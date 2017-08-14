@@ -20,20 +20,17 @@ set encoding=utf-8
 set tabstop=2
 set nowrap
 set number
-set expandtab
 set nowritebackup
 set noswapfile
 set nobackup
 set hlsearch
 set ignorecase
 set smartcase
-set expandtab
 set noruler
 set laststatus=2
 
-" Highlights lines over 100 columns
 highlight OverLength ctermbg=red ctermfg=white
-match OverLength /\%>100v\+/
+match OverLength /\%>80v\+/
 
 " Maps
-:imap ff <Esc> 
+:imap df <Esc> 

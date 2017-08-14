@@ -13,7 +13,7 @@ set $mod Mod4
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 # font pango:Terminus 12
 
-font pango:Source Code Pro 10
+font pango:Source Code Pro 12
 
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -30,16 +30,56 @@ floating_modifier $mod
 # Look
 #..........
 
-new_window pixel 2
-new_float pixel 2
+new_window pixel 4
+new_float pixel 4
+
+# Hybrid colors
+set $back               #282828
+set $black              #282828
+set $grey               #665c54
+set $lightgrey          #928374
+set $white              #ebdbb2
+set $aqua               #689d6a
+set $red                #fb4934 
+set $darkred            #cc241d
+set $blue               #458588
 
 #class                  border      backgr.     text        split
 client.background       $back
 
 #......
 
+# start feh background
+exec --no-startup-id feh --bg-scale ~/.background/current.jpg
+
+# start dunst
+exec --no-startup-id dunst -config ~/.config/dunst
+
+# start redshift
+exec --no-startup-id redshift
+
+# start a terminal
+bindsym $mod+Return exec termite
+
+# start emacs client
+bindsym $mod+p exec emacsclient -c
+
+# start firefox
+bindsym $mod+apostrophe exec firefox-developer
+
+# start chromium
+bindsym Print exec gnome-screenshot -i
+
 # kill focused window
 bindsym $mod+q kill
+
+# start dmenu (a program launcher)
+# bindsym $mod+d exec dmenu_run
+# There also is the (new) i3-dmenu-desktop which only displays applications
+# shipping a .desktop file. It is a wrapper around dmenu, so you need that
+# installed.
+set $rofi "rofi -show run -font 'Source Code Pro 12' -bw 4 -color-normal '#002b36,#ebdbb2,#282828,#93a1a1,#458588' -color-window '#002b36,#93a1a1'"
+bindsym $mod+d exec $rofi
 
 # change focus
 bindsym $mod+h focus left
@@ -91,6 +131,9 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
+# move workspace to other monitor
+bindsym $mod+x move workspace to output left
+
 # switch to workspace
 bindsym $mod+1 workspace 1
 bindsym $mod+2 workspace 2
@@ -122,6 +165,9 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
+bindsym --release $mod+Shift+l exec i3lock
+bindsym --release $mod+Shift+s exec i3lock && systemctl suspend
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
 # These bindings trigger as soon as you enter the resize mode
@@ -148,4 +194,27 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-bindsym $mod+x move workspace to output left
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+  tray_output primary
+  workspace_buttons yes
+  status_command i3blocks
+
+  font pango:Source Code Pro 12
+
+  colors {
+    separator #dc322f
+    background #002b36
+    statusline #268bd2
+    focused_workspace #fdf6e3 #859900 #fdf6e3
+    active_workspace #fdf6e3 #6c71c4 #fdf6e3
+    inactive_workspace #586e75 #93a1a1 #002b36
+    urgent_workspace #d33682 #d33682 #fdf6e3
+  }
+}
+
+client.focused #859900 #859900 #fdf6e3 #859900
+client.focused_inactive #073642 #073642 #eee8d5 #6c71c4
+client.unfocused #073642 #073642 #93a1a1 #586e75
+client.urgent #d33682 #d33682 #fdf6e3 #dc322f

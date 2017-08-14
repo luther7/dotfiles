@@ -143,8 +143,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
   (setq exec-path-from-shell-arguments '("-l"))
-
-  ;; theme setup
   (setq solarized-distinct-fringe-background t)
   (setq solarized-emphasize-indicators t)
   (setq solarized-use-less-bold t)
@@ -162,28 +160,11 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   (setq create-lockfiles nil)
-
   (xterm-mouse-mode -1)
-
   (global-auto-revert-mode t)
-
-  ;; (setq fci-rule-column 101)
-  ;; (setq fci-rule-width 4)
-  ;; (setq fci-rule-color "lightblue")
-  ;; (add-hook 'prog-mode-hook #'fci-mode)
-
   (add-hook 'prog-mode-hook 'indent-guide-mode)
-
-  (setq whitespace-line-column 100)
-  (setq whitespace-style '(face tabs lines-tail trailing))
-  (add-hook 'prog-mode-hook 'whitespace-mode)
-
   (add-hook 'imenu-after-jump-hook (lambda () (recenter 10)))
-
   (setq-default c-basic-offset 4)
-
-  (setq geben-close-mirror-file-after-finish t)
-  (setq geben-pause-at-entry-line t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -214,7 +195,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (jinja2-mode intero hlint-refactor hindent helm-hoogle haskell-snippets flyspell-correct-helm flyspell-correct flycheck-haskell dockerfile-mode docker tablist magit-popup docker-tramp dante company-ghci company-ghc ghc haskell-mode company-cabal company-ansible cmm-mode auto-dictionary ansible-doc ansible symon string-inflection realgud test-simple loc-changes load-relative password-generator meghanada groovy-mode groovy-imports gradle-mode flycheck-bashate evil-lion ensime sbt-mode scala-mode editorconfig company-php ac-php-core eclim company-auctex auctex fuzzy winum dash powerline parent-mode pkg-info epl flx evil goto-chg diminish bind-map bind-key packed f s avy popup package-build clojure-snippets clj-refactor inflections edn peg cider-eval-sexp-fu cider seq queue clojure-mode hydra spinner pcache iedit highlight insert-shebang hide-comnt helm-purpose window-purpose anzu undo-tree helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-gtags helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag ace-jump-helm-line evil-snipe evil-commentary async flycheck smartparens helm helm-core projectile jade-mode counsel swiper ivy tabbar-ruler mode-icons tabbar origami org alert log4e gntp nlinum-relative nlinum markdown-mode skewer-mode simple-httpd json-snatcher json-reformat multiple-cursors js2-mode ibuffer-projectile haml-mode paredit php-mode web-completion-data dash-functional tern company-quickhelp pos-tip company command-log-mode yasnippet anaconda-mode pythonic auto-complete vi-tilde-fringe yapfify yaml-mode xcscope ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit systemd stickyfunc-enhance srefactor sql-indent spacemacs-theme spaceline solarized-theme smex slim-mode scss-mode sass-mode restclient restart-emacs request rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode pcre2el paradox org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http neotree mwim move-text mmm-mode markdown-toc macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc ivy-hydra info+ indent-guide imenu-list ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-make google-translate golden-ratio gnuplot gh-md ggtags geben flycheck-pos-tip flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump drupal-mode disaster define-word cython-mode counsel-projectile company-web company-tern company-statistics company-shell company-emacs-eclim company-c-headers company-anaconda column-enforce-mode color-theme-sanityinc-solarized coffee-mode cmake-mode clean-aindent-mode clang-format auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+    (org-category-capture impatient-mode org-brain evil-org add-node-modules-path jinja2-mode intero hlint-refactor hindent helm-hoogle haskell-snippets flyspell-correct-helm flyspell-correct flycheck-haskell dockerfile-mode docker tablist magit-popup docker-tramp dante company-ghci company-ghc ghc haskell-mode company-cabal company-ansible cmm-mode auto-dictionary ansible-doc ansible symon string-inflection realgud test-simple loc-changes load-relative password-generator meghanada groovy-mode groovy-imports gradle-mode flycheck-bashate evil-lion ensime sbt-mode scala-mode editorconfig company-php ac-php-core eclim company-auctex auctex fuzzy winum dash powerline parent-mode pkg-info epl flx evil goto-chg diminish bind-map bind-key packed f s avy popup package-build clojure-snippets clj-refactor inflections edn peg cider-eval-sexp-fu cider seq queue clojure-mode hydra spinner pcache iedit highlight insert-shebang hide-comnt helm-purpose window-purpose anzu undo-tree helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-gtags helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag ace-jump-helm-line evil-snipe evil-commentary async flycheck smartparens helm helm-core projectile jade-mode counsel swiper ivy tabbar-ruler mode-icons tabbar origami org alert log4e gntp nlinum-relative nlinum markdown-mode skewer-mode simple-httpd json-snatcher json-reformat multiple-cursors js2-mode ibuffer-projectile haml-mode paredit php-mode web-completion-data dash-functional tern company-quickhelp pos-tip company command-log-mode yasnippet anaconda-mode pythonic auto-complete vi-tilde-fringe yapfify yaml-mode xcscope ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit systemd stickyfunc-enhance srefactor sql-indent spacemacs-theme spaceline solarized-theme smex slim-mode scss-mode sass-mode restclient restart-emacs request rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode pcre2el paradox org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http neotree mwim move-text mmm-mode markdown-toc macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc ivy-hydra info+ indent-guide imenu-list ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-make google-translate golden-ratio gnuplot gh-md ggtags geben flycheck-pos-tip flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump drupal-mode disaster define-word cython-mode counsel-projectile company-web company-tern company-statistics company-shell company-emacs-eclim company-c-headers company-anaconda column-enforce-mode color-theme-sanityinc-solarized coffee-mode cmake-mode clean-aindent-mode clang-format auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

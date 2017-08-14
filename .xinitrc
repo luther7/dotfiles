@@ -1,3 +1,5 @@
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
-exec startkde
+xmodmap .Xmodmap
+
+exec i3
