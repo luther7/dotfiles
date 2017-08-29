@@ -64,10 +64,10 @@ bindsym $mod+Return exec termite
 # start emacs client
 bindsym $mod+p exec emacsclient -c
 
-# start firefox
-bindsym $mod+apostrophe exec firefox-developer
-
 # start chromium
+bindsym $mod+apostrophe exec chromium
+
+# screenshot
 bindsym Print exec gnome-screenshot -i
 
 # kill focused window
@@ -165,8 +165,8 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-bindsym --release $mod+Shift+l exec i3lock
-bindsym --release $mod+Shift+s exec i3lock && systemctl suspend
+bindsym Pause exec i3lock -c 000000
+bindsym $mod+Pause exec i3lock -c 000000 && systemctl suspend
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
