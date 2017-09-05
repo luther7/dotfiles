@@ -1,6 +1,4 @@
 ;; -*- mode: emacs-lisp -*-
-;; This file is loaded by Spacemacs at startup.
-;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
@@ -8,19 +6,17 @@ You should not put any user code in this function besides modifying the variable
 values."
   (setq-default
    dotspacemacs-distribution 'spacemacs
-   dotspacemacs-enable-lazy-installation nil
+   dotspacemacs-enable-lazy-installation 'unused
    dotspacemacs-ask-for-lazy-installation t
    dotspacemacs-configuration-layer-path (list (expand-file-name "layers/" dotspacemacs-directory))
    dotspacemacs-configuration-layers
    '(
-     ansible
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence "df"
                       auto-completion-complete-with-key-sequence-delay 0.4
                       auto-completion-enable-snippets-in-popup nil
                       auto-completion-enable-help-tooltip t
                       company-tooltip-align-annotations t)
-     command-log
      cscope
      docker
      evil-cleverparens
@@ -29,26 +25,32 @@ values."
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      imenu-list
+     (ranger :variables
+             ranger-cleanup-on-disable t
+             ranger-show-dotfiles t)
      semantic
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
-     vinegar
+     (version-control :variables
+                      version-control-diff-tool 'diff-hl)
      vim-empty-lines
      vim-powerline
+     vinegar
 
      emacs-lisp
      systemd
      shell-scripts
 
-     c-c++
+     ansible
+     ;; c-c++
      (haskell :variables
               haskell-completion-backend 'ghc-mod
               haskell-enable-hindent-style "fundamental")
      html
-     java
+     ;; java
      javascript
-     latex
+     ;; latex
      markdown
      org
      php
@@ -90,10 +92,11 @@ values."
                                :width normal
                                :powerline-scale 2)
    dotspacemacs-leader-key "SPC"
+   dotspacemacs-emacs-command-key "SPC"
+   dotspacemacs-ex-command-key ":"
    dotspacemacs-emacs-leader-key "M-m"
    dotspacemacs-major-mode-leader-key ","
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
-   dotspacemacs-emacs-command-key "SPC"
    dotspacemacs-distinguish-gui-tab nil
    dotspacemacs-remap-Y-to-y$ nil
    dotspacemacs-retain-visual-state-on-shift t
@@ -104,15 +107,14 @@ values."
    dotspacemacs-auto-resume-layouts nil
    dotspacemacs-large-file-size 1
    dotspacemacs-auto-save-file-location 'cache
-   dotspacemacs-max-rollback-slots 10
+   dotspacemacs-max-rollback-slots 5
    dotspacemacs-helm-resize nil
    dotspacemacs-helm-no-header nil
    dotspacemacs-helm-position 'bottom
    dotspacemacs-helm-use-fuzzy 'always
-   dotspacemacs-enable-paste-transient-state nil
+   dotspacemacs-enable-paste-transient-state t
    dotspacemacs-which-key-delay 0.4
    dotspacemacs-which-key-position 'bottom
-
    dotspacemacs-loading-progress-bar t
    dotspacemacs-fullscreen-at-startup nil
    dotspacemacs-fullscreen-use-non-native nil
@@ -123,11 +125,11 @@ values."
    dotspacemacs-show-transient-state-color-guide t
    dotspacemacs-mode-line-unicode-symbols t
    dotspacemacs-smooth-scrolling t
-   dotspacemacs-line-numbers t
+   dotspacemacs-line-numbers nil
    dotspacemacs-folding-method 'evil
    dotspacemacs-smartparens-strict-mode nil
    dotspacemacs-smart-closing-parenthesis nil
-   dotspacemacs-highlight-delimiters 'current
+   dotspacemacs-highlight-delimiters 'all
    dotspacemacs-persistent-server t
    dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
    dotspacemacs-default-package-repository nil
@@ -141,7 +143,6 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-
   (setq exec-path-from-shell-arguments '("-l"))
   (setq solarized-distinct-fringe-background t)
   (setq solarized-emphasize-indicators t)
@@ -158,31 +159,14 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-
   (setq create-lockfiles nil)
   (xterm-mouse-mode -1)
   (global-auto-revert-mode t)
   (add-hook 'prog-mode-hook 'indent-guide-mode)
-  (add-hook 'imenu-after-jump-hook (lambda () (recenter 10)))
-  (setq-default c-basic-offset 4)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (powerline parent-mode pkg-info epl flx evil goto-chg diminish eclim company-auctex bind-map bind-key packed auctex f s avy popup package-build clojure-snippets clj-refactor inflections edn peg cider-eval-sexp-fu cider seq queue clojure-mode hydra spinner pcache iedit highlight insert-shebang hide-comnt helm-purpose window-purpose anzu undo-tree helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-gtags helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag ace-jump-helm-line evil-snipe evil-commentary async flycheck smartparens helm helm-core projectile jade-mode counsel swiper ivy tabbar-ruler mode-icons tabbar origami org alert log4e gntp nlinum-relative nlinum markdown-mode skewer-mode simple-httpd json-snatcher json-reformat multiple-cursors js2-mode ibuffer-projectile haml-mode paredit php-mode web-completion-data dash-functional tern company-quickhelp pos-tip company command-log-mode yasnippet anaconda-mode pythonic auto-complete vi-tilde-fringe yapfify yaml-mode xcscope ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit systemd stickyfunc-enhance srefactor sql-indent spacemacs-theme spaceline solarized-theme smex slim-mode scss-mode sass-mode restclient restart-emacs request rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode pcre2el paradox org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http neotree mwim move-text mmm-mode markdown-toc macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc ivy-hydra info+ indent-guide imenu-list ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-make google-translate golden-ratio gnuplot gh-md ggtags geben flycheck-pos-tip flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump drupal-mode disaster define-word cython-mode counsel-projectile company-web company-tern company-statistics company-shell company-emacs-eclim company-c-headers company-anaconda column-enforce-mode color-theme-sanityinc-solarized coffee-mode cmake-mode clean-aindent-mode clang-format auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -195,7 +179,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (org-category-capture impatient-mode org-brain evil-org add-node-modules-path jinja2-mode intero hlint-refactor hindent helm-hoogle haskell-snippets flyspell-correct-helm flyspell-correct flycheck-haskell dockerfile-mode docker tablist magit-popup docker-tramp dante company-ghci company-ghc ghc haskell-mode company-cabal company-ansible cmm-mode auto-dictionary ansible-doc ansible symon string-inflection realgud test-simple loc-changes load-relative password-generator meghanada groovy-mode groovy-imports gradle-mode flycheck-bashate evil-lion ensime sbt-mode scala-mode editorconfig company-php ac-php-core eclim company-auctex auctex fuzzy winum dash powerline parent-mode pkg-info epl flx evil goto-chg diminish bind-map bind-key packed f s avy popup package-build clojure-snippets clj-refactor inflections edn peg cider-eval-sexp-fu cider seq queue clojure-mode hydra spinner pcache iedit highlight insert-shebang hide-comnt helm-purpose window-purpose anzu undo-tree helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-gtags helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag ace-jump-helm-line evil-snipe evil-commentary async flycheck smartparens helm helm-core projectile jade-mode counsel swiper ivy tabbar-ruler mode-icons tabbar origami org alert log4e gntp nlinum-relative nlinum markdown-mode skewer-mode simple-httpd json-snatcher json-reformat multiple-cursors js2-mode ibuffer-projectile haml-mode paredit php-mode web-completion-data dash-functional tern company-quickhelp pos-tip company command-log-mode yasnippet anaconda-mode pythonic auto-complete vi-tilde-fringe yapfify yaml-mode xcscope ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit systemd stickyfunc-enhance srefactor sql-indent spacemacs-theme spaceline solarized-theme smex slim-mode scss-mode sass-mode restclient restart-emacs request rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode pcre2el paradox org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http neotree mwim move-text mmm-mode markdown-toc macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc ivy-hydra info+ indent-guide imenu-list ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-make google-translate golden-ratio gnuplot gh-md ggtags geben flycheck-pos-tip flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump drupal-mode disaster define-word cython-mode counsel-projectile company-web company-tern company-statistics company-shell company-emacs-eclim company-c-headers company-anaconda column-enforce-mode color-theme-sanityinc-solarized coffee-mode cmake-mode clean-aindent-mode clang-format auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+    (ranger git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-commit with-editor git-gutter diff-hl browse-at-remote yapfify yaml-mode ws-butler winum which-key web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit systemd symon string-inflection stickyfunc-enhance srefactor sql-indent spaceline solarized-theme slim-mode scss-mode sass-mode restart-emacs request realgud rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode pcre2el password-generator paradox org-projectile org-present org-pomodoro org-download org-bullets org-brain open-junk-file neotree move-text mmm-mode meghanada markdown-toc macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode js2-refactor js-doc jinja2-mode intero insert-shebang info+ indent-guide impatient-mode ibuffer-projectile hy-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-hoogle helm-gtags helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag haskell-snippets gradle-mode google-translate golden-ratio gnuplot gh-md ggtags fuzzy flyspell-correct-helm flycheck-pos-tip flycheck-haskell flycheck-bashate flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-cleverparens evil-args evil-anzu eval-sexp-fu ensime emmet-mode elisp-slime-nav editorconfig dumb-jump drupal-mode dockerfile-mode docker disaster define-word dante cython-mode company-web company-tern company-statistics company-shell company-quickhelp company-php company-ghci company-ghc company-emacs-eclim company-cabal company-c-headers company-auctex company-ansible company-anaconda command-log-mode column-enforce-mode color-theme-sanityinc-solarized coffee-mode cmm-mode cmake-mode cmake-ide clean-aindent-mode clang-format auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile ansible-doc ansible aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
