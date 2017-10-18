@@ -12,5 +12,3 @@ alias ec='emacsclient -nc'
 export PATH="${PATH}:/home/luther/bin:/home/luther/.local/bin"
 export EDITOR="nvim"
 export BROWSER="chromium"
-
-exec fish

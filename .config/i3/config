@@ -117,5 +117,4 @@ bindsym Pause exec i3lock -c 000000
 bindsym $mod+Pause exec i3lock -c 000000 && systemctl suspend
 bindsym $mod+Return exec termite
 bindsym $mod+p exec emacsclient -c
-bindsym $mod+apostrophe exec chromium
 bindsym Print exec gnome-screenshot -i
