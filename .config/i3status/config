@@ -1,0 +1,57 @@
+general {
+  colors         = true
+  interval       = 5
+  color_good     = "#d8dee9"
+  color_degraded = "#dedee9" 
+  color_bad      = "#d8dee9"
+  output_format  = i3bar
+}
+
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "battery 0"
+order += "disk /"
+order += "load"
+order += "cpu_temperature 0"
+order += "volume master"
+order += "tztime local"
+
+wireless _first_ {
+  format_up   = " wifi %quality %ip "
+  format_down = " wifi down "
+}
+
+ethernet _first_ {
+  format_up   = " ethernet %ip "
+  format_down = " ethernet down "
+}
+
+battery 0 {
+  format = " battery %percentage "
+  path   = "/sys/class/power_supply/BAT1/uevent"
+}
+
+tztime local {
+  format = " date %Y %m %d time %l:%M "
+}
+
+load {
+  format = " load %1min "
+}
+
+disk "/" {
+  format = " disk %avail "
+}
+
+volume master {
+  format = " volume %volume "
+  format_muted = " volume muted "
+  device = "default"
+    mixer = "Master"
+    mixer_idx = 0
+}
+
+cpu_temperature 0 {
+  format = " temperature %degrees °C "
+  path = "/sys/class/hwmon/hwmon2/temp1_input"
+}

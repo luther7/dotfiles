@@ -1,47 +1,36 @@
 set $mod Mod4
 floating_modifier $mod
 
-bindsym $mod+q kill
-
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
-
+bindsym $mod+q       kill
+bindsym $mod+h       focus left
+bindsym $mod+j       focus down
+bindsym $mod+k       focus up
+bindsym $mod+l       focus right
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
-
-bindsym $mod+c split h
-bindsym $mod+v split v
-
-bindsym $mod+f fullscreen toggle
-
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
-
-bindsym $mod+t floating toggle
-
-bindsym $mod+space focus mode_toggle
-
-bindsym $mod+a focus parent
-bindsym $mod+z focus child
-
-bindsym $mod+x move workspace to output left
-
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
-bindsym $mod+3 workspace 3
-bindsym $mod+4 workspace 4
-bindsym $mod+5 workspace 5
-bindsym $mod+6 workspace 6
-bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
-
+bindsym $mod+c       split h
+bindsym $mod+v       split v
+bindsym $mod+f       fullscreen toggle
+bindsym $mod+s       layout stacking
+bindsym $mod+w       layout tabbed
+bindsym $mod+e       layout toggle split
+bindsym $mod+t       floating toggle
+bindsym $mod+space   focus mode_toggle
+bindsym $mod+a       focus parent
+bindsym $mod+z       focus child
+bindsym $mod+x       move workspace to output left
+bindsym $mod+1       workspace 1
+bindsym $mod+2       workspace 2
+bindsym $mod+3       workspace 3
+bindsym $mod+4       workspace 4
+bindsym $mod+5       workspace 5
+bindsym $mod+6       workspace 6
+bindsym $mod+7       workspace 7
+bindsym $mod+8       workspace 8
+bindsym $mod+9       workspace 9
+bindsym $mod+0       workspace 10
 bindsym $mod+Shift+1 move container to workspace 1
 bindsym $mod+Shift+2 move container to workspace 2
 bindsym $mod+Shift+3 move container to workspace 3
@@ -52,69 +41,58 @@ bindsym $mod+Shift+7 move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
-
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -b 'Yes' 'i3-msg exit'"
+bindsym $mod+r       mode "resize"
+bindsym Pause        exec i3lock -c 000000
+bindsym $mod+Pause   exec i3lock -c 000000 && systemctl suspend
+bindsym $mod+Return  exec termite
+bindsym Print        exec gnome-screenshot -i
+bindsym $mod+d       exec rofi -show run -font 'Source Code Pro 12' -bw 4
+bindsym $mod+p       exec emacsclient -c
 
 mode "resize" {
-        bindsym h resize shrink width 10 px or 10 ppt
-        bindsym j resize grow height 10 px or 10 ppt
-        bindsym k resize shrink height 10 px or 10 ppt
-        bindsym l resize grow width 10 px or 10 ppt
-
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+  bindsym h resize shrink width  10 px or 10 ppt
+  bindsym j resize grow height   10 px or 10 ppt
+  bindsym k resize shrink height 10 px or 10 ppt
+  bindsym l resize grow width    10 px or 10 ppt
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
 }
 
-bindsym $mod+r mode "resize"
-
 font pango:Source Code Pro 12
-new_window pixel 4
-new_float pixel 4
 
-set $back               #282828
-set $black              #282828
-set $grey               #665c54
-set $lightgrey          #928374
-set $white              #ebdbb2
-set $aqua               #689d6a
-set $red                #fb4934 
-set $darkred            #cc241d
-set $blue               #458588
+new_window pixel 10
+new_float  pixel 10
 
-client.background       $back
+set $bg1 #2e3440
+set $bg2 #4c566a
+set $fg1 #d8dee9
+set $fg2 #8fbcbb
+
+client.background       $bg1
+client.focused          $bg2 $bg2 $fg2 $bg2 $bg2
+client.focused_inactive $bg2 $bg2 $fg2 $bg2 $bg2
+client.unfocused        $bg1 $bg1 $fg1 $bg1 $bg1
+client.urgent           $bg1 $bg1 $fg1 $bg1 $bg1
+client.placeholder $bg1 $bg1 $fg1 $bg1 $bg1
 
 bar {
-  tray_output primary
   workspace_buttons yes
-  status_command i3blocks
-
-  font pango:Source Code Pro 12
+  mode              dock
+  status_command    i3status
 
   colors {
-    separator #dc322f
-    background #002b36
-    statusline #268bd2
-    focused_workspace #fdf6e3 #859900 #fdf6e3
-    active_workspace #fdf6e3 #6c71c4 #fdf6e3
-    inactive_workspace #586e75 #93a1a1 #002b36
-    urgent_workspace #d33682 #d33682 #fdf6e3
+    background         $bg1
+    statusline         $fg1
+    focused_workspace  $fg2 $bg2 $fg2 
+    active_workspace   $fg2 $bg2 $fg2
+    inactive_workspace $fg1 $bg1 $fg1
+    urgent_workspace   $fg1 $bg1
   }
 }
 
-client.focused #859900 #859900 #fdf6e3 #859900
-client.focused_inactive #073642 #073642 #eee8d5 #6c71c4
-client.unfocused #073642 #073642 #93a1a1 #586e75
-client.urgent #d33682 #d33682 #fdf6e3 #dc322f
-
 exec --no-startup-id dunst -config ~/.config/dunst
 exec --no-startup-id redshift
-
-set $rofi "rofi -show run -font 'Source Code Pro 12' -bw 4 -color-normal '#002b36,#ebdbb2,#282828,#93a1a1,#458588' -color-window '#002b36,#93a1a1'"
-bindsym $mod+d exec $rofi
-bindsym Pause exec i3lock -c 000000
-bindsym $mod+Pause exec i3lock -c 000000 && systemctl suspend
-bindsym $mod+Return exec termite
-bindsym $mod+p exec emacsclient -c
-bindsym Print exec gnome-screenshot -i
+exec --no-startup-id feh --bg-scale ~/.background.jpg
