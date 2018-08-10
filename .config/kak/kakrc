@@ -1,0 +1,10 @@
+colorscheme nord
+
+set-option global ui_options ncurses_assistant=cat
+
+set global indentwidth 2
+
+hook global WinCreate .* %{
+  add-highlighter window number_lines
+  add-highlighter global column 100 default,rgb:4c566a
+}
