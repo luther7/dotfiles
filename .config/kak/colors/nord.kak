@@ -46,27 +46,27 @@
 
         # builtin
         face global Default            ${nord4},${nord0}
-        face global PrimarySelection   ${nord4},${nord3}
+        face global PrimarySelection   ${nord8},${nord1}
         face global SecondarySelection ${nord9},${nord10}
-        face global PrimaryCursor      ${nord3},${nord4}
+        face global PrimaryCursor      ${nord1},${nord4}
         face global SecondaryCursor    ${nord10},${nord4}
         face global PrimaryCursorEol   ${nord7},${nord7}
         face global SecondaryCursorEol ${nord11},${nord7}
-        face global LineNumbers        ${nord4},${nord2}
-        face global LineNumberCursor   ${nord10},${nord2}
-        face global LineNumbersWrapped ${nord10},${nord2}
-        face global MenuForeground     ${nord4},${nord2}
-        face global MenuBackground     ${nord4},${nord2}
-        face global MenuInfo           ${nord2}
-        face global Information        ${nord4},${nord2}
+        face global LineNumbers        ${nord3},${nord0}
+        face global LineNumberCursor   ${nord10},${nord1}
+        face global LineNumbersWrapped ${nord10},${nord1}
+        face global MenuForeground     ${nord4},${nord1}
+        face global MenuBackground     ${nord4},${nord1}
+        face global MenuInfo           ${nord1}
+        face global Information        ${nord4},${nord1}
         face global Error              ${nord11},default+b
-        face global StatusLine         ${nord4},${nord2}+b
-        face global StatusLineMode     ${nord2}
+        face global StatusLine         ${nord4},${nord0}+b
+        face global StatusLineMode     ${nord13}
         face global StatusLineInfo     ${nord8}
-        face global StatusLineValue    ${nord7}
-        face global StatusCursor       ${nord4},${nord2}
+        face global StatusLineValue    ${nord12}
+        face global StatusCursor       ${nord4},${nord1}
         face global Prompt             ${nord4}+b
-        face global MatchingChar       ${nord4},${nord2}+b
-        face global BufferPadding      ${nord4},${nord9}
+        face global MatchingChar       ${nord4},${nord1}+b
+        face global BufferPadding      ${nord11},${nord0}
     "
 }
