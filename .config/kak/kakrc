@@ -9,6 +9,8 @@ add-highlighter global/ wrap -width 101 -indent -word
 set-option global ui_options ncurses_assistant=none
 set-face global GitBlame 'rgb:D8DEE9'
 
+alias global r ranger
+
 #
 # kakoune-cd extension
 # https://github.com/Delapouite/kakoune-cd
@@ -44,4 +46,4 @@ map global user 3 ':enter-user-mode i3<ret>' -docstring 'i3…'
 # kak-lsp
 # https://github.com/ul/kak-lsp
 #
-eval %sh{kak-lsp --kakoune -s $kak_session}
+#eval %sh{kak-lsp --kakoune -s $kak_session}
