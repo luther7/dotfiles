@@ -4,11 +4,14 @@
 
 set global indentwidth 2
 colorscheme nord
-hook global WinCreate .* %{add-highlighter window number_lines}
-add-highlighter global/ wrap -width 101 -indent -word
+
+add-highlighter global/ number-lines -hlcursor
+add-highlighter global/ wrap -indent -width 100 -marker +
+add-highlighter global/ show-matching
 set-option global ui_options ncurses_assistant=none
 set-face global GitBlame 'rgb:D8DEE9'
 
+set global grepcmd 'rg --column'
 alias global r ranger
 
 #
@@ -46,4 +49,5 @@ map global user 3 ':enter-user-mode i3<ret>' -docstring 'i3…'
 # kak-lsp
 # https://github.com/ul/kak-lsp
 #
-#eval %sh{kak-lsp --kakoune -s $kak_session}
+eval %sh{kak-lsp --kakoune -s $kak_session}
+lsp-auto-hover-enable
