@@ -28,27 +28,21 @@
     color = "#859900"
  
 [shortcuts]
-    close = mod1+j
-    history = mod1+k
-    close_all = mod1+l
-    #context = ctrl+shift+period
+    close = mod1+y
+    history = mod1+u
+    close_all = mod1+i
  
 [urgency_low]
-    background = "#073642"
-    foreground = "#eeee8d5"
+    background = "#d8dee9"
+    foreground = "#e5e9fo"
     timeout = 5
  
 [urgency_normal]
-    background = "#073642"
-    foreground = "#eeee8d5"
+    background = "#d8dee9"
+    foreground = "#e5e9f0"
     timeout = 5
  
 [urgency_critical]
-    background = "#073642"
-    foreground = "#dc322f"
+    background = "#d8dee9"
+    foreground = "#e5e9f0"
     timeout = 5
-
-[ignore]
-    appname = "Spotify"
-    summary = "*"
-    format 
