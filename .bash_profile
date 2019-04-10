@@ -1,4 +1,3 @@
-
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
 if [ -z "$SSH_AUTH_SOCK" ]; then
