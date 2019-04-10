@@ -6,12 +6,9 @@
 PS1=" \[\e[32m\]\W\[\e[m\] \[\e[37m\]>\[\e[m\] "
 
 alias ls="ls --color=auto"
-alias l="ls -l --color=auto"
-alias la="ls -la --color=auto"
-alias vim="nvim"
-alias cd="pushd"
+alias vault="ansible-vault edit .vault.yml"
 
 export PATH="${PATH}:/home/luther/bin:/home/luther/.local/bin"
-export EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="vim"
+export VISUAL="vim"
 export BROWSER="firefox-developer-edition"

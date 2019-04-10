@@ -7,28 +7,16 @@ general {
   output_format  = i3bar
 }
 
-order += "wireless _first_"
 order += "ethernet _first_"
-order += "battery 0"
 order += "disk /"
 order += "load"
 order += "cpu_temperature 0"
 order += "volume master"
 order += "tztime local"
 
-wireless _first_ {
-  format_up   = " wifi %quality %ip "
-  format_down = " wifi down "
-}
-
 ethernet _first_ {
   format_up   = " ethernet %ip "
   format_down = " ethernet down "
-}
-
-battery 0 {
-  format = " battery %percentage "
-  path   = "/sys/class/power_supply/BAT1/uevent"
 }
 
 tztime local {

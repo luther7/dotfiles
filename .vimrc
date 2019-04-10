@@ -51,7 +51,6 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf'
-Plug 'terryma/vim-multiple-cursors'
 
 call plug#end()
 

@@ -1,3 +1,13 @@
+
+output DP-1 pos 0 0 res 1920x1080
+output DP-2 pos 1920 0 res 1920x1080
+output DP-1 bg ~/.config/background.jpg stretch
+output DP-2 bg ~/.config/background.jpg stretch
+
+input 2131:273:Topre_Corporation_Realforce_87 {
+  xkb_options caps:super
+}
+
 set $mod Mod4
 floating_modifier $mod
 
@@ -89,10 +99,9 @@ bar {
     focused_workspace  $fg2 $bg2 $fg2 
     active_workspace   $fg2 $bg2 $fg2
     inactive_workspace $fg1 $bg1 $fg1
-    urgent_workspace   $fg1 $bg1
+    urgent_workspace   $fg1 $bg1 $fg1
   }
 }
 
 exec --no-startup-id dunst -config ~/.config/dunst
 exec --no-startup-id redshift
-exec --no-startup-id feh --bg-scale ~/.background.jpg
