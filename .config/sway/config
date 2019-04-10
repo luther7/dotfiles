@@ -60,7 +60,7 @@ bindsym $mod+Pause   exec i3lock -c 000000 && systemctl suspend
 bindsym $mod+Return  exec termite
 bindsym Print        exec gnome-screenshot -i
 bindsym $mod+d       exec rofi -show run -font 'Source Code Pro 12' -bw 4
-bindsym $mod+p       exec emacsclient -c
+bindsym $mod+p       exec termite -e 'kak'
 
 mode "resize" {
   bindsym h resize shrink width  10 px or 10 ppt
