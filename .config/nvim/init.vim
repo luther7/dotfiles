@@ -1,5 +1,5 @@
 "
-" .vimrc
+" .config/nvim/init.vim
 "
 
 runtime! archlinux.vim
@@ -43,17 +43,24 @@ set selectmode=mouse,key
 set backspace=indent,eol,start
 set nospell
 set cc=80
+set clipboard=unnamedplus
 
 set rtp+=~/.fzf
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter'
 Plug 'arcticicestudio/nord-vim'
+Plug 'calviken/vim-gdscript3'
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'dense-analysis/ale'
+Plug 'hashivim/vim-packer'
+Plug 'hashivim/vim-terraform'
+Plug 'hashivim/vim-vagrant'
 Plug 'itchyny/lightline.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-commentary'
 call plug#end()
 
 colorscheme nord
@@ -68,8 +75,8 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = '•'
 let g:ale_sign_warning = '•'
 let g:ale_completion_enabled = 1
-let g:ale_linters = {'python': ['pyls', 'flake8']}
-let g:ale_fixers = {'python': ['black']}
+let g:ale_linters = {'python': [], 'ruby': ['solargraph', 'rubocop']}
+let g:ale_fixers = {'python': ['black'], 'ruby': ['solargraph', 'rubocop']}
 
 if has("nvim")
   au TermOpen * setlocal nonumber norelativenumber
