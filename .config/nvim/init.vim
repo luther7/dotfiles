@@ -84,7 +84,7 @@ let g:ale_sign_column_always = 1
 let g:ale_completion_enabled = 1
 
 let g:ale_linters = {
-\     'bash': [
+\     'sh': [
 \         'shellcheck'
 \     ],
 \     'javascript': [
@@ -119,7 +119,8 @@ let g:ale_linters = {
 \         'fmt'
 \     ],
 \     'yaml': [
-\         'yamllint'
+\         'yamllint',
+\         'prettier'
 \     ]
 \ }
 
@@ -147,6 +148,9 @@ let g:ale_fixers = {
 \     ],
 \     'terraform': [
 \         'fmt'
+\     ],
+\     'yaml': [
+\         'prettier'
 \     ]
 \ }
 
