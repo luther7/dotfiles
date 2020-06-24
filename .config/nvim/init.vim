@@ -109,6 +109,13 @@ let g:ale_linters = {
 \         'rubocop',
 \         'solargraph'
 \     ],
+\     'rust': [
+\         'cargo',
+\         'rls',
+\         'rustc',
+\         'clippy',
+\         'rustfmt'
+\     ],
 \     'scala': [
 \         'sbtserver'
 \     ],
@@ -143,6 +150,9 @@ let g:ale_fixers = {
 \     'ruby': [
 \         'rubocop'
 \     ],
+\     'rust': [
+\         'cargo'
+\     ],
 \     'sql': [
 \         'sqlfmt'
 \     ],
@@ -153,6 +163,9 @@ let g:ale_fixers = {
 \         'prettier'
 \     ]
 \ }
+
+let g:ale_linters = {'python': ['pylint'], 'ruby': ['solargraph', 'rubocop'], }
+let g:ale_fixers = {'python': ['black'], 'ruby': ['solargraph', 'rubocop']}
 
 if has("nvim")
   au TermOpen * setlocal nonumber norelativenumber
