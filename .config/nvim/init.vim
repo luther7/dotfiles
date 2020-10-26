@@ -57,6 +57,7 @@ Plug 'hashivim/vim-packer'
 Plug 'hashivim/vim-terraform'
 Plug 'hashivim/vim-vagrant'
 Plug 'itchyny/lightline.vim'
+Plug 'mzlogin/vim-markdown-toc'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -77,10 +78,10 @@ highlight ExtraWhitespace ctermbg='grey'
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 1
 let g:ale_linters_explicit = 1
+let g:ale_set_highlights = 0
 let g:ale_sign_column_always = 1
 let g:ale_sign_error = '•'
 let g:ale_sign_warning = '•'
-let g:ale_sign_column_always = 1
 let g:ale_completion_enabled = 1
 
 let g:ale_linters = {
@@ -89,7 +90,8 @@ let g:ale_linters = {
 \     ],
 \     'javascript': [
 \         'eslint',
-\         'prettier-eslint'
+\         'prettier',
+\         'tsserver'
 \     ],
 \     'json': [
 \         'jq',
@@ -125,6 +127,11 @@ let g:ale_linters = {
 \     'terraform': [
 \         'fmt'
 \     ],
+\     'typescript': [
+\         'eslint',
+\         'prettier',
+\         'tsserver'
+\     ],
 \     'yaml': [
 \         'yamllint',
 \         'prettier'
@@ -134,7 +141,7 @@ let g:ale_linters = {
 let g:ale_fixers = {
 \     'javascript': [
 \         'eslint',
-\         'prettier-eslint'
+\         'prettier'
 \     ],
 \     'json': [
 \         'jq',
@@ -159,13 +166,14 @@ let g:ale_fixers = {
 \     'terraform': [
 \         'fmt'
 \     ],
+\     'typescript': [
+\         'eslint',
+\         'prettier'
+\     ],
 \     'yaml': [
 \         'prettier'
 \     ]
 \ }
-
-let g:ale_linters = {'python': ['pylint'], 'ruby': ['solargraph', 'rubocop'], }
-let g:ale_fixers = {'python': ['black'], 'ruby': ['solargraph', 'rubocop']}
 
 if has("nvim")
   au TermOpen * setlocal nonumber norelativenumber
