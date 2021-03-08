@@ -2,8 +2,6 @@
 " .config/nvim/init.vim
 "
 
-runtime! archlinux.vim
-
 syntax on
 filetype on
 filetype plugin on
@@ -56,7 +54,9 @@ Plug 'dense-analysis/ale'
 Plug 'hashivim/vim-packer'
 Plug 'hashivim/vim-terraform'
 Plug 'hashivim/vim-vagrant'
+Plug 'hashivim/vim-vaultproject'
 Plug 'itchyny/lightline.vim'
+Plug 'mbbill/undotree'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -83,6 +83,18 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = '•'
 let g:ale_sign_warning = '•'
 let g:ale_completion_enabled = 1
+let g:ale_set_balloons = 1
+let g:ale_floating_preview = 1
+let g:ale_hover_to_floating_preview = 1
+let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰']
+let g:ale_virtualtext_cursor = 1
+let g:ale_virtualtext_prefix = '<-- '
+
+let $FZF_DEFAULT_COMMAND = 'fd --follow --hidden --exclude .git'
+let $BAT_THEME = 'Nord'
+let g:fzf_preview_command = 'bat --color=always --style=header,grid --line-range :300 {}'
+let g:fzf_preview_filelist_command = 'fd --follow --hidden --exclude .git'
+let g:fzf_preview_directory_files_command = 'fd --follow --hidden --exclude .git'
 
 let g:ale_linters = {
 \     'sh': [
@@ -102,6 +114,7 @@ let g:ale_linters = {
 \     ],
 \     'python': [
 \         'black',
+\         'pylint',
 \         'flake8',
 \         'isort',
 \         'mypy',
@@ -110,13 +123,6 @@ let g:ale_linters = {
 \     'ruby': [
 \         'rubocop',
 \         'solargraph'
-\     ],
-\     'rust': [
-\         'cargo',
-\         'rls',
-\         'rustc',
-\         'clippy',
-\         'rustfmt'
 \     ],
 \     'scala': [
 \         'sbtserver'
@@ -157,9 +163,6 @@ let g:ale_fixers = {
 \     'ruby': [
 \         'rubocop'
 \     ],
-\     'rust': [
-\         'cargo'
-\     ],
 \     'sql': [
 \         'sqlfmt'
 \     ],
@@ -181,13 +184,15 @@ if has("nvim")
   au FileType fzf tunmap <buffer> <Esc>
 endif
 
-nnoremap <F2> :Buffers<CR>
-nnoremap <F3> :GFiles<CR>
-nnoremap <F4> :Rg<CR>
+nnoremap <F1> :Buffers<CR>
+nnoremap <F2> :Files<CR>
+nnoremap <F3> :Rg<CR>
 
 nnoremap <F5> :ALEFix<CR>
-nnoremap <F6> :ALEFindReferences<CR>
-nnoremap <F7> :ALEGoToDefinition<CR>
-nnoremap <F8> :ALEHover<CR>
+nnoremap <F6> :ALEHover<CR>
+nnoremap <F7> :ALEFindReferences<CR>
+nnoremap <F8> :ALEGoToDefinition<CR>
 
 nnoremap <F9> :NERDTreeFind<CR>
+
+nnoremap <F10> :UndotreeToggle<CR>
