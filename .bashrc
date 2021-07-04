@@ -4,7 +4,6 @@
 
 [[ $- != *i* ]] && return
 
-export COLORTERM="truecolor"
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin"
 export EDITOR="nvim"
 export VISUAL="nvim"
@@ -23,14 +22,15 @@ eval "$(pyenv virtualenv-init -)"
 
 export PATH="${HOME}/.poetry/bin:${PATH}"
 
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 [[ -f "${HOME}/.poetry/env" ]] && source "${HOME}/.poetry/env"
 
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 [[ -f "${HOME}/.fzf.bash" ]] && source "${HOME}/.fzf.bash"
 
-export BAT_THEME="Nord"
+# shellcheck disable=SC1091
+[[ -f "${HOME}/.cargo/env" ]] && . "${HOME}/.cargo/env"
 
-alias ls="ls --color=auto"
+# alias ls="ls --color=auto"
 alias vim="nvim"
-alias fd="fdfind"
+# alias fd="fdfind"
