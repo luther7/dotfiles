@@ -3,6 +3,7 @@
 "
 
 autocmd!
+syntax on
 filetype on
 filetype plugin on
 filetype indent on
@@ -10,6 +11,7 @@ set nocompatible
 set encoding=utf-8
 set fileencodings=utf-8
 set number
+set wrap
 set signcolumn=yes
 set cursorline
 set colorcolumn=100
@@ -23,7 +25,7 @@ set grepprg=rg\ --vimgrep
 
 call plug#begin("~/.local/share/nvim/plugged")
 Plug 'airblade/vim-rooter'
-Plug 'arcticicestudio/nord-vim'
+Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'hashivim/vim-terraform'
 Plug 'hrsh7th/nvim-compe'
@@ -38,8 +40,12 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'tsandall/vim-rego'
 call plug#end()
 
-colorscheme nord
-let g:lightline = { 'colorscheme': 'nord', }
+set background=light
+let g:solarized_visibility = "high"
+let g:solarized_contrast = "high"
+colorscheme solarized
+hi clear SignColumn
+let g:lightline = { 'colorscheme': 'solarized', }
 
 lua << EOF
 -- vim.lsp.set_log_level("debug")

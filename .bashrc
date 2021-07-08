@@ -4,12 +4,19 @@
 
 [[ $- != *i* ]] && return
 
+# export BASH_SILENCE_DEPRECATION_WARNING=1
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin"
 export EDITOR="nvim"
 export VISUAL="nvim"
 # export BROWSER="firefox-developer-edition"
 
-PS1=" \[\e[32m\]\W\[\e[m\] \[\e[37m\]>\[\e[m\] "
+export FZF_DEFAULT_OPTS="
+--color fg:-1,bg:-1,hl:33,fg+:235,bg+:-1,hl+:33
+--color info:236,prompt:136,pointer:234,marker:234,spinner:136
+"
+
+PS1=" \W $ "
+
 HISTSIZE=-1
 HISTFILESIZE=-1
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
@@ -34,3 +41,4 @@ export PATH="${HOME}/.poetry/bin:${PATH}"
 # alias ls="ls --color=auto"
 alias vim="nvim"
 # alias fd="fdfind"
+# alias sed="gsed"
