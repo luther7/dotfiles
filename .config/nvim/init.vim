@@ -37,6 +37,7 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'TimUntersberger/neogit'
 Plug 'tsandall/vim-rego'
 call plug#end()
 
@@ -242,7 +243,7 @@ nnoremap <F3> :Telescope live_grep<CR>
 nnoremap <F4> :Telescope grep_string<CR>
 nnoremap <F5> :Telescope lsp_definitions<CR>
 " nnoremap <F6> <CR>
-" nnoremap <F7> <CR>
+nnoremap <F7> :Neogit kind=split<CR>
 nnoremap <F8> :Telescope lsp_code_actions<CR>
 nnoremap <silent> <F9> <cmd>lua vim.lsp.buf.formatting()<CR>
 nnoremap <F10> :Telescope file_browser<CR>
