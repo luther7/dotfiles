@@ -22,6 +22,7 @@ set noswapfile
 set nowb
 set clipboard=unnamedplus
 set grepprg=rg\ --vimgrep
+set spell
 
 call plug#begin("~/.local/share/nvim/plugged")
 Plug 'airblade/vim-rooter'
@@ -37,7 +38,6 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'TimUntersberger/neogit'
 Plug 'tsandall/vim-rego'
 call plug#end()
 
@@ -75,6 +75,7 @@ for _, lsp in ipairs(servers) do
 end
 
 lspconfig.diagnosticls.setup {
+  on_attach = on_attach,
   filetypes = {
     "json",
     "markdown",
@@ -83,100 +84,95 @@ lspconfig.diagnosticls.setup {
     "terraform",
   },
   init_options = {
-   filetypes = {
-     python = "flake8",
-     sh = "shellcheck",
-   },
-   formatFiletypes = {
-     json = "prettier",
-     markdown = "pandoc",
-     python = "black",
-     terraform = "terraform",
-     yaml = "prettier",
-   },
-   linters = {
-     flake8 = {
-       sourceName = "flake8",
-       command = "flake8",
-       debounce = 100,
-       args = {
-         "--format=%(row)d,%(col)d,%(code).1s,%(code)s: %(text)s", "-" 
-       },
-       offsetLine = 0,
-       offsetColumn = 0,
-       formatLines = 1,
-       formatPattern = {
-         "(\\d+),(\\d+),({A-Z}),(.*)(\\r|\\n)*$",
-         {
-           line = 1,
-           column = 2,
-           security = 3,
-           message = 4
-         }
-       },
-       securities = {
-         W = "warning",
-         E = "error",
-         F = "error",
-         C = "error",
-         N = "error",
-       },
-     },
-     shellcheck = {
-       sourceName = "shellcheck",
-       command = "shellcheck",
-       args = {
-         "--format",
-         "json",
-         "-"
-       },
-       debounce = 100,
-       parseJson = {
-         line = "line",
-         column = "column",
-         endLine = "endLine",
-         endColumn = "endColumn",
-         message = "${message} { ${code} }",
-         security = "level",
-       },
-       securities = {
-         error = "error",
-         warning = "warning",
-         info = "info",
-         style = "hint",
-       },
-     },
-   },
-   formatters = {
-     black = {
-       command = "black",
-       args = {
-         "--quiet",
-         "-"
-       }
-     },
-     pandoc = {
-       command = "pandoc",
-       args = {
-         "-t",
-         "markdown"
-       }
-     },
-     prettier = {
-       command = "prettier",
-       args = {
-         "--stdin-filepath",
-         "%filepath"
-       }
-     },
-     terraform = {
-       command = "terraform",
-       args = {
-         "fmt",
-         "-"
-       }
-     },
-   },
+    filetypes = {
+      "json",
+      "markdown",
+      "python",
+      "sh",
+      "terraform",
+    },
+    formatFiletypes = {
+      json = "prettier",
+      markdown = "prettier",
+      python = "black",
+      terraform = "terraform",
+      yaml = "prettier",
+    },
+    linters = {
+      flake8 = {
+        command = "flake8",
+        debounce = 100,
+        args = {
+          "--format=%(row)d,%(col)d,%(code).1s,%(code)s: %(text)s", "-" 
+        },
+        offsetLine = 0,
+        offsetColumn = 0,
+        formatLines = 1,
+        formatPattern = {
+          "(\\d+),(\\d+),({A-Z}),(.*)(\\r|\\n)*$",
+          {
+            line = 1,
+            column = 2,
+            security = 3,
+            message = 4
+          }
+        },
+        securities = {
+          W = "warning",
+          E = "error",
+          F = "error",
+          C = "error",
+          N = "error",
+        },
+      },
+      shellcheck = {
+        sourceName = "shellcheck",
+        command = "shellcheck",
+        args = {
+          "--format",
+          "json",
+          "-"
+        },
+        debounce = 100,
+        parseJson = {
+          line = "line",
+          column = "column",
+          endLine = "endLine",
+          endColumn = "endColumn",
+          message = "${message} { ${code} }",
+          security = "level",
+        },
+        securities = {
+          error = "error",
+          warning = "warning",
+          info = "info",
+          style = "hint",
+        },
+      },
+    },
+    formatters = {
+      black = {
+        command = "black",
+        args = {
+          "--quiet",
+          "-"
+        }
+      },
+      prettier = {
+        command = "prettier",
+        args = {
+          "--stdin-filepath",
+          "%filepath"
+        }
+      },
+      terraform = {
+        command = "terraform",
+        args = {
+          "fmt",
+          "-"
+        }
+      },
+    },
   },
 }
 
@@ -216,6 +212,7 @@ require'compe'.setup {
     vsnip = true;
     ultisnips = true;
     luasnip = true;
+    spell = true;
     treesitter = true;
   };
 }
@@ -243,7 +240,7 @@ nnoremap <F3> :Telescope live_grep<CR>
 nnoremap <F4> :Telescope grep_string<CR>
 nnoremap <F5> :Telescope lsp_definitions<CR>
 " nnoremap <F6> <CR>
-nnoremap <F7> :Neogit kind=split<CR>
+" nnoremap <F7 <CR>
 nnoremap <F8> :Telescope lsp_code_actions<CR>
 nnoremap <silent> <F9> <cmd>lua vim.lsp.buf.formatting()<CR>
 nnoremap <F10> :Telescope file_browser<CR>
