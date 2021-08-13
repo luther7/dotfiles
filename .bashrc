@@ -38,7 +38,15 @@ export PATH="${HOME}/.poetry/bin:${PATH}"
 # shellcheck disable=SC1091
 [[ -f "${HOME}/.cargo/env" ]] && . "${HOME}/.cargo/env"
 
-# alias ls="ls --color=auto"
+# shellcheck disable=SC1091
+[[ -f "${HOME}/.git-completion.bash" ]] && . "${HOME}/.git-completion.bash"
+
 alias vim="nvim"
+
+# Linux
+alias ls="ls --color=auto"
+
+# MacOS
 # alias fd="fdfind"
 # alias sed="gsed"
+# alias head="ghead"
