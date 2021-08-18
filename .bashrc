@@ -4,23 +4,21 @@
 
 [[ $- != *i* ]] && return
 
-# export BASH_SILENCE_DEPRECATION_WARNING=1
+shopt -s histappend
+
+export PROMPT_COMMAND="history -a; history -c; history -r; ${PROMPT_COMMAND}"
+
+PS1=" \W $ "
+
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin"
 export EDITOR="nvim"
 export VISUAL="nvim"
-# export BROWSER="firefox-developer-edition"
+export BROWSER="firefox-developer-edition"
 
 export FZF_DEFAULT_OPTS="
 --color fg:-1,bg:-1,hl:33,fg+:235,bg+:-1,hl+:33
 --color info:236,prompt:136,pointer:234,marker:234,spinner:136
 "
-
-PS1=" \W $ "
-
-HISTSIZE=-1
-HISTFILESIZE=-1
-PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
-shopt -s histappend
 
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="${PYENV_ROOT}/bin:${PATH}"
@@ -45,8 +43,10 @@ alias vim="nvim"
 
 # Linux
 alias ls="ls --color=auto"
+alias fd="fdfind"
 
 # MacOS
-# alias fd="fdfind"
+# export BASH_SILENCE_DEPRECATION_WARNING=1
+# alias ls="gls --color=auto"
 # alias sed="gsed"
 # alias head="ghead"
