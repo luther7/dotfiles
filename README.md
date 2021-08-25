@@ -1,1 +1,5 @@
 # Dotfiles
+
+- neovim
+- tmux
+- bash
