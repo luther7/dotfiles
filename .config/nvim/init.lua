@@ -264,8 +264,8 @@ require('telescope').setup {
       i = {['<esc>'] = actions.close},
       n = {['<esc>'] = actions.close, ['q'] = actions.close}
     },
+    file_ignore_patterns = {'.git', 'node_modules'},
     previewer = false,
-    disable_devicons = true,
     theme = 'get_dropdown'
   }
 }
