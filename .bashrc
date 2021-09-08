@@ -44,13 +44,29 @@ alias vim="nvim"
 alias prw="gh pr create --web"
 alias prv="gh pr view --web"
 
+#
 # Linux
+#
+
 # alias ls="ls --color=auto"
 # alias fd="fdfind"
 # export BROWSER="firefox-developer-edition"
 
+# END Linux
+
+#
 # MacOS
+#
+
 export BASH_SILENCE_DEPRECATION_WARNING=1
 alias ls="gls --color=auto"
 alias sed="gsed"
 alias head="ghead"
+
+JAVA_11_HOME="$(/usr/libexec/java_home -v11)"
+export JAVA_HOME="${JAVA_11_HOME}"
+export PATH="${HOME}/Library/Application Support/Coursier/bin:${PATH}"
+
+#
+# END MacOS
+#

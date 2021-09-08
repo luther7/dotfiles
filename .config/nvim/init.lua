@@ -31,6 +31,8 @@ o.wb = false
 o.spell = true
 o.clipboard = 'unnamedplus'
 
+vim.opt_global.shortmess:remove('F')
+
 if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
 
 local disabled_built_ins = {
@@ -59,6 +61,7 @@ require('packer').startup(function()
   use 'altercation/vim-colors-solarized'
   use 'b3nj5m1n/kommentary'
   use 'christoomey/vim-tmux-navigator'
+  use 'editorconfig/editorconfig-vim'
   use 'hashivim/vim-terraform'
   use 'hrsh7th/nvim-compe'
   use 'hrsh7th/vim-vsnip'
@@ -77,6 +80,7 @@ require('packer').startup(function()
   }
   use 'phaazon/hop.nvim'
   use 'tsandall/vim-rego'
+  use 'scalameta/nvim-metals'
   use 'wbthomason/packer.nvim'
 end)
 
@@ -91,6 +95,8 @@ cmd('hi clear SignColumn')
 
 vim.g.solarized_visibility = 'high'
 vim.g.solarized_contrast = 'high'
+vim.g.solarized_italic = 0
+vim.g.solarized_bold = 0
 
 cmd('let g:lightline = { \'colorscheme\': \'solarized\', }')
 
@@ -180,6 +186,17 @@ lspconfig.diagnosticls.setup {
   }
 }
 
+cmd('au BufRead,BufNewFile *.sbt set filetype=scala')
+
+metals_config = require('metals').bare_config
+metals_config.init_options.statusBarProvider = 'on'
+
+cmd [[augroup lsp
+      au!
+      au FileType scala,sbt lua require('metals').initialize_or_attach(metals_config)
+      augroup end
+    ]]
+
 --
 -- Treesitter
 --
@@ -264,9 +281,9 @@ require('telescope').setup {
       i = {['<esc>'] = actions.close},
       n = {['<esc>'] = actions.close, ['q'] = actions.close}
     },
-    file_ignore_patterns = {'.git', 'node_modules'},
-    previewer = false,
-    theme = 'get_dropdown'
+    file_ignore_patterns = {'.git', 'node_modules', '%.png', 'h.jpg', '%.jpeg'},
+    theme = 'get_dropdown',
+    layout_strategy = 'flex'
   }
 }
 
@@ -279,13 +296,13 @@ map('s', '<Tab>', 'v:lua.tab_complete()', {expr = true})
 map('i', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
 map('s', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
 
-map('n', '<F1>', '<CMD>Telescope buffers <CR>', {noremap = true})
-map('n', '<F2>', '<CMD>Telescope find_files hidden=true <CR>', {noremap = true})
-map('n', '<F3>', '<CMD>Telescope live_grep <CR>', {noremap = true})
-map('n', '<F4>', '<CMD>Telescope grep_string <CR>', {noremap = true})
-map('n', '<F5>', '<CMD>HopWord <CR>', {noremap = true})
-map('n', '<F6>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
-map('n', '<F7>', '<CMD>Telescope command_history <CR>', {noremap = true})
-map('n', '<F8>', '<CMD>Telescope file_browser hidden=true <CR>', {noremap = true})
+map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true})
+map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
+map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
+map('n', '<F4>', '<CMD>Telescope grep_string previewer=false <CR>', {noremap = true})
+map('n', '<F5>', '<CMD>Telescope lsp_implementations previewer=false <CR>', {noremap = true})
+map('n', '<F6>', '<CMD>HopWord <CR>', {noremap = true})
+map('n', '<F7>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
+map('n', '<F8>', '<CMD>Telescope command_history <CR>', {noremap = true})
 map('n', '<F9>', '<CMD>Telescope lsp_code_actions <CR>', {noremap = true})
 map('n', '<F10>', '<CMD>lua vim.lsp.buf.formatting() <CR>', {noremap = true})
