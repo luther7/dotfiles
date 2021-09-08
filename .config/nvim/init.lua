@@ -3,45 +3,15 @@
 --
 local api = vim.api
 local execute = vim.api.nvim_command
-local map = vim.api.nvim_set_keymap
 local fn = vim.fn
 local cmd = vim.cmd
 local o = vim.o
 
---
--- Settings
---
-
-cmd('syntax on')
-cmd('filetype plugin indent on')
-
-o.compatible = false
-o.encoding = 'UTF-8'
-o.fileencodings = 'UTF-8'
-o.number = true
-o.wrap = true
-o.signcolumn = 'yes'
-o.cursorline = true
-o.colorcolumn = '100'
-o.expandtab = true
-o.tabstop = 2
-o.shiftwidth = 2
-o.swapfile = false
-o.wb = false
-o.spell = true
-o.clipboard = 'unnamedplus'
-
-vim.opt_global.shortmess:remove('F')
-
-if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
-
-local disabled_built_ins = {
-  'netrw', 'netrwPlugin', 'netrwSettings', 'netrwFileHandlers', 'gzip', 'zip', 'zipPlugin', 'tar',
-  'tarPlugin', 'getscript', 'getscriptPlugin', 'vimball', 'vimballPlugin', '2html_plugin',
-  'logipat', 'rrhelper', 'spellfile_plugin', 'matchit'
-}
-
-for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
+local function map(mode, lhs, rhs, opts)
+  local options = {noremap = true}
+  if opts then options = vim.tbl_extend('force', options, opts) end
+  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+end
 
 --
 -- Packer
@@ -83,6 +53,42 @@ require('packer').startup(function()
   use 'scalameta/nvim-metals'
   use 'wbthomason/packer.nvim'
 end)
+
+--
+-- Settings
+--
+
+cmd('syntax on')
+cmd('filetype plugin indent on')
+
+o.compatible = false
+o.encoding = 'UTF-8'
+o.fileencodings = 'UTF-8'
+o.number = true
+o.wrap = true
+o.signcolumn = 'yes'
+o.cursorline = true
+o.colorcolumn = '100'
+o.expandtab = true
+o.tabstop = 2
+o.shiftwidth = 2
+o.swapfile = false
+o.wb = false
+o.spell = true
+o.clipboard = 'unnamedplus'
+
+vim.opt_global.completeopt = {'menu', 'noinsert', 'noselect'}
+vim.opt_global.shortmess:remove('F'):append('c')
+
+if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
+
+local disabled_built_ins = {
+  'netrw', 'netrwPlugin', 'netrwSettings', 'netrwFileHandlers', 'gzip', 'zip', 'zipPlugin', 'tar',
+  'tarPlugin', 'getscript', 'getscriptPlugin', 'vimball', 'vimballPlugin', '2html_plugin',
+  'logipat', 'rrhelper', 'spellfile_plugin', 'matchit'
+}
+
+for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
 
 --
 -- Theme
@@ -186,16 +192,33 @@ lspconfig.diagnosticls.setup {
   }
 }
 
-cmd('au BufRead,BufNewFile *.sbt set filetype=scala')
+vim.cmd([[hi! link LspReferenceText CursorColumn]])
+vim.cmd([[hi! link LspReferenceRead CursorColumn]])
+vim.cmd([[hi! link LspReferenceWrite CursorColumn]])
+
+--
+-- Metals
+--
 
 metals_config = require('metals').bare_config
+
+metals_config.settings = {
+  showImplicitArguments = true,
+  excludedPackages = {'akka.actor.typed.javadsl', 'com.github.swagger.akka.javadsl'}
+}
+
 metals_config.init_options.statusBarProvider = 'on'
 
-cmd [[augroup lsp
-      au!
-      au FileType scala,sbt lua require('metals').initialize_or_attach(metals_config)
-      augroup end
-    ]]
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+metals_config.capabilities = capabilities
+
+cmd([[augroup lsp]])
+cmd([[autocmd!]])
+cmd([[autocmd FileType scala setlocal omnifunc=v:lua.vim.lsp.omnifunc]])
+cmd([[autocmd FileType scala,sbt lua require("metals").initialize_or_attach(metals_config)]])
+cmd([[augroup end]])
 
 --
 -- Treesitter
@@ -295,6 +318,7 @@ map('i', '<Tab>', 'v:lua.tab_complete()', {expr = true})
 map('s', '<Tab>', 'v:lua.tab_complete()', {expr = true})
 map('i', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
 map('s', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
+map('i', '<CR>', 'compe#confirm("\\<CR>")', {expr = true})
 
 map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true})
 map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
