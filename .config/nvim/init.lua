@@ -115,8 +115,8 @@ require'nvim-web-devicons'.setup {default = true}
 local lspconfig = require('lspconfig')
 
 local servers = {
-  'bashls', 'dockerls', 'jsonls', 'pyright', 'solargraph', 'terraformls', 'tsserver', 'vimls',
-  'yamlls'
+  'bashls', 'dockerls', 'jsonls', 'pyright', 'rnix', 'solargraph', 'terraformls', 'tsserver',
+  'vimls', 'yamlls'
 }
 
 for _, lsp in ipairs(servers) do
@@ -125,7 +125,7 @@ end
 
 lspconfig.diagnosticls.setup {
   on_attach = on_attach,
-  filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua'},
+  filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua', 'nix'},
   init_options = {
     filetypes = {python = 'flake8', sh = 'shellcheck', dockerfile = 'hadolint'},
     formatFiletypes = {
@@ -134,7 +134,8 @@ lspconfig.diagnosticls.setup {
       python = 'black',
       terraform = 'terraform',
       yaml = 'prettier',
-      lua = 'luaformat'
+      lua = 'luaformat',
+      nix = 'nixfmt'
     },
     linters = {
       flake8 = {
@@ -200,25 +201,25 @@ vim.cmd([[hi! link LspReferenceWrite CursorColumn]])
 -- Metals
 --
 
-metals_config = require('metals').bare_config
-
-metals_config.settings = {
-  showImplicitArguments = true,
-  excludedPackages = {'akka.actor.typed.javadsl', 'com.github.swagger.akka.javadsl'}
-}
-
-metals_config.init_options.statusBarProvider = 'on'
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-metals_config.capabilities = capabilities
-
-cmd([[augroup lsp]])
-cmd([[autocmd!]])
-cmd([[autocmd FileType scala setlocal omnifunc=v:lua.vim.lsp.omnifunc]])
-cmd([[autocmd FileType scala,sbt lua require("metals").initialize_or_attach(metals_config)]])
-cmd([[augroup end]])
+-- metals_config = require('metals').bare_config
+-- 
+-- metals_config.settings = {
+--   showImplicitArguments = true,
+--   excludedPackages = {'akka.actor.typed.javadsl', 'com.github.swagger.akka.javadsl'}
+-- }
+-- 
+-- metals_config.init_options.statusBarProvider = 'on'
+-- 
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities.textDocument.completion.completionItem.snippetSupport = true
+-- 
+-- metals_config.capabilities = capabilities
+-- 
+-- cmd([[augroup lsp]])
+-- cmd([[autocmd!]])
+-- cmd([[autocmd FileType scala setlocal omnifunc=v:lua.vim.lsp.omnifunc]])
+-- cmd([[autocmd FileType scala,sbt lua require("metals").initialize_or_attach(metals_config)]])
+-- cmd([[augroup end]])
 
 --
 -- Treesitter
