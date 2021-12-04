@@ -1,6 +1,7 @@
 --
 -- init.lua
 --
+
 local api = vim.api
 local execute = vim.api.nvim_command
 local fn = vim.fn
