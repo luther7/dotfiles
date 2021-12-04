@@ -1,5 +1,1 @@
 # Dotfiles
-
-- neovim
-- tmux
-- bash
