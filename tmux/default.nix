@@ -4,6 +4,7 @@
     enable = true;
     terminal = "$TERM";
     secureSocket = true;
+
     plugins = with pkgs; [
       tmuxPlugins.vim-tmux-navigator
       {
@@ -19,6 +20,7 @@
         '';
       }
     ];
+
     extraConfig = builtins.readFile ./tmux.conf;
   };
 }
