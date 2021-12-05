@@ -65,6 +65,7 @@ in
       nodePackages.prettier
       nodePackages.typescript-language-server
       nodePackages.yaml-language-server
+      openssh
       pandoc
       postgresql
       python39
