@@ -25,11 +25,10 @@ echo "experimental-features = nix-command flakes" > "${HOME}/.config/nix/nix.con
 nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 nix-channel --update
 export NIX_PATH="${HOME}/.nix-defexpr/channels${NIX_PATH:+:}${NIX_PATH}"
-nix-shell '<home-manager>' -A install
 
 rm -rf "${HOME}/.config/nixpkgs"
 nix-env -i git
 git clone https://github.com/nesyamun/dotfiles "${HOME}/.config/nixpkgs"
 nix-env -e git
 
-home-manager switch
+nix-shell '<home-manager>' -A install
