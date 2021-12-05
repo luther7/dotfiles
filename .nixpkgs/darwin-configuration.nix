@@ -58,6 +58,8 @@ in {
     scala
     shellcheck
     solargraph
+    sqlite
+    syncthing
     tcpdump
     terraform
     terraform-ls
@@ -75,18 +77,29 @@ in {
     autoUpdate = true;
     cleanup = "zap";
     taps = [
-      "homebrew/bundle"
-      "homebrew/core"
       "homebrew/cask"
       "homebrew/cask-fonts"
+      "homebrew/cask-versions"
+      "homebrew/bundle"
+      "homebrew/core"
     ];
     casks = [
+      "1password"
+      "1password-cli"
       "caffeine"
+      "chromium"
       "docker"
       "font-caskaydia-cove-nerd-font"
+      "homebrew/cask-versions/firefox-developer-edition"
       "iterm2"
       # "joplin"
+      "microsoft-excel"
+      "microsoft-outlook"
+      "microsoft-powerpoint"
+      "microsoft-remote-desktop"
+      "microsoft-word"
       "mullvadvpn"
+      "slack"
       "swinsian"
       "rectangle"
       "vlc"
