@@ -3,15 +3,15 @@ let
   locale = "C.UTF-8";
   homedir = builtins.getEnv "HOME";
   username = builtins.getEnv "USER";
-in 
+in
 {
-    imports = [
-      ./git/default.nix 
-      ./vim/default.nix 
-    ];
+  imports = [
+    ./git.nix
+    ./vim/default.nix
+    ./tmux.nix
+  ];
 
   home = {
-
     username = username;
     homeDirectory = homedir;
     stateVersion = "21.03";
