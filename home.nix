@@ -6,9 +6,11 @@ let
 in
 {
   imports = [
+    ./bash.nix
+    ./fzf.nix
     ./git.nix
     ./vim/default.nix
-    ./tmux.nix
+    ./tmux/default.nix
   ];
 
   home = {
@@ -39,11 +41,10 @@ in
       docker-compose
       fd
       fontconfig
-      fzf
       gcc
       gh
-      gitAndTools.gitFull
       gnupg
+      git
       go
       google-cloud-sdk
       htop
@@ -87,7 +88,6 @@ in
       tcpdump
       terraform
       terraform-ls
-      tmux
       tree
       vault
       watch
