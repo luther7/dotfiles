@@ -1,24 +1,39 @@
 { config, lib, pkgs, ... }:
-let
-  homedir = builtins.getEnv "HOME";
-  locale = "C.UTF-8";
-in
-{
+let homedir = builtins.getEnv "HOME";
+in {
   programs.bash = {
     enable = true;
 
     initExtra = builtins.readFile ./init;
 
     sessionVariables = {
-      LANG = locale;
-      LC_ALL = locale;
       EDITOR = "nvim";
       VISUAL = "nvim";
+      PS1 = "  \\W $ ";
       JAVA_HOME = "${pkgs.openjdk.home}";
     } // (if (pkgs.stdenv.system == "x86_64-darwin") then {
       BASH_SILENCE_DEPRECATION_WARNING = 1;
       HOMEBREW_NO_AUTO_UPDATE = 1;
     } else
       { });
+
+    shellAliases = {
+      vim = "nvim";
+      prw = "gh pr create --web";
+      prv = "gh pr view --web";
+    } // (if (pkgs.stdenv.system == "x86_64-darwin") then {
+      rbs =
+        "darwin-rebuild switch -I darwin-config=${homedir}/.config/nixpkgs/darwin.nix";
+    } else {
+      rbs = "home-manager switch";
+    });
+
+    shellOptions = [ "histappend" "checkwinsize" "extglob" ]
+      ++ (if (pkgs.stdenv.system == "x86_64-darwin") then
+        [ ]
+      else [
+        "globstar"
+        "checkjobs"
+      ]);
   };
 }

@@ -1,5 +1,4 @@
-{ config, pkgs, lib, ... }:
-{
+{ config, pkgs, lib, ... }: {
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -33,10 +32,8 @@
       # nvim-metals
     ];
 
-    extraConfig = builtins.concatStringsSep "\n" [
-      ''
-        luafile ${builtins.toString ./init-lua.lua}
-      ''
-    ];
+    extraConfig = builtins.concatStringsSep "\n" [''
+      luafile ${builtins.toString ./init-lua.lua}
+    ''];
   };
 }

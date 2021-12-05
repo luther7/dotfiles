@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#
+# bootstrap-darwin.sh
+#
+
+set -euxo pipefail
+
+echo "TODO"

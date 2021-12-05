@@ -1,7 +1,22 @@
 { config, pkgs, ... }:
-let home-dir = builtins.getEnv ("HOME");
-in
-{
+let
+  homedir = builtins.getEnv "HOME";
+  username = builtins.getEnv "USER";
+in {
+  # $ darwin-rebuild switch -I darwin-config="${HOME}/.config/nixpkgs/darwin.nix"
+  environment.darwinConfig = "${homedir}/.config/nixpkgs/darwin.nix";
+
+  imports = [ <home-manager/nix-darwin> ];
+
+  users.users."${username}" = {
+    name = username;
+    home = homedir;
+  };
+
+  home-manager.useUserPackages = true;
+  home-manager.useGlobalPkgs = true;
+  home-manager.users."${username}" = import ./home.nix;
+
   homebrew = {
     enable = true;
     autoUpdate = true;
@@ -40,11 +55,15 @@ in
 
     extraConfig = ''
       brew "docker-credential-helper-ecr"
-      cask_args appdir: "${home-dir}/Applications"
+      cask_args appdir: "${homedir}/Applications"
     '';
   };
 
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
+
+  programs.zsh.enable = true;
+  programs.bash.enable = true;
+
   system.stateVersion = 4;
 }
