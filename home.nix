@@ -5,6 +5,7 @@ let
 in {
   imports = [
     ./bash/default.nix
+    ./direnv.nix
     ./fzf.nix
     ./git.nix
     ./vim/default.nix
@@ -28,9 +29,8 @@ in {
       cmake
       conftest
       coreutils-full
-      coursier
+      # coursier
       curl
-      direnv
       docker-credential-helpers
       docker-compose
       fd
@@ -39,11 +39,12 @@ in {
       gh
       gnupg
       git
-      go
+      # go
       google-cloud-sdk
       htop
       httpie
-      jdk11
+      # jdk11
+      # jdk
       jq
       kubectl
       libssh2
@@ -65,17 +66,20 @@ in {
       postgresql
       python39
       python39Packages.black
-      python39Packages.isort
       python39Packages.flake8
+      python39Packages.isort
+      python39Packages.mypy
+      # python39Packages.pip
+      # python39Packages.virtualenv
       pyright
       ripgrep
       rnix-lsp
-      ruby
-      rubocop
+      # ruby
+      # rubocop
       # sbt
       # scala
       shellcheck
-      solargraph
+      # solargraph
       sqlite
       syncthing
       tcpdump
