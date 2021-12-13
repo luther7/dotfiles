@@ -47,6 +47,7 @@ in {
       # jdk
       jq
       kubectl
+      less
       libssh2
       lua
       luarocks
@@ -69,8 +70,8 @@ in {
       python39Packages.flake8
       python39Packages.isort
       python39Packages.mypy
-      # python39Packages.pip
-      # python39Packages.virtualenv
+      python39Packages.pip
+      python39Packages.virtualenv
       pyright
       ripgrep
       rnix-lsp

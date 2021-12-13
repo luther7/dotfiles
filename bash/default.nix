@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 let homedir = builtins.getEnv "HOME";
-in {
+in
+{
   programs.bash = {
     enable = true;
 
@@ -19,6 +20,7 @@ in {
 
     shellAliases = {
       vim = "nvim";
+      rv = "gh repo view -w";
       prw = "gh pr create --web";
       prv = "gh pr view --web";
     } // (if (pkgs.stdenv.system == "x86_64-darwin") then {
@@ -30,10 +32,10 @@ in {
 
     shellOptions = [ "histappend" "checkwinsize" "extglob" ]
       ++ (if (pkgs.stdenv.system == "x86_64-darwin") then
-        [ ]
-      else [
-        "globstar"
-        "checkjobs"
-      ]);
+      [ ]
+    else [
+      "globstar"
+      "checkjobs"
+    ]);
   };
 }
