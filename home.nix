@@ -33,6 +33,8 @@ in {
       curl
       docker-credential-helpers
       docker-compose
+      dig
+      envsubst
       fd
       fontconfig
       gcc
