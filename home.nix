@@ -26,6 +26,8 @@ in {
     packages = with pkgs; [
       automake
       awscli
+      beets
+      chromaprint
       cmake
       conftest
       coreutils-full
@@ -43,10 +45,10 @@ in {
       git
       # go
       google-cloud-sdk
+      gst_all_1.gstreamer
       htop
       httpie
-      # jdk11
-      # jdk
+      jdk
       jq
       kubectl
       less
@@ -73,6 +75,8 @@ in {
       python39Packages.isort
       python39Packages.mypy
       python39Packages.pip
+      python39Packages.pyacoustid
+      python39Packages.requests
       python39Packages.virtualenv
       pyright
       ripgrep
