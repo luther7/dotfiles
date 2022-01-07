@@ -4,7 +4,7 @@
     enableBashIntegration = true;
 
     defaultOptions = [
-      "--color fg:-1,bg:-1,hl:33,fg+:235,bg+:-1,hl+:33 --color info:236,prompt:136,pointer:234,marker:234,spinner:136"
+      "--color=bg+:#2e3440 --color=fg:#e5e9f0,bg:#3b4252,hl:#81a1c1 --color=fg+:#e5e9f0,hl+:#81a1c1 --color=info:#eacb8a,prompt:#bf6069,pointer:#b48dac --color=marker:#a3be8b,spinner:#b48dac,header:#a3be8b"
     ];
   };
 }

@@ -54,17 +54,18 @@ for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
 -- Theme
 --
 
-o.background = 'light'
-
-cmd('colo solarized')
 cmd('hi clear SignColumn')
 
-vim.g.solarized_visibility = 'high'
-vim.g.solarized_contrast = 'high'
-vim.g.solarized_italic = 0
-vim.g.solarized_bold = 0
+o.background = 'dark'
+o.termguicolors = true
 
-cmd('let g:lightline = { \'colorscheme\': \'solarized\', }')
+vim.g.nord_italic = 0
+vim.g.nord_bold = 0
+
+cmd('colorscheme nord')
+cmd('hi! Normal guibg=NONE')
+
+cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
 
 require'nvim-web-devicons'.setup {default = true}
 
@@ -75,7 +76,7 @@ require'nvim-web-devicons'.setup {default = true}
 local lspconfig = require('lspconfig')
 
 local servers = {
-  'bashls', 'dockerls', 'jsonls', 'pyright', 'rnix', 'solargraph', 'terraformls', 'tsserver',
+  'bashls', 'dockerls', 'jsonls', 'pyright', 'rnix', 'terraformls', 'tsserver',
   'vimls', 'yamlls'
 }
 
@@ -87,7 +88,7 @@ lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua', 'nix'},
   init_options = {
-    filetypes = {python = 'flake8', sh = 'shellcheck', dockerfile = 'hadolint'},
+    filetypes = {sh = 'shellcheck', dockerfile = 'hadolint'},
     formatFiletypes = {
       json = 'prettier',
       markdown = 'prettier',
@@ -98,18 +99,6 @@ lspconfig.diagnosticls.setup {
       nix = 'nixfmt'
     },
     linters = {
-      flake8 = {
-        command = 'flake8',
-        debounce = 100,
-        args = {'--format=%(row)d,%(col)d,%(code).1s,%(code)s: %(text)s', '-'},
-        offsetLine = 0,
-        offsetColumn = 0,
-        formatLines = 1,
-        formatPattern = {
-          '(\\d+),(\\d+),({A-Z}),(.*)(\\r|\\n)*$', {line = 1, column = 2, security = 3, message = 4}
-        },
-        securities = {W = 'warning', E = 'error', F = 'error', C = 'error', N = 'error'}
-      },
       shellcheck = {
         sourceName = 'shellcheck',
         command = 'shellcheck',
@@ -285,8 +274,8 @@ map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true}
 map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
 map('n', '<F4>', '<CMD>Telescope grep_string previewer=false <CR>', {noremap = true})
-map('n', '<F5>', '<CMD>Telescope lsp_implementations previewer=false <CR>', {noremap = true})
-map('n', '<F6>', '<CMD>HopWord <CR>', {noremap = true})
+-- map('n', '<F5>', '<CMD><CR>', {noremap = true})
+map('n', '<F6>', '<CMD>lua vim.lsp.buf.hover() <CR>', {noremap = true})
 map('n', '<F7>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
 map('n', '<F8>', '<CMD>Telescope command_history <CR>', {noremap = true})
 map('n', '<F9>', '<CMD>Telescope lsp_code_actions <CR>', {noremap = true})

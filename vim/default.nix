@@ -1,4 +1,17 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, ... }:
+let
+  pluginGit = ref: repo: pkgs.vimUtils.buildVimPluginFrom2Nix {
+    pname = "${lib.strings.sanitizeDerivationName repo}";
+    version = ref;
+    src = builtins.fetchGit {
+      url = "https://github.com/${repo}.git";
+      ref = ref;
+    };
+  };
+
+  plugin = pluginGit "HEAD";
+in
+{
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -10,7 +23,6 @@
     plugins = with pkgs.vimPlugins; [
       completion-nvim
       editorconfig-vim
-      hop-nvim
       kommentary
       lightline-vim
       nvim-compe
@@ -21,7 +33,7 @@
       popup-nvim
       telescope-fzf-native-nvim
       telescope-nvim
-      vim-colors-solarized
+      nord-nvim
       vim-markdown-toc
       vim-nix
       vim-rooter
@@ -32,8 +44,10 @@
       # nvim-metals
     ];
 
-    extraConfig = builtins.concatStringsSep "\n" [''
-      luafile ${builtins.toString ./init-lua.lua}
-    ''];
+    extraConfig = builtins.concatStringsSep "\n" [
+      ''
+        luafile ${builtins.toString ./init-lua.lua}
+      ''
+    ];
   };
 }

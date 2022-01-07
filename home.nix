@@ -26,17 +26,17 @@ in {
     packages = with pkgs; [
       automake
       awscli
-      beets
-      chromaprint
+      # beets
+      # chromaprint
       cmake
-      conftest
+      # conftest
       coreutils-full
       # coursier
       curl
       docker-credential-helpers
       docker-compose
       dig
-      envsubst
+      # envsubst
       fd
       fontconfig
       gcc
@@ -45,10 +45,8 @@ in {
       git
       # go
       google-cloud-sdk
-      gst_all_1.gstreamer
+      # gst_all_1.gstreamer
       htop
-      httpie
-      jdk
       jq
       kubectl
       less
@@ -64,20 +62,18 @@ in {
       nodePackages.dockerfile-language-server-nodejs
       nodePackages.vscode-json-languageserver
       nodePackages.prettier
+      nodePackages.prettier-plugin-toml
       nodePackages.typescript-language-server
       nodePackages.yaml-language-server
       openssh
       pandoc
-      postgresql
-      python39
-      python39Packages.black
-      python39Packages.flake8
-      python39Packages.isort
-      python39Packages.mypy
-      python39Packages.pip
-      python39Packages.pyacoustid
-      python39Packages.requests
-      python39Packages.virtualenv
+      # postgresql
+      poetry
+      python310
+      # python310Packages.black
+      # python310Packages.isort
+      # python310Packages.pip
+      # python310Packages.virtualenv
       pyright
       ripgrep
       rnix-lsp
@@ -88,7 +84,6 @@ in {
       shellcheck
       # solargraph
       sqlite
-      syncthing
       tcpdump
       terraform
       terraform-ls
