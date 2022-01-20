@@ -1,17 +1,17 @@
 { config, pkgs, lib, ... }:
 let
-  pluginGit = ref: repo: pkgs.vimUtils.buildVimPluginFrom2Nix {
-    pname = "${lib.strings.sanitizeDerivationName repo}";
-    version = ref;
-    src = builtins.fetchGit {
-      url = "https://github.com/${repo}.git";
-      ref = ref;
+  pluginGit = ref: repo:
+    pkgs.vimUtils.buildVimPluginFrom2Nix {
+      pname = "${lib.strings.sanitizeDerivationName repo}";
+      version = ref;
+      src = builtins.fetchGit {
+        url = "https://github.com/${repo}.git";
+        ref = ref;
+      };
     };
-  };
 
   plugin = pluginGit "HEAD";
-in
-{
+in {
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -44,10 +44,8 @@ in
       # nvim-metals
     ];
 
-    extraConfig = builtins.concatStringsSep "\n" [
-      ''
-        luafile ${builtins.toString ./init-lua.lua}
-      ''
-    ];
+    extraConfig = builtins.concatStringsSep "\n" [''
+      luafile ${builtins.toString ./init-lua.lua}
+    ''];
   };
 }

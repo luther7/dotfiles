@@ -7,6 +7,9 @@
       tmuxPlugins.vim-tmux-navigator
       {
         plugin = tmuxPlugins.nord;
+        extraConfig = ''
+          set -g @nord_tmux_no_patched_font "1"
+        '';
       }
       {
         plugin = tmuxPlugins.yank;

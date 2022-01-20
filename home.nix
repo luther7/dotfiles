@@ -24,11 +24,11 @@ in {
     };
 
     packages = with pkgs; [
-      automake
+      # automake
       awscli
       # beets
       # chromaprint
-      cmake
+      # cmake
       # conftest
       coreutils-full
       # coursier
@@ -39,7 +39,7 @@ in {
       # envsubst
       fd
       fontconfig
-      gcc
+      # gcc
       gh
       gnupg
       git
@@ -54,7 +54,7 @@ in {
       lua
       luarocks
       # metals
-      ninja
+      # ninja
       nixfmt
       nodejs
       nodePackages.bash-language-server
@@ -70,10 +70,9 @@ in {
       # postgresql
       poetry
       python310
-      # python310Packages.black
-      # python310Packages.isort
-      # python310Packages.pip
-      # python310Packages.virtualenv
+      # python39
+      # python39Packages.black
+      # python39Packages.isort
       pyright
       ripgrep
       rnix-lsp

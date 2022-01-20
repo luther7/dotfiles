@@ -1,5 +1,0 @@
-# shellcheck shell=bash
-PATH="${PATH}:${HOME}/.nix-profile/bin/";
-PROMPT_COMMAND="history -a; history -c; history -r; ${PROMPT_COMMAND}";
-# eval "$(op signin my)"
-[[ -z "${SSH_AUTH_SOCK}" ]] && eval "$(ssh-agent -s)"
