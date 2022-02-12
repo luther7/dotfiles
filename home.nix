@@ -19,12 +19,6 @@ in {
     homeDirectory = homedir;
     stateVersion = "21.03";
 
-    sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
-      JAVA_HOME = "${pkgs.openjdk.home}";
-    };
-
     packages = with pkgs; [
       awscli
       coreutils-full
@@ -74,6 +68,16 @@ in {
       watch
       wget
     ];
+
+    language = {
+      base = "en_US.UTF-8";
+      collate = "en_US.UTF-8";
+      ctype = "en_US.UTF-8";
+      messages = "en_US.UTF-8";
+      monetary = "en_US.UTF-8";
+      numeric = "en_US.UTF-8";
+      time = "en_US.UTF-8";
+    };
   };
 
   programs.home-manager.enable = true;

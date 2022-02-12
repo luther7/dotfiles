@@ -28,20 +28,18 @@ in {
       nvim-compe
       nvim-lspconfig
       nvim-treesitter
-      nvim-web-devicons
       plenary-nvim
       popup-nvim
       telescope-fzf-native-nvim
       telescope-nvim
-      nord-nvim
+      trouble-nvim
+      vim-colors-solarized
       vim-markdown-toc
       vim-nix
       vim-rooter
       vim-terraform
       vim-tmux-navigator
       vim-vsnip
-      # vim-rego
-      # nvim-metals
     ];
 
     extraConfig = builtins.concatStringsSep "\n" [''

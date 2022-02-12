@@ -17,7 +17,6 @@ end
 --
 -- Settings
 --
-
 cmd('syntax on')
 cmd('filetype plugin indent on')
 
@@ -36,6 +35,7 @@ o.swapfile = false
 o.wb = false
 o.spell = true
 o.clipboard = 'unnamedplus'
+cmd('set noshowmode')
 
 vim.opt_global.completeopt = {'menu', 'noinsert', 'noselect'}
 vim.opt_global.shortmess:remove('F'):append('c')
@@ -54,20 +54,36 @@ for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
 -- Theme
 --
 
-cmd('hi clear SignColumn')
-
-o.background = 'dark'
-o.termguicolors = true
-
-vim.g.nord_italic = 0
-vim.g.nord_bold = 0
-
-cmd('colorscheme nord')
-cmd('hi! Normal guibg=NONE')
-
-cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
-
-require'nvim-web-devicons'.setup {default = true}
+-- cmd('set t_Co=256')
+-- cmd('let g:solarized_termtrans=1')
+-- cmd('let g:solarized_termcolors=256')
+cmd('let g:solarized_italic=0')
+cmd('let g:solarized_bold=0')
+cmd('let g:solarized_underline=0')
+cmd('let g:lightline = { \'colorscheme\': \'solarized\', }')
+cmd('colorscheme solarized')
+cmd('set background=light')
+cmd('highlight clear SignColumn')
+cmd('highlight DiagnosticError guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticHint guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticVirtualTextError guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticVirtualTextWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticVirtualTextInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticVirtualTextHint guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticUnderlineError guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticUnderlineWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticUnderlineInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticUnderlineHint guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticFloatingError guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticFloatingWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticFloatingInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticFloatingHint guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticSignError guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticSignWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticSignInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
+cmd('highlight DiagnosticSignHint guifg=light guibg=NONE guisp=NONE gui=NONE')
 
 --
 -- LSP
@@ -146,29 +162,11 @@ vim.cmd([[hi! link LspReferenceText CursorColumn]])
 vim.cmd([[hi! link LspReferenceRead CursorColumn]])
 vim.cmd([[hi! link LspReferenceWrite CursorColumn]])
 
---
--- Metals
---
-
--- metals_config = require('metals').bare_config
--- 
--- metals_config.settings = {
---   showImplicitArguments = true,
---   excludedPackages = {'akka.actor.typed.javadsl', 'com.github.swagger.akka.javadsl'}
--- }
--- 
--- metals_config.init_options.statusBarProvider = 'on'
--- 
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities.textDocument.completion.completionItem.snippetSupport = true
--- 
--- metals_config.capabilities = capabilities
--- 
--- cmd([[augroup lsp]])
--- cmd([[autocmd!]])
--- cmd([[autocmd FileType scala setlocal omnifunc=v:lua.vim.lsp.omnifunc]])
--- cmd([[autocmd FileType scala,sbt lua require("metals").initialize_or_attach(metals_config)]])
--- cmd([[augroup end]])
+vim.diagnostic.config({
+	virtual_text = { source = "always", prefix = "●" },
+	float = { source = "always" },
+	underline = true,
+})
 
 --
 -- Treesitter
@@ -261,6 +259,14 @@ require('telescope').setup {
 }
 
 --
+-- Trouble
+--
+
+require("trouble").setup {
+  icons = false
+}
+
+--
 -- Mappings
 --
 
@@ -275,8 +281,8 @@ map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
 map('n', '<F4>', '<CMD>Telescope grep_string previewer=false <CR>', {noremap = true})
 -- map('n', '<F5>', '<CMD><CR>', {noremap = true})
-map('n', '<F6>', '<CMD>lua vim.lsp.buf.hover() <CR>', {noremap = true})
+map('n', '<F6>', '<CMD>Telescope command_history <CR>', {noremap = true})
 map('n', '<F7>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
-map('n', '<F8>', '<CMD>Telescope command_history <CR>', {noremap = true})
-map('n', '<F9>', '<CMD>Telescope lsp_code_actions <CR>', {noremap = true})
+map('n', '<F8>', '<CMD>TroubleToggle <CR>', {noremap = true})
+-- map('n', '<F9>', '<CMD> <CR>', {noremap = true})
 map('n', '<F10>', '<CMD>lua vim.lsp.buf.formatting() <CR>', {noremap = true})

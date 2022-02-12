@@ -18,6 +18,7 @@ in {
 
       [[ -z "$SSH_AUTH_SOCK" ]] && eval "$(ssh-agent -s)"
 
+      # export TERM=xterm-256color
       export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
       export PATH="$HOME/.local/bin:$PATH"
       export PATH="$HOME/bin:$PATH"
