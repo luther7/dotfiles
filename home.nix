@@ -1,7 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
+
 let
   homedir = builtins.getEnv "HOME";
   username = builtins.getEnv "USER";
+  isWSL = (builtins.getEnv "WSL_DISTRO_NAME") != "";
 in {
   imports = [
     ./bash/default.nix
@@ -24,28 +26,18 @@ in {
     };
 
     packages = with pkgs; [
-      # automake
       awscli
-      # beets
-      # chromaprint
-      # cmake
-      # conftest
       coreutils-full
-      # coursier
       curl
       docker-credential-helpers
       docker-compose
       dig
-      # envsubst
       fd
       fontconfig
-      # gcc
       gh
       gnupg
       git
-      # go
       google-cloud-sdk
-      # gst_all_1.gstreamer
       htop
       jq
       kubectl
@@ -53,8 +45,6 @@ in {
       libssh2
       lua
       luarocks
-      # metals
-      # ninja
       nixfmt
       nodejs
       nodePackages.bash-language-server
@@ -66,27 +56,20 @@ in {
       nodePackages.typescript-language-server
       nodePackages.yaml-language-server
       openssh
+      unzip
       pandoc
-      # postgresql
       poetry
       python310
-      # python39
-      # python39Packages.black
-      # python39Packages.isort
+      python310Packages.black
       pyright
       ripgrep
       rnix-lsp
-      # ruby
-      # rubocop
-      # sbt
-      # scala
       shellcheck
-      # solargraph
       sqlite
       tcpdump
       terraform
       terraform-ls
-      # tree
+      tree
       vault
       watch
       wget
