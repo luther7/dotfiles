@@ -158,14 +158,14 @@ lspconfig.diagnosticls.setup {
   }
 }
 
-vim.cmd([[hi! link LspReferenceText CursorColumn]])
-vim.cmd([[hi! link LspReferenceRead CursorColumn]])
-vim.cmd([[hi! link LspReferenceWrite CursorColumn]])
+cmd('hi! link LspReferenceText CursorColumn')
+cmd('hi! link LspReferenceRead CursorColumn')
+cmd('hi! link LspReferenceWrite CursorColumn')
 
 vim.diagnostic.config({
-	virtual_text = { source = "always", prefix = "●" },
-	float = { source = "always" },
-	underline = true,
+  virtual_text = { source = "always", prefix = "●" },
+  float = { source = "always" },
+  underline = true,
 })
 
 --
@@ -253,7 +253,7 @@ require('telescope').setup {
       n = {['<esc>'] = actions.close, ['q'] = actions.close}
     },
     file_ignore_patterns = {'.git', 'node_modules', '%.png', 'h.jpg', '%.jpeg'},
-    theme = 'get_dropdown',
+    theme = 'get_ivy',
     layout_strategy = 'flex'
   }
 }

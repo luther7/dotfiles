@@ -27,6 +27,7 @@ in {
       docker-compose
       dig
       fd
+      findutils
       fontconfig
       gh
       gnupg

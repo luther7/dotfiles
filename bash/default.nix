@@ -54,6 +54,9 @@ in {
       // optionalAttrs pkgs.stdenv.isDarwin {
         rbs =
           "darwin-rebuild switch -I darwin-config=${homedir}/.config/nixpkgs/darwin.nix";
+        awk = "gawk";
+        grep = "ggrep";
+        sed = "gsed";
       };
 
     shellOptions = flatten [
