@@ -21,11 +21,13 @@ in {
 
     packages = with pkgs; [
       awscli
+      bash-completion
       coreutils-full
       curl
       docker-credential-helpers
       docker-compose
       dig
+      direnv
       fd
       findutils
       fontconfig
@@ -53,21 +55,35 @@ in {
       openssh
       unzip
       pandoc
-      poetry
-      python310
-      python310Packages.black
-      pyright
       ripgrep
       rnix-lsp
       shellcheck
+      ssm-session-manager-plugin
       sqlite
       tcpdump
       terraform
       terraform-ls
-      tree
+      tig
+      # tree
       vault
       watch
       wget
+      yq-go
+
+      # Python
+      python39
+      python39Packages.black
+      python39Packages.poetry
+      pyright
+
+      # Ruby
+      ruby
+      asdf-vm
+      rubocop
+      solargraph
+
+      # Kotlin
+      kotlin
     ];
 
     language = {

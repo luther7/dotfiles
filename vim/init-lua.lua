@@ -1,7 +1,6 @@
 --
 -- init.lua
 --
-
 local api = vim.api
 local execute = vim.api.nvim_command
 local fn = vim.fn
@@ -36,8 +35,7 @@ o.wb = false
 o.spell = true
 o.clipboard = 'unnamedplus'
 cmd('set noshowmode')
-
-vim.opt_global.completeopt = {'menu', 'noinsert', 'noselect'}
+vim.opt_global.completeopt = {'menu', 'menuone', 'noinsert', 'noselect'}
 vim.opt_global.shortmess:remove('F'):append('c')
 
 if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
@@ -92,7 +90,7 @@ cmd('highlight DiagnosticSignHint guifg=light guibg=NONE guisp=NONE gui=NONE')
 local lspconfig = require('lspconfig')
 
 local servers = {
-  'bashls', 'dockerls', 'jsonls', 'pyright', 'rnix', 'terraformls', 'tsserver',
+  'bashls', 'dockerls', 'jsonls', 'pyright', 'rnix', 'solargraph', 'terraformls', 'tsserver',
   'vimls', 'yamlls'
 }
 
@@ -158,15 +156,9 @@ lspconfig.diagnosticls.setup {
   }
 }
 
-cmd('hi! link LspReferenceText CursorColumn')
-cmd('hi! link LspReferenceRead CursorColumn')
-cmd('hi! link LspReferenceWrite CursorColumn')
-
-vim.diagnostic.config({
-  virtual_text = { source = "always", prefix = "●" },
-  float = { source = "always" },
-  underline = true,
-})
+cmd('highlight! link LspReferenceText CursorColumn')
+cmd('highlight! link LspReferenceRead CursorColumn')
+cmd('highlight! link LspReferenceWrite CursorColumn')
 
 --
 -- Treesitter
@@ -262,9 +254,7 @@ require('telescope').setup {
 -- Trouble
 --
 
-require("trouble").setup {
-  icons = false
-}
+require('trouble').setup {icons = false}
 
 --
 -- Mappings

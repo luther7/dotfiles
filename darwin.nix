@@ -31,6 +31,7 @@ in {
     ];
 
     brews = [
+      "bash"
       "gawk"
       "gnu-getopt"
       "gnu-indent"
@@ -38,17 +39,17 @@ in {
       "gnu-tar"
       "gnutls"
       "grep"
+      "tree"
     ];
 
     casks = [
       "1password"
       "1password-cli"
-      "caffeine"
       "docker"
       "font-caskaydia-cove-nerd-font"
       "homebrew/cask-versions/firefox-developer-edition"
       "iterm2"
-      # "joplin"
+      "intellij-idea"
       "microsoft-edge"
       "microsoft-excel"
       "microsoft-outlook"
