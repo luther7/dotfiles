@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   homedir = builtins.getEnv "HOME";
   username = builtins.getEnv "USER";
@@ -20,7 +20,7 @@ in {
   homebrew = {
     enable = true;
     autoUpdate = true;
-    cleanup = "zap";
+    cleanup = "none";
 
     taps = [
       "homebrew/cask"
@@ -40,41 +40,34 @@ in {
       "gnutls"
       "grep"
       "tree"
+
+      # Kotlin
+      "kotlin"
+      "ktlint"
     ];
 
     casks = [
-      "1password"
-      "1password-cli"
+      "amethyst"
+      "caffeine"
       "docker"
       "font-caskaydia-cove-nerd-font"
       "homebrew/cask-versions/firefox-developer-edition"
       "iterm2"
-      "intellij-idea"
-      "microsoft-edge"
-      "microsoft-excel"
-      "microsoft-outlook"
-      "microsoft-powerpoint"
-      "microsoft-remote-desktop"
-      "microsoft-word"
-      "mullvadvpn"
-      "slack"
-      "swinsian"
-      "rectangle"
+      # "swinsian"
       "vlc"
-      "zoom"
     ];
-
-    extraConfig = ''
-      brew "docker-credential-helper-ecr"
-      cask_args appdir: "${homedir}/Applications"
-    '';
   };
 
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
 
-  programs.zsh.enable = true;
+  programs.zsh.enable = false;
   programs.bash.enable = true;
 
-  system.stateVersion = 4;
+  nix.extraOptions = ''
+    auto-optimise-store = true
+    experimental-features = nix-command flakes
+  '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
+    extra-platforms = x86_64-darwin aarch64-darwin
+  '';
 }

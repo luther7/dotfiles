@@ -20,26 +20,19 @@ in {
     stateVersion = "21.03";
 
     packages = with pkgs; [
-      awscli
+      # awscli
       bash-completion
       coreutils-full
-      curl
-      docker-credential-helpers
-      docker-compose
-      dig
+      # curl
       direnv
       fd
       findutils
       fontconfig
       gh
       gnupg
-      git
-      google-cloud-sdk
-      htop
       jq
-      kubectl
+      # kubectl
       less
-      libssh2
       lua
       luarocks
       nixfmt
@@ -52,38 +45,35 @@ in {
       nodePackages.prettier-plugin-toml
       nodePackages.typescript-language-server
       nodePackages.yaml-language-server
-      openssh
+      # openssh
       unzip
-      pandoc
+      # pandoc
       ripgrep
       rnix-lsp
       shellcheck
-      ssm-session-manager-plugin
       sqlite
-      tcpdump
-      terraform
+      # tcpdump
+      # terraform
       terraform-ls
       tig
       # tree
-      vault
       watch
       wget
       yq-go
 
       # Python
-      python39
-      python39Packages.black
-      python39Packages.poetry
+      python310
+      # python310Packages.black
+      # python310Packages.poetry
       pyright
 
       # Ruby
-      ruby
-      asdf-vm
-      rubocop
-      solargraph
+      # ruby
+      # asdf-vm
+      # rubocop
+      # solargraph
 
-      # Kotlin
-      kotlin
+      yarn
     ];
 
     language = {

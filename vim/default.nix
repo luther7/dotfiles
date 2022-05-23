@@ -17,14 +17,15 @@ in {
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
-    withNodeJs = true;
-    withPython3 = true;
+    # withNodeJs = true;
+    # withPython3 = true;
 
     plugins = with pkgs.vimPlugins; [
       completion-nvim
       editorconfig-vim
       kommentary
       lightline-vim
+      nord-nvim
       nvim-compe
       nvim-lspconfig
       nvim-treesitter
@@ -33,7 +34,6 @@ in {
       telescope-fzf-native-nvim
       telescope-nvim
       trouble-nvim
-      vim-colors-solarized
       vim-markdown-toc
       vim-nix
       vim-rooter

@@ -1,13 +1,14 @@
 { config, pkgs, ... }: {
   programs.tmux = {
     enable = true;
-    aggressiveResize = true;
     newSession = true;
     secureSocket = false;
     baseIndex = 1;
     escapeTime = 50;
     keyMode = "vi";
     terminal = "xterm-256color";
+    # FIXME
+    shell = "/opt/homebrew/bin/bash";
 
     plugins = with pkgs; [
       tmuxPlugins.vim-tmux-navigator
@@ -18,9 +19,9 @@
         '';
       }
       {
-        plugin = tmuxPlugins.tmux-colors-solarized;
+        plugin = tmuxPlugins.nord;
         extraConfig = ''
-          set -g @colors-solarized 'light'
+          set -g @nord_tmux_no_patched_font "1"
         '';
       }
     ];

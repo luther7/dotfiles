@@ -9,42 +9,38 @@ in {
     historyFileSize = 100000;
     historySize = 100000;
 
-    profileExtra = builtins.readFile ./private-profile-extra + ''
-      umask 027
-
-      if [ -f "${config.home.profileDirectory}/etc/profile.d/nix.sh" ]; then
-        . "${config.home.profileDirectory}/etc/profile.d/nix.sh"
-      fi
-
-      [[ -z "$SSH_AUTH_SOCK" ]] && eval "$(ssh-agent -s)"
-
-      # export TERM=xterm-256color
-      export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
-      export PATH="$HOME/.local/bin:$PATH"
-      export PATH="$HOME/bin:$PATH"
-      export __PROFILE_SOURCED=1
-    '';
-
-    initExtra = ''
+    profileExtra = ''
       if [[ -z "$__PROFILE_SOURCED" ]] && [[ -f "$HOME/.profile" ]]; then
-        source "$HOME/.profile"
+    '' + builtins.readFile ./private-profile-extra + ''
+
+        umask 027
+
+        if [ -f "${config.home.profileDirectory}/etc/profile.d/nix.sh" ]; then
+          . "${config.home.profileDirectory}/etc/profile.d/nix.sh"
+        fi
+
+        [[ -z "$SSH_AUTH_SOCK" ]] && eval "$(ssh-agent -s)"
+
+        # export TERM=xterm-256color
+        export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+        export PATH="$HOME/.local/bin:$PATH"
+        export PATH="$HOME/bin:$PATH"
+        export __PROFILE_SOURCED=1
       fi
     '';
 
-    sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
-      HISTCONTROL = "ignoredups:erasedups";
-      HISTSIZE = "100000";
-      HISTFILESIZE = "100000";
-      PS1 = " \\W $ ";
-    } // optionalAttrs pkgs.stdenv.isLinux { }
-      // optionalAttrs pkgs.stdenv.isDarwin {
-        BASH_SILENCE_DEPRECATION_WARNING = 1;
-        HOMEBREW_NO_AUTO_UPDATE = 1;
-      };
+    bashrcExtra = builtins.readFile ./private-bashrc-extra + ''
+      export EDITOR=nvim
+      export VISUAL=nvim
+      export HISTCONTROL=ignoredups:erasedups
+      export HISTSIZE=100000
+      export HISTFILESIZE=100000
+      export PS1=" \\W $ "
+      export BASH_SILENCE_DEPRECATION_WARNING=1
+      export HOMEBREW_NO_AUTO_UPDATE=1
+    '';
 
-    shellAliases = import ./private-aliases.nix // {
+    shellAliases = {
       vim = "nvim";
       ops = "eval $(op login my)";
       rv = "gh repo view -w";
