@@ -61,8 +61,6 @@ require('nordic').colorscheme({
   alternate_backgrounds = false
 })
 
-cmd('colorscheme nordic')
-cmd('hi! Normal guibg=NONE')
 cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
 
 --

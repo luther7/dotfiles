@@ -24,6 +24,7 @@ in {
       bash-completion
       brotli
       coreutils-full
+      gcc
       cmake
       curl
       direnv
