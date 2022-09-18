@@ -16,6 +16,7 @@ end
 --
 -- Settings
 --
+
 cmd('syntax on')
 cmd('filetype plugin indent on')
 
@@ -52,41 +53,15 @@ for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
 -- Theme
 --
 
--- cmd('set t_Co=256')
--- cmd('let g:solarized_termtrans=1')
--- cmd('let g:solarized_termcolors=256')
--- cmd('let g:solarized_italic=0')
--- cmd('let g:solarized_bold=0')
--- cmd('let g:solarized_underline=0')
--- cmd('let g:lightline = { \'colorscheme\': \'solarized\', }')
--- cmd('colorscheme solarized')
--- cmd('set background=light')
--- cmd('highlight clear SignColumn')
--- cmd('highlight DiagnosticError guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticHint guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticVirtualTextError guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticVirtualTextWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticVirtualTextInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticVirtualTextHint guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticUnderlineError guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticUnderlineWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticUnderlineInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticUnderlineHint guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticFloatingError guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticFloatingWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticFloatingInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticFloatingHint guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticSignError guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticSignWarn guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticSignInfo guifg=light guibg=NONE guisp=NONE gui=NONE')
--- cmd('highlight DiagnosticSignHint guifg=light guibg=NONE guisp=NONE gui=NONE')
+require('nordic').colorscheme({
+  underline_option = 'none',
+  italic = false,
+  italic_comments = false,
+  minimal_mode = false,
+  alternate_backgrounds = false
+})
 
-cmd('let g:nord_italic=0')
-cmd('let g:nord_bold=0')
-cmd('let g:nord_underline=0')
-cmd('colorscheme nord')
+cmd('colorscheme nordic')
 cmd('hi! Normal guibg=NONE')
 cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
 
@@ -97,8 +72,8 @@ cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
 local lspconfig = require('lspconfig')
 
 local servers = {
-  'bashls', 'dockerls', 'jsonls', 'pyright', 'rnix', 'solargraph', 'terraformls', 'tsserver',
-  'vimls', 'yamlls'
+  'bashls', 'dockerls', 'jsonls', 'kotlin_language_server', 'pyright', 'rnix', 'solargraph',
+  'terraformls', 'tsserver', 'vimls', 'yamlls'
 }
 
 for _, lsp in ipairs(servers) do
@@ -109,7 +84,7 @@ lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua', 'nix'},
   init_options = {
-    filetypes = {sh = 'shellcheck', dockerfile = 'hadolint'},
+    filetypes = {sh = 'shellcheck'},
     formatFiletypes = {
       json = 'prettier',
       markdown = 'prettier',
@@ -134,18 +109,6 @@ lspconfig.diagnosticls.setup {
           security = 'level'
         },
         securities = {error = 'error', warning = 'warning', info = 'info', style = 'hint'}
-      },
-      hadolint = {
-        command = 'hadolint',
-        sourceName = 'hadolint',
-        args = {'-f', 'json', '-'},
-        parseJson = {
-          line = 'line',
-          colume = 'column',
-          security = 'level',
-          message = '${message} [${code}]'
-        },
-        securities = {error = 'error', warning = 'warning', info = 'info', style = 'hint'}
       }
     },
     formatters = {
@@ -163,6 +126,14 @@ lspconfig.diagnosticls.setup {
   }
 }
 
+require'lspconfig'.jdtls.setup {
+  cmd = {'jdtls'},
+  root_dir = function(fname)
+    return require'lspconfig'.util.root_pattern('pom.xml', 'gradle.build', '.git')(fname) or
+               vim.fn.getcwd()
+  end
+}
+
 cmd('highlight! link LspReferenceText CursorColumn')
 cmd('highlight! link LspReferenceRead CursorColumn')
 cmd('highlight! link LspReferenceWrite CursorColumn')
@@ -172,9 +143,14 @@ cmd('highlight! link LspReferenceWrite CursorColumn')
 --
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = 'maintained',
-  highlight = {enable = true, disable = {}},
-  indent = {enable = false, disable = {}}
+  ensure_installed = {
+    'bash', 'c', 'cpp', 'go', 'python', 'java', 'javascript', 'kotlin', 'lua', 'nix', 'ruby',
+    'toml', 'typescript', 'vim', 'yaml'
+  },
+  sync_install = false,
+  ignore_install = {},
+  highlight = {enable = true, disable = {}, additional_vim_regex_highlighting = false},
+  indent = {enable = true}
 }
 
 --
@@ -258,10 +234,11 @@ require('telescope').setup {
 }
 
 --
--- Trouble
+-- LSP Saga
 --
 
-require('trouble').setup {icons = false}
+local saga = require('lspsaga')
+saga.init_lsp_saga()
 
 --
 -- Mappings
@@ -276,10 +253,10 @@ map('i', '<CR>', 'compe#confirm("\\<CR>")', {expr = true})
 map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true})
 map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
-map('n', '<F4>', '<CMD>Telescope grep_string previewer=false <CR>', {noremap = true})
--- map('n', '<F5>', '<CMD><CR>', {noremap = true})
-map('n', '<F6>', '<CMD>Telescope command_history <CR>', {noremap = true})
-map('n', '<F7>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
-map('n', '<F8>', '<CMD>TroubleToggle <CR>', {noremap = true})
--- map('n', '<F9>', '<CMD> <CR>', {noremap = true})
+map('n', '<F4>', '<CMD>Lspsaga lsp_finder <CR>', {noremap = true, silent = true})
+map('n', '<F5>', '<CMD>Lspsaga hover_doc <CR>', {noremap = true, silent = true})
+map('n', '<F6>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
+map('n', '<F7>', '<CMD>Lspsaga code_action <CR>', {noremap = true, silent = true})
+map('n', '<F8>', '<CMD>Lspsaga diagnostic_jump_next <CR>', {noremap = true, silent = true})
+map('n', '<F9>', '<CMD>Lspsaga diagnostic_jump_prev <CR>', {noremap = true, silent = true})
 map('n', '<F10>', '<CMD>lua vim.lsp.buf.formatting() <CR>', {noremap = true})

@@ -40,20 +40,22 @@ in {
       "gnutls"
       "grep"
       "tree"
-
-      # Kotlin
-      "kotlin"
-      "ktlint"
     ];
 
     casks = [
-      "amethyst"
+      "betterdisplay"
       "caffeine"
       "docker"
-      "font-caskaydia-cove-nerd-font"
+      "font-cascadia-code"
+      "font-cascadia-mono"
+      "gimp"
+      "homebrew/cask-fonts/font-source-code-pro"
+      "homebrew/cask-fonts/font-source-sans-pro"
+      "homebrew/cask-fonts/font-source-serif-pro"
       "homebrew/cask-versions/firefox-developer-edition"
       "iterm2"
-      # "swinsian"
+      "rectangle"
+      "swinsian"
       "vlc"
     ];
   };

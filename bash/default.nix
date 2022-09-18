@@ -25,6 +25,7 @@ in {
         export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
         export PATH="$HOME/.local/bin:$PATH"
         export PATH="$HOME/bin:$PATH"
+
         export __PROFILE_SOURCED=1
       fi
     '';

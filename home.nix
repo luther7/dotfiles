@@ -20,10 +20,12 @@ in {
     stateVersion = "21.03";
 
     packages = with pkgs; [
-      # awscli
+      awscli
       bash-completion
+      brotli
       coreutils-full
-      # curl
+      cmake
+      curl
       direnv
       fd
       findutils
@@ -31,48 +33,31 @@ in {
       gh
       gnupg
       jq
-      # kubectl
+      kubectl
       less
       lua
       luarocks
+      luaformatter
       nixfmt
       nodejs
-      nodePackages.bash-language-server
-      nodePackages.diagnostic-languageserver
-      nodePackages.dockerfile-language-server-nodejs
-      nodePackages.vscode-json-languageserver
       nodePackages.prettier
       nodePackages.prettier-plugin-toml
-      nodePackages.typescript-language-server
-      nodePackages.yaml-language-server
-      # openssh
-      unzip
-      # pandoc
+      openssh
+      pandoc
+      poetry
+      python310
+      python310Packages.black
       ripgrep
-      rnix-lsp
+      ruby
+      rubocop
       shellcheck
       sqlite
-      # tcpdump
-      # terraform
-      terraform-ls
-      tig
-      # tree
+      tcpdump
+      terraform
+      unzip
       watch
       wget
       yq-go
-
-      # Python
-      python310
-      # python310Packages.black
-      # python310Packages.poetry
-      pyright
-
-      # Ruby
-      # ruby
-      # asdf-vm
-      # rubocop
-      # solargraph
-
       yarn
     ];
 
@@ -88,6 +73,13 @@ in {
   };
 
   programs.home-manager.enable = true;
+
+  # home.file = {
+  #   ".config/java-language-server" = {
+  #     source = "${pkgs.java-language-server}/share/java/java-language-server";
+  #     recursive = true;
+  #   };
+  # };
 
   manual = {
     html.enable = false;
