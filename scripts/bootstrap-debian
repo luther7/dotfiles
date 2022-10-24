@@ -1,34 +1,21 @@
 #!/bin/bash
-
-#
-# bootstrap-debian.sh
-#
-
 set -euxo pipefail
 
 sudo echo "Inital sudo"
-
 echo "%sudo  ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/sudo
-
 sudo apt-get update -y
 sudo apt-get upgrade -y
 sudo apt-get install -y ca-certificates curl xz-utils 
-
 sudo rm -rf /nix
-
 sh <(curl -L https://nixos.org/nix/install) --no-daemon	
 . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
-
 mkdir -p "${HOME}/.config/nix"
 echo "experimental-features = nix-command flakes" > "${HOME}/.config/nix/nix.conf"
-
 nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 nix-channel --update
 export NIX_PATH="${HOME}/.nix-defexpr/channels${NIX_PATH:+:}${NIX_PATH}"
-
 rm -rf "${HOME}/.config/nixpkgs"
 nix-env -i git
 git clone https://github.com/nesyamun/dotfiles "${HOME}/.config/nixpkgs"
 nix-env -e git
-
 nix-shell '<home-manager>' -A install

@@ -1,25 +1,16 @@
---
--- init.lua
---
 local api = vim.api
 local execute = vim.api.nvim_command
 local fn = vim.fn
 local cmd = vim.cmd
 local o = vim.o
-
 local function map(mode, lhs, rhs, opts)
   local options = {noremap = true}
   if opts then options = vim.tbl_extend('force', options, opts) end
   vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
-
---
 -- Settings
---
-
 cmd('syntax on')
 cmd('filetype plugin indent on')
-
 o.compatible = false
 o.encoding = 'UTF-8'
 o.fileencodings = 'UTF-8'
@@ -37,22 +28,15 @@ o.spell = true
 o.clipboard = 'unnamedplus'
 cmd('set noshowmode')
 vim.opt_global.completeopt = {'menu', 'menuone', 'noinsert', 'noselect'}
-vim.opt_global.shortmess:remove('F'):append('c')
-
+-- vim.opt_global.shortmess:remove('F'):append('c')
 if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
-
 local disabled_built_ins = {
   'netrw', 'netrwPlugin', 'netrwSettings', 'netrwFileHandlers', 'gzip', 'zip', 'zipPlugin', 'tar',
   'tarPlugin', 'getscript', 'getscriptPlugin', 'vimball', 'vimballPlugin', '2html_plugin',
   'logipat', 'rrhelper', 'spellfile_plugin', 'matchit'
 }
-
 for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
-
---
 -- Theme
---
-
 require('nordic').colorscheme({
   underline_option = 'none',
   italic = false,
@@ -60,26 +44,18 @@ require('nordic').colorscheme({
   minimal_mode = false,
   alternate_backgrounds = false
 })
-
 cmd('colorscheme nordic')
 cmd('hi! Normal guibg=NONE')
 cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
-
---
 -- LSP
---
-
 local lspconfig = require('lspconfig')
-
 local servers = {
-  'bashls', 'dockerls', 'jsonls', 'kotlin_language_server', 'pyright', 'rnix', 'solargraph',
-  'terraformls', 'tsserver', 'vimls', 'yamlls'
+  'bashls', 'dockerls', 'jsonls', 'pyright', 'rnix', 'solargraph', 'terraformls', 'tsserver',
+  'vimls', 'yamlls'
 }
-
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {on_attach = on_attach, flags = {debounce_text_changes = 150}}
 end
-
 lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua', 'nix'},
@@ -125,23 +101,10 @@ lspconfig.diagnosticls.setup {
     }
   }
 }
-
-require'lspconfig'.jdtls.setup {
-  cmd = {'jdtls'},
-  root_dir = function(fname)
-    return require'lspconfig'.util.root_pattern('pom.xml', 'gradle.build', '.git')(fname) or
-               vim.fn.getcwd()
-  end
-}
-
 cmd('highlight! link LspReferenceText CursorColumn')
 cmd('highlight! link LspReferenceRead CursorColumn')
 cmd('highlight! link LspReferenceWrite CursorColumn')
-
---
 -- Treesitter
---
-
 require'nvim-treesitter.configs'.setup {
   ensure_installed = {
     'bash', 'c', 'cpp', 'go', 'python', 'java', 'javascript', 'kotlin', 'lua', 'nix', 'ruby',
@@ -152,11 +115,7 @@ require'nvim-treesitter.configs'.setup {
   highlight = {enable = true, disable = {}, additional_vim_regex_highlighting = false},
   indent = {enable = true}
 }
-
---
 -- Compe
---
-
 require'compe'.setup {
   enabled = true,
   autocomplete = true,
@@ -171,7 +130,6 @@ require'compe'.setup {
   max_kind_width = 100,
   max_menu_width = 100,
   documentation = true,
-
   source = {
     path = true,
     buffer = true,
@@ -185,14 +143,11 @@ require'compe'.setup {
     luasnip = true
   }
 }
-
 local t = function(str) return api.nvim_replace_termcodes(str, true, true, true) end
-
 local check_back_space = function()
   local col = vim.fn.col('.') - 1
   return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
 end
-
 _G.tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t '<C-n>'
@@ -204,7 +159,6 @@ _G.tab_complete = function()
     return vim.fn['compe#complete']()
   end
 end
-
 _G.s_tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t '<C-p>'
@@ -214,13 +168,8 @@ _G.s_tab_complete = function()
     return t '<S-Tab>'
   end
 end
-
---
 -- Telescope
---
-
 local actions = require('telescope.actions')
-
 require('telescope').setup {
   defaults = {
     mappings = {
@@ -232,24 +181,20 @@ require('telescope').setup {
     layout_strategy = 'flex'
   }
 }
-
---
+-- Treesitter
+local parser_install_dir = vim.fn.stdpath('cache') .. '/treesitter'
+vim.fn.mkdir(parser_install_dir, 'p')
+require('nvim-treesitter.configs').setup {parser_install_dir = parser_install_dir}
+vim.opt.runtimepath:append(parser_install_dir)
 -- LSP Saga
---
-
 local saga = require('lspsaga')
 saga.init_lsp_saga()
-
---
 -- Mappings
---
-
 map('i', '<Tab>', 'v:lua.tab_complete()', {expr = true})
 map('s', '<Tab>', 'v:lua.tab_complete()', {expr = true})
 map('i', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
 map('s', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
 map('i', '<CR>', 'compe#confirm("\\<CR>")', {expr = true})
-
 map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true})
 map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})

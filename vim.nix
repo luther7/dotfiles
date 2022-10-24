@@ -9,7 +9,6 @@ let
         ref = ref;
       };
     };
-
   plugin = pluginGit "HEAD";
 in {
   programs.neovim = {
@@ -17,9 +16,6 @@ in {
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
-    # withNodeJs = true;
-    # withPython3 = true;
-
     plugins = with pkgs.vimPlugins; [
       completion-nvim
       editorconfig-vim
@@ -32,7 +28,6 @@ in {
       nvim-compe
       nvim-dap
       nvim-lspconfig
-      nvim-jdtls
       nvim-treesitter
       plenary-nvim
       popfix
@@ -46,7 +41,6 @@ in {
       vim-tmux-navigator
       vim-vsnip
     ];
-
     extraPackages = with pkgs; [
       nodePackages.bash-language-server
       nodePackages.diagnostic-languageserver
@@ -59,9 +53,8 @@ in {
       solargraph
       terraform-ls
     ];
-
     extraConfig = builtins.concatStringsSep "\n" [''
-      luafile ${builtins.toString ./init-lua.lua}
+      luafile ${builtins.toString ./vim.lua}
     ''];
   };
 }

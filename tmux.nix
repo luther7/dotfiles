@@ -8,8 +8,7 @@
     keyMode = "vi";
     terminal = "xterm-256color";
     # FIXME
-    shell = "/opt/homebrew/bin/bash";
-
+    # shell = "/opt/homebrew/bin/bash";
     plugins = with pkgs; [
       tmuxPlugins.vim-tmux-navigator
       {
@@ -25,7 +24,6 @@
         '';
       }
     ];
-
     extraConfig = builtins.readFile ./tmux.conf;
   };
 }

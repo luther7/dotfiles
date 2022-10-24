@@ -1,27 +1,18 @@
 { config, pkgs, lib, ... }:
 let
-  homedir = builtins.getEnv "HOME";
-  username = builtins.getEnv "USER";
-in {
-  # $ darwin-rebuild switch -I darwin-config="${HOME}/.config/nixpkgs/darwin.nix"
-  environment.darwinConfig = "${homedir}/.config/nixpkgs/darwin.nix";
-
-  imports = [ <home-manager/nix-darwin> ];
-
-  users.users."${username}" = {
-    name = username;
-    home = homedir;
-  };
-
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
-  home-manager.users."${username}" = import ./home.nix;
-
+  username = "luther";
+in
+{
+  programs.zsh.enable = false;
+  programs.bash.enable = true;
   homebrew = {
     enable = true;
-    autoUpdate = true;
-    cleanup = "none";
-
+    brewPrefix = "/opt/homebrew/bin";
+    onActivation = {
+      # enable = true;
+      autoUpdate = true;
+      cleanup = "none";
+    };
     taps = [
       "homebrew/cask"
       "homebrew/cask-fonts"
@@ -29,7 +20,6 @@ in {
       "homebrew/bundle"
       "homebrew/core"
     ];
-
     brews = [
       "bash"
       "gawk"
@@ -41,7 +31,6 @@ in {
       "grep"
       "tree"
     ];
-
     casks = [
       "betterdisplay"
       "caffeine"
@@ -59,13 +48,17 @@ in {
       "vlc"
     ];
   };
-
+  users.users."${username}".home = "/Users/luther";
+  home-manager.useUserPackages = true;
+  home-manager.useGlobalPkgs = true;
+  home-manager.users."${username}" = import ./home.nix;
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
-
-  programs.zsh.enable = false;
-  programs.bash.enable = true;
-
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowBroken = false;
+    allowUnsupportedSystem = false;
+  };
   nix.extraOptions = ''
     auto-optimise-store = true
     experimental-features = nix-command flakes
