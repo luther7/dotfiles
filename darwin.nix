@@ -48,7 +48,6 @@ in
       "vlc"
     ];
   };
-  users.users."${username}".home = "/Users/luther";
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
   home-manager.users."${username}" = import ./home.nix;

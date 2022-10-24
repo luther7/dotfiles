@@ -1,7 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ config, lib, pkgs, ... }: with lib;
 let
   username = "luther";
-in {
+  homeDirectory = if pkgs.stdenv.isDarwin then "/Users/" else "/home/" + username;
+in
+{
   imports = [
     ./bash.nix
     ./vim.nix
@@ -13,7 +15,8 @@ in {
   home = {
     stateVersion = "21.11";
     username = username;
-    packages = with pkgs; [
+    homeDirectory = homeDirectory;
+    packages = with pkgs; flatten [
       cachix
       nix-prefetch-git
       nixpkgs-fmt
@@ -34,6 +37,9 @@ in {
       shellcheck
       unzip
       wget
+      (optional pkgs.stdenv.isLinux [
+        gcc
+      ])
     ];
     language = {
       base = "en_US.UTF-8";

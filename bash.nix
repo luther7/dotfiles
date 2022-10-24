@@ -36,10 +36,11 @@ in
       rv = "gh repo view -w";
       prw = "gh pr create --web";
       prv = "gh pr view --web";
-    } // optionalAttrs pkgs.stdenv.isLinux { rbs = "home-manager switch"; }
-    // optionalAttrs pkgs.stdenv.isDarwin {
+    } // optionalAttrs pkgs.stdenv.isLinux {
+      rbs = "home-manager switch --flake $HOME/.config/nixpkgs";
+    } // optionalAttrs pkgs.stdenv.isDarwin {
       rbs =
-        "darwin-rebuild switch --flake ~/.config/nixpkgs";
+        "darwin-rebuild switch --flake $HOME/.config/nixpkgs";
       awk = "gawk";
       grep = "ggrep";
       sed = "gsed";
@@ -47,7 +48,6 @@ in
     shellOptions = flatten [
       [ "histappend" "histreedit" "checkwinsize" "hostcomplete" "extglob" ]
       (optional pkgs.stdenv.isLinux [ "globstar" "checkjobs" ])
-      (optional pkgs.stdenv.isDarwin [ ])
     ];
   };
 }
