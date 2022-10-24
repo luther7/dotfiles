@@ -1,6 +1,3 @@
-local api = vim.api
-local execute = vim.api.nvim_command
-local fn = vim.fn
 local cmd = vim.cmd
 local o = vim.o
 local function map(mode, lhs, rhs, opts)
@@ -44,8 +41,6 @@ require('nordic').colorscheme({
   minimal_mode = false,
   alternate_backgrounds = false
 })
-cmd('colorscheme nordic')
-cmd('hi! Normal guibg=NONE')
 cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
 -- LSP
 local lspconfig = require('lspconfig')
