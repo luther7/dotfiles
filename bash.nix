@@ -17,6 +17,7 @@ in
         # export TERM=xterm-256color
         export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
         export PATH="$HOME/.local/bin:$PATH"
+        export PATH="/opt/homebrew/bin:$PATH"
         export PATH="$HOME/bin:$PATH"
         export __PROFILE_SOURCED=1
       fi
@@ -30,6 +31,7 @@ in
       export PS1=" \\W $ "
       export BASH_SILENCE_DEPRECATION_WARNING=1
       export HOMEBREW_NO_AUTO_UPDATE=1
+      eval "$(test -x $HOME/bin/hermit && $HOME/bin/hermit shell-hooks --print --bash)"
     '';
     shellAliases = {
       vim = "nvim";

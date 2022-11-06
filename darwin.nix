@@ -21,7 +21,6 @@ in
       "homebrew/core"
     ];
     brews = [
-      "bash"
       "gawk"
       "gnu-getopt"
       "gnu-indent"
@@ -32,9 +31,11 @@ in
       "tree"
     ];
     casks = [
+      "alt-tab"
       "betterdisplay"
       "caffeine"
       "docker"
+      "dozer"
       "font-cascadia-code"
       "font-cascadia-mono"
       "gimp"
@@ -43,10 +44,15 @@ in
       "homebrew/cask-fonts/font-source-serif-pro"
       "homebrew/cask-versions/firefox-developer-edition"
       "iterm2"
+      "libreoffice"
       "rectangle"
       "swinsian"
       "vlc"
     ];
+  };
+  users.users.luther = {
+    name = "luther";
+    home = "/Users/luther";
   };
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;

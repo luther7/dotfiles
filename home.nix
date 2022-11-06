@@ -15,7 +15,8 @@ in
   home = {
     stateVersion = "21.11";
     username = username;
-    homeDirectory = homeDirectory;
+    # FIXME
+    # homeDirectory = homeDirectory;
     packages = with pkgs; flatten [
       cachix
       nix-prefetch-git
