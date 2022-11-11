@@ -47,6 +47,7 @@ in
       "libreoffice"
       "rectangle"
       "swinsian"
+      "stats"
       "vlc"
     ];
   };
