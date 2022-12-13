@@ -44,6 +44,7 @@ in
       "homebrew/cask-fonts/font-source-serif-pro"
       "homebrew/cask-versions/firefox-developer-edition"
       "iterm2"
+      "maccy"
       "libreoffice"
       "rectangle"
       "swinsian"
