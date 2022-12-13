@@ -100,7 +100,11 @@ cmd('highlight! link LspReferenceText CursorColumn')
 cmd('highlight! link LspReferenceRead CursorColumn')
 cmd('highlight! link LspReferenceWrite CursorColumn')
 -- Treesitter
+local parser_install_dir = vim.fn.stdpath("cache") .. "/treesitters"
+vim.fn.mkdir(parser_install_dir, "p")
+vim.opt.runtimepath:append(parser_install_dir)
 require'nvim-treesitter.configs'.setup {
+  parser_install_dir = parser_install_dir,
   ensure_installed = {
     'bash', 'c', 'cpp', 'go', 'python', 'java', 'javascript', 'kotlin', 'lua', 'nix', 'ruby',
     'toml', 'typescript', 'vim', 'yaml'
@@ -176,11 +180,6 @@ require('telescope').setup {
     layout_strategy = 'flex'
   }
 }
--- Treesitter
-local parser_install_dir = vim.fn.stdpath('cache') .. '/treesitter'
-vim.fn.mkdir(parser_install_dir, 'p')
-require('nvim-treesitter.configs').setup {parser_install_dir = parser_install_dir}
-vim.opt.runtimepath:append(parser_install_dir)
 -- LSP Saga
 local saga = require('lspsaga')
 saga.init_lsp_saga()
