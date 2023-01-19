@@ -1,11 +1,10 @@
 local cmd = vim.cmd
+local map = vim.keymap.set
 local o = vim.o
-local function map(mode, lhs, rhs, opts)
-  local options = {noremap = true}
-  if opts then options = vim.tbl_extend('force', options, opts) end
-  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
+local g = vim.g
+
 -- Settings
+
 cmd('syntax on')
 cmd('filetype plugin indent on')
 o.compatible = false
@@ -24,7 +23,7 @@ o.wb = false
 o.spell = true
 o.clipboard = 'unnamedplus'
 cmd('set noshowmode')
-vim.opt_global.completeopt = {'menu', 'menuone', 'noinsert', 'noselect'}
+vim.opt_global.completeopt = {'menu', 'menuone', 'noselect'}
 -- vim.opt_global.shortmess:remove('F'):append('c')
 if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
 local disabled_built_ins = {
@@ -33,7 +32,9 @@ local disabled_built_ins = {
   'logipat', 'rrhelper', 'spellfile_plugin', 'matchit'
 }
 for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
+
 -- Theme
+
 require('nordic').colorscheme({
   underline_option = 'none',
   italic = false,
@@ -42,15 +43,90 @@ require('nordic').colorscheme({
   alternate_backgrounds = false
 })
 cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
--- LSP
-local lspconfig = require('lspconfig')
-local servers = {
-  'bashls', 'dockerls', 'jsonls', 'pyright', 'rnix', 'solargraph', 'terraformls', 'tsserver',
-  'vimls', 'yamlls'
+
+-- cmp
+
+local cmp = require 'cmp'
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn['vsnip#anonymous'](args.body) -- For `vsnip` users.
+    end
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({select = true})
+  }),
+  sources = cmp.config.sources({{name = 'nvim_lsp'}, {name = 'vsnip'}}, {{name = 'buffer'}})
+})
+cmp.setup.filetype('gitcommit', {sources = cmp.config.sources({{name = 'buffer'}})})
+cmp.setup.cmdline({'/', '?'},
+                  {mapping = cmp.mapping.preset.cmdline(), sources = {{name = 'buffer'}}})
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({{name = 'path'}}, {{name = 'cmdline'}})
+})
+
+-- Ionide
+--
+g['fsharp#lsp_auto_setup'] = 0
+g['fsharp#fsautocomplete_command'] = {
+  'dotnet', 'tool', 'run', 'fsautocomplete', '--adaptive-lsp-server-enabled'
 }
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {on_attach = on_attach, flags = {debounce_text_changes = 150}}
+cmd([[
+if has('nvim') && exists('*nvim_open_win')
+  set updatetime=1000
+  augroup FSharpShowTooltip
+    autocmd!
+    autocmd CursorHold *.fs,*.fsi,*.fsx call fsharp#showTooltip()
+  augroup END
+endif
+]])
+
+-- LSP
+
+local on_attach = function(client, bufnr)
+  local bufopts = {noremap = true, silent = true, buffer = bufnr}
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  map('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  map('n', 'gd', vim.lsp.buf.definition, bufopts)
+  map('n', 'K', vim.lsp.buf.hover, bufopts)
+  map('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  map('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  map('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  map('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  map('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+      bufopts)
+  map('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+  map('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+  map('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+  map('n', 'gr', vim.lsp.buf.references, bufopts)
+  map('n', '<space>f', function() vim.lsp.buf.format {async = true} end, bufopts)
+  map('n', '<F10>', function() vim.lsp.buf.format {async = true} end, bufopts)
 end
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local lspconfig = require('lspconfig')
+local lspservers = {
+  lspconfig.bashls, lspconfig.dockerls, require('ionide'), lspconfig.jsonls, lspconfig.pyright,
+  lspconfig.rnix, lspconfig.solargraph, lspconfig.terraformls, lspconfig.tsserver, lspconfig.vimls,
+  lspconfig.yamlls
+}
+for _, lspserver in ipairs(lspservers) do
+  lspserver.setup {
+    autostart = true,
+    on_attach = on_attach,
+    flags = {debounce_text_changes = 150},
+    capabilities = capabilities
+  }
+end
+vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {focusable = false})
 lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua', 'nix'},
@@ -99,75 +175,25 @@ lspconfig.diagnosticls.setup {
 cmd('highlight! link LspReferenceText CursorColumn')
 cmd('highlight! link LspReferenceRead CursorColumn')
 cmd('highlight! link LspReferenceWrite CursorColumn')
+
 -- Treesitter
-local parser_install_dir = vim.fn.stdpath("cache") .. "/treesitters"
-vim.fn.mkdir(parser_install_dir, "p")
+
+local parser_install_dir = vim.fn.stdpath('cache') .. '/treesitters'
+vim.fn.mkdir(parser_install_dir, 'p')
 vim.opt.runtimepath:append(parser_install_dir)
 require'nvim-treesitter.configs'.setup {
   parser_install_dir = parser_install_dir,
   ensure_installed = {
-    'bash', 'c', 'cpp', 'go', 'python', 'java', 'javascript', 'kotlin', 'lua', 'nix', 'ruby',
-    'toml', 'typescript', 'vim', 'yaml'
+    'bash', 'c', 'cpp', 'c_sharp', 'go', 'python', 'java', 'javascript', 'kotlin', 'lua', 'nix',
+    'ruby', 'toml', 'typescript', 'vim', 'yaml'
   },
   sync_install = false,
   ignore_install = {},
   highlight = {enable = true, disable = {}, additional_vim_regex_highlighting = false},
   indent = {enable = true}
 }
--- Compe
-require'compe'.setup {
-  enabled = true,
-  autocomplete = true,
-  debug = false,
-  min_length = 1,
-  preselect = 'enable',
-  throttle_time = 80,
-  source_timeout = 200,
-  resolve_timeout = 800,
-  incomplete_delay = 400,
-  max_abbr_width = 100,
-  max_kind_width = 100,
-  max_menu_width = 100,
-  documentation = true,
-  source = {
-    path = true,
-    buffer = true,
-    calc = true,
-    nvim_lsp = true,
-    nvim_lua = true,
-    spell = true,
-    treesitter = true,
-    vsnip = true,
-    ultisnips = true,
-    luasnip = true
-  }
-}
-local t = function(str) return api.nvim_replace_termcodes(str, true, true, true) end
-local check_back_space = function()
-  local col = vim.fn.col('.') - 1
-  return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
-end
-_G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t '<C-n>'
-  elseif vim.fn['vsnip#available'](1) == 1 then
-    return t '<Plug>(vsnip-expand-or-jump)'
-  elseif check_back_space() then
-    return t '<Tab>'
-  else
-    return vim.fn['compe#complete']()
-  end
-end
-_G.s_tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t '<C-p>'
-  elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-    return t '<Plug>(vsnip-jump-prev)'
-  else
-    return t '<S-Tab>'
-  end
-end
 -- Telescope
+
 local actions = require('telescope.actions')
 require('telescope').setup {
   defaults = {
@@ -180,22 +206,19 @@ require('telescope').setup {
     layout_strategy = 'flex'
   }
 }
--- LSP Saga
-local saga = require('lspsaga')
-saga.init_lsp_saga()
+
 -- Mappings
+
+local opts = {noremap = true, silent = true}
 map('i', '<Tab>', 'v:lua.tab_complete()', {expr = true})
 map('s', '<Tab>', 'v:lua.tab_complete()', {expr = true})
 map('i', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
 map('s', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
-map('i', '<CR>', 'compe#confirm("\\<CR>")', {expr = true})
+map('n', '<space>e', vim.diagnostic.open_float, opts)
+map('n', '[d', vim.diagnostic.goto_prev, opts)
+map('n', ']d', vim.diagnostic.goto_next, opts)
+map('n', '<space>q', vim.diagnostic.setloclist, opts)
 map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true})
 map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
-map('n', '<F4>', '<CMD>Lspsaga lsp_finder <CR>', {noremap = true, silent = true})
-map('n', '<F5>', '<CMD>Lspsaga hover_doc <CR>', {noremap = true, silent = true})
-map('n', '<F6>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
-map('n', '<F7>', '<CMD>Lspsaga code_action <CR>', {noremap = true, silent = true})
-map('n', '<F8>', '<CMD>Lspsaga diagnostic_jump_next <CR>', {noremap = true, silent = true})
-map('n', '<F9>', '<CMD>Lspsaga diagnostic_jump_prev <CR>', {noremap = true, silent = true})
-map('n', '<F10>', '<CMD>lua vim.lsp.buf.formatting() <CR>', {noremap = true})
+map('n', '<F9>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})

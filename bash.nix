@@ -1,8 +1,7 @@
-{ config, lib, pkgs, ... }: with lib;
-let
-  homedir = builtins.getEnv "HOME";
-in
-{
+{ config, lib, pkgs, ... }:
+with lib;
+let homedir = builtins.getEnv "HOME";
+in {
   programs.bash = {
     enable = true;
     historyFileSize = 100000;
@@ -41,8 +40,7 @@ in
     } // optionalAttrs pkgs.stdenv.isLinux {
       rbs = "home-manager switch --flake $HOME/.config/nixpkgs";
     } // optionalAttrs pkgs.stdenv.isDarwin {
-      rbs =
-        "darwin-rebuild switch --flake $HOME/.config/nixpkgs";
+      rbs = "darwin-rebuild switch --flake $HOME/.config/nixpkgs";
       awk = "gawk";
       grep = "ggrep";
       sed = "gsed";

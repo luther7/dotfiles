@@ -1,8 +1,6 @@
 { config, pkgs, lib, ... }:
-let
-  username = "luther";
-in
-{
+let username = "luther";
+in {
   programs.zsh.enable = false;
   programs.bash.enable = true;
   homebrew = {

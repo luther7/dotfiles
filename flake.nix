@@ -19,14 +19,12 @@
       };
       macbookpro = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
-        modules = [
-          home-manager.darwinModules.home-manager
-          (import ./darwin.nix)
-        ];
+        modules =
+          [ home-manager.darwinModules.home-manager (import ./darwin.nix) ];
       };
-    in
-    {
+    in {
       packages.x86_64-linux.homeConfigurations."luther@purple" = desktop;
-      packages.aarch64-darwin.darwinConfigurations."luther-macbookpro" = macbookpro;
+      packages.aarch64-darwin.darwinConfigurations."luther-macbookpro" =
+        macbookpro;
     };
 }

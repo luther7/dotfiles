@@ -17,15 +17,28 @@ in {
     vimAlias = true;
     vimdiffAlias = true;
     plugins = with pkgs.vimPlugins; [
-      completion-nvim
+      cmp-nvim-tags
+      cmp-nvim-lua
+      cmp-nvim-lsp
+      cmp-nvim-lsp-signature-help
+      cmp-nvim-lsp-document-symbol
+      cmp-pandoc-nvim
+      cmp-tmux
+      cmp-treesitter
+      cmp-spell
+      cmp-rg
+      cmp-path
+      cmp-buffer
+      cmp-cmdline
+      cmp-vsnip
       editorconfig-vim
       gitsigns-nvim
+      Ionide-vim
       kommentary
       kotlin-vim
       lightline-vim
-      lspsaga-nvim
       nordic-nvim
-      nvim-compe
+      nvim-cmp
       nvim-dap
       nvim-lspconfig
       nvim-treesitter
@@ -48,6 +61,7 @@ in {
       nodePackages.vscode-json-languageserver
       nodePackages.typescript-language-server
       nodePackages.yaml-language-server
+      luaformatter
       pyright
       rnix-lsp
       solargraph

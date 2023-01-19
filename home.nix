@@ -1,14 +1,11 @@
-{ config, lib, pkgs, ... }: with lib;
+{ config, lib, pkgs, ... }:
+with lib;
 let
   username = "luther";
-  homeDirectory = if pkgs.stdenv.isDarwin then "/Users/" else "/home/" + username;
-in
-{
-  imports = [
-    ./bash.nix
-    ./vim.nix
-    ./tmux.nix
-  ];
+  homeDirectory =
+    if pkgs.stdenv.isDarwin then "/Users/" else "/home/" + username;
+in {
+  imports = [ ./bash.nix ./vim.nix ./tmux.nix ];
   programs.home-manager.enable = true;
   programs.man.enable = true;
   programs.info.enable = false;
@@ -16,32 +13,31 @@ in
     stateVersion = "21.11";
     username = username;
     # FIXME
-    # homeDirectory = homeDirectory;
-    packages = with pkgs; flatten [
-      cachix
-      nix-prefetch-git
-      nixpkgs-fmt
-      # bash-completion
-      coreutils-full
-      curl
-      direnv
-      fd
-      findutils
-      fontconfig
-      gh
-      gnupg
-      jq
-      less
-      nixfmt
-      openssh
-      ripgrep
-      shellcheck
-      unzip
-      wget
-      (optional pkgs.stdenv.isLinux [
-        gcc
-      ])
-    ];
+    homeDirectory = homeDirectory;
+    packages = with pkgs;
+      flatten [
+        cachix
+        nix-prefetch-git
+        nixpkgs-fmt
+        # bash-completion
+        coreutils-full
+        curl
+        direnv
+        fd
+        findutils
+        fontconfig
+        gh
+        gnupg
+        jq
+        less
+        nixfmt
+        openssh
+        ripgrep
+        shellcheck
+        unzip
+        wget
+        (optional pkgs.stdenv.isLinux [ gcc ])
+      ];
     language = {
       base = "en_US.UTF-8";
       collate = "en_US.UTF-8";
