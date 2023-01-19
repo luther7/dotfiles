@@ -30,6 +30,7 @@ in {
       cmp-path
       cmp-buffer
       cmp-cmdline
+      cmp-dap
       cmp-vsnip
       editorconfig-vim
       gitsigns-nvim
@@ -40,32 +41,22 @@ in {
       nordic-nvim
       nvim-cmp
       nvim-dap
+      nvim-dap-ui
+      nvim-dap-virtual-text
       nvim-lspconfig
       nvim-treesitter
       plenary-nvim
       popfix
       popup-nvim
-      telescope-fzf-native-nvim
       telescope-nvim
+      # telescope-dap-nvim
+      telescope-fzf-native-nvim
       vim-markdown-toc
       vim-nix
       vim-rooter
-      vim-terraform
+      # vim-terraform
       vim-tmux-navigator
       vim-vsnip
-    ];
-    extraPackages = with pkgs; [
-      nodePackages.bash-language-server
-      nodePackages.diagnostic-languageserver
-      nodePackages.dockerfile-language-server-nodejs
-      nodePackages.vscode-json-languageserver
-      nodePackages.typescript-language-server
-      nodePackages.yaml-language-server
-      luaformatter
-      pyright
-      rnix-lsp
-      solargraph
-      terraform-ls
     ];
     extraConfig = builtins.concatStringsSep "\n" [''
       luafile ${builtins.toString ./vim.lua}

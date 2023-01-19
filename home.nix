@@ -32,11 +32,25 @@ in {
         less
         nixfmt
         openssh
+        pandoc
         ripgrep
         shellcheck
         unzip
         wget
         (optional pkgs.stdenv.isLinux [ gcc ])
+        # vim
+        netcoredbg
+        nodePackages.bash-language-server
+        nodePackages.diagnostic-languageserver
+        # nodePackages.dockerfile-language-server-nodejs
+        nodePackages.vscode-json-languageserver
+        # nodePackages.typescript-language-server
+        nodePackages.yaml-language-server
+        luaformatter
+        # pyright
+        rnix-lsp
+        # solargraph
+        # terraform-ls
       ];
     language = {
       base = "en_US.UTF-8";

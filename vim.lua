@@ -53,10 +53,7 @@ cmp.setup({
       vim.fn['vsnip#anonymous'](args.body) -- For `vsnip` users.
     end
   },
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
-  },
+  window = {completion = cmp.config.window.bordered(), documentation = cmp.config.window.bordered()},
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -114,9 +111,12 @@ end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 local lspservers = {
-  lspconfig.bashls, lspconfig.dockerls, require('ionide'), lspconfig.jsonls, lspconfig.pyright,
-  lspconfig.rnix, lspconfig.solargraph, lspconfig.terraformls, lspconfig.tsserver, lspconfig.vimls,
-  lspconfig.yamlls
+  lspconfig.bashls, -- lspconfig.dockerls,
+  require('ionide'), lspconfig.jsonls, -- lspconfig.pyright,
+  lspconfig.rnix, -- lspconfig.solargraph,
+  -- lspconfig.terraformls,
+  -- lspconfig.tsserver,
+  lspconfig.vimls, lspconfig.yamlls
 }
 for _, lspserver in ipairs(lspservers) do
   lspserver.setup {
@@ -129,14 +129,19 @@ end
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {focusable = false})
 lspconfig.diagnosticls.setup {
   on_attach = on_attach,
-  filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua', 'nix'},
+  filetypes = {
+    'json', 'markdown', -- 'python',
+    'sh', -- 'terraform',
+    -- 'dockerfile',
+    'lua', 'nix'
+  },
   init_options = {
     filetypes = {sh = 'shellcheck'},
     formatFiletypes = {
       json = 'prettier',
       markdown = 'prettier',
-      python = 'black',
-      terraform = 'terraform',
+      -- python = 'black',
+      -- terraform = 'terraform',
       yaml = 'prettier',
       lua = 'luaformat',
       nix = 'nixfmt'
@@ -159,9 +164,9 @@ lspconfig.diagnosticls.setup {
       }
     },
     formatters = {
-      black = {command = 'black', args = {'--quiet', '-'}},
+      -- black = {command = 'black', args = {'--quiet', '-'}},
       prettier = {command = 'prettier', args = {'--stdin-filepath', '%filepath'}},
-      terraform = {command = 'terraform', args = {'fmt', '-'}},
+      -- terraform = {command = 'terraform', args = {'fmt', '-'}},
       luaformat = {
         command = 'lua-format',
         args = {
@@ -192,6 +197,7 @@ require'nvim-treesitter.configs'.setup {
   highlight = {enable = true, disable = {}, additional_vim_regex_highlighting = false},
   indent = {enable = true}
 }
+
 -- Telescope
 
 local actions = require('telescope.actions')
@@ -204,6 +210,39 @@ require('telescope').setup {
     file_ignore_patterns = {'.git', 'node_modules', '%.png', 'h.jpg', '%.jpeg'},
     theme = 'get_ivy',
     layout_strategy = 'flex'
+  }
+}
+
+-- Dap
+
+local dap = require('dap')
+local dapvirt = require('nvim-dap-virtual-text')
+local dapui = require('dapui')
+dapui.setup()
+dapvirt.setup()
+dap.adapters.coreclr = {
+  type = 'executable',
+  command = '/home/luther/.nix-profile/bin/netcoredbg',
+  args = {'--interpreter=vscode'}
+}
+dap.configurations.cs = {
+  {
+    type = 'coreclr',
+    name = 'launch - netcoredbg',
+    request = 'launch',
+    program = function()
+      return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/.godot/mono/temp/bin/Debug/', 'file')
+    end
+  }
+}
+dap.configurations.fsharp = {
+  {
+    type = 'coreclr',
+    name = 'launch - netcoredbg',
+    request = 'launch',
+    program = function()
+      return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/.godot/mono/temp/bin/Debug/', 'file')
+    end
   }
 }
 
@@ -221,4 +260,7 @@ map('n', '<space>q', vim.diagnostic.setloclist, opts)
 map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true})
 map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
+map('n', '<F6>', dapui.toggle, {noremap = true})
+map('n', '<F7>', ':DapToggleBreakpoint<CR>', {noremap = true})
+map('n', '<F8>', ":DapContinue<CR>", {noremap = true})
 map('n', '<F9>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
