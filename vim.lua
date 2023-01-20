@@ -71,8 +71,9 @@ cmp.setup.cmdline(':', {
   sources = cmp.config.sources({{name = 'path'}}, {{name = 'cmdline'}})
 })
 
--- Ionide
---
+-- LSP
+
+-- TODO move to project script
 g['fsharp#lsp_auto_setup'] = 0
 g['fsharp#fsautocomplete_command'] = {
   'dotnet', 'tool', 'run', 'fsautocomplete', '--adaptive-lsp-server-enabled'
@@ -86,9 +87,6 @@ if has('nvim') && exists('*nvim_open_win')
   augroup END
 endif
 ]])
-
--- LSP
-
 local on_attach = function(client, bufnr)
   local bufopts = {noremap = true, silent = true, buffer = bufnr}
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -111,12 +109,9 @@ end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 local lspservers = {
-  lspconfig.bashls, -- lspconfig.dockerls,
-  require('ionide'), lspconfig.jsonls, -- lspconfig.pyright,
-  lspconfig.rnix, -- lspconfig.solargraph,
-  -- lspconfig.terraformls,
-  -- lspconfig.tsserver,
-  lspconfig.vimls, lspconfig.yamlls
+  -- TODO move to project script
+  require('ionide'), lspconfig.bashls, lspconfig.jsonls, lspconfig.rnix, lspconfig.vimls,
+  lspconfig.yamlls
 }
 for _, lspserver in ipairs(lspservers) do
   lspserver.setup {
@@ -129,19 +124,12 @@ end
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {focusable = false})
 lspconfig.diagnosticls.setup {
   on_attach = on_attach,
-  filetypes = {
-    'json', 'markdown', -- 'python',
-    'sh', -- 'terraform',
-    -- 'dockerfile',
-    'lua', 'nix'
-  },
+  filetypes = {'json', 'markdown', 'sh', 'lua', 'nix'},
   init_options = {
     filetypes = {sh = 'shellcheck'},
     formatFiletypes = {
       json = 'prettier',
       markdown = 'prettier',
-      -- python = 'black',
-      -- terraform = 'terraform',
       yaml = 'prettier',
       lua = 'luaformat',
       nix = 'nixfmt'
@@ -164,9 +152,7 @@ lspconfig.diagnosticls.setup {
       }
     },
     formatters = {
-      -- black = {command = 'black', args = {'--quiet', '-'}},
       prettier = {command = 'prettier', args = {'--stdin-filepath', '%filepath'}},
-      -- terraform = {command = 'terraform', args = {'fmt', '-'}},
       luaformat = {
         command = 'lua-format',
         args = {
@@ -215,6 +201,7 @@ require('telescope').setup {
 
 -- Dap
 
+-- TODO move to project script
 local dap = require('dap')
 local dapvirt = require('nvim-dap-virtual-text')
 local dapui = require('dapui')
@@ -222,29 +209,57 @@ dapui.setup()
 dapvirt.setup()
 dap.adapters.coreclr = {
   type = 'executable',
-  command = '/home/luther/.nix-profile/bin/netcoredbg',
+  command = '/nix/store/2kr91b9sk6jcvz5xhvjyhw79cbah6b4j-netcoredbg-2.0.0-895/bin/netcoredbg',
   args = {'--interpreter=vscode'}
 }
-dap.configurations.cs = {
+vim.g.dotnet_build_project = function()
+  local default_path = vim.fn.getcwd() .. '/'
+  if vim.g['dotnet_last_proj_path'] ~= nil then default_path = vim.g['dotnet_last_proj_path'] end
+  local path = vim.fn.input('Path to your *proj file', default_path, 'file')
+  vim.g['dotnet_last_proj_path'] = path
+  local cmd = 'dotnet build -c Debug ' .. path .. ' > /dev/null'
+  print('')
+  print('Cmd to execute: ' .. cmd)
+  local f = os.execute(cmd)
+  if f == 0 then
+    print('\nBuild: ✔️ ')
+  else
+    print('\nBuild: ❌ (code: ' .. f .. ')')
+  end
+end
+vim.g.dotnet_get_dll_path = function()
+  local request = function()
+    return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+  end
+
+  if vim.g['dotnet_last_dll_path'] == nil then
+    vim.g['dotnet_last_dll_path'] = request()
+  else
+    if vim.fn.confirm('Do you want to change the path to dll?\n' .. vim.g['dotnet_last_dll_path'],
+                      '&yes\n&no', 2) == 1 then vim.g['dotnet_last_dll_path'] = request() end
+  end
+
+  return vim.g['dotnet_last_dll_path']
+end
+local config = {
   {
     type = 'coreclr',
     name = 'launch - netcoredbg',
     request = 'launch',
     program = function()
-      return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/.godot/mono/temp/bin/Debug/', 'file')
+      if vim.fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
+        vim.g.dotnet_build_project()
+      end
+      return vim.g.dotnet_get_dll_path()
     end
   }
 }
-dap.configurations.fsharp = {
-  {
-    type = 'coreclr',
-    name = 'launch - netcoredbg',
-    request = 'launch',
-    program = function()
-      return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/.godot/mono/temp/bin/Debug/', 'file')
-    end
-  }
-}
+dap.configurations.cs = config
+dap.configurations.fsharp = config
+
+-- config-local
+
+-- require('config-local').setup()
 
 -- Mappings
 
@@ -262,5 +277,5 @@ map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
 map('n', '<F6>', dapui.toggle, {noremap = true})
 map('n', '<F7>', ':DapToggleBreakpoint<CR>', {noremap = true})
-map('n', '<F8>', ":DapContinue<CR>", {noremap = true})
+map('n', '<F8>', ':DapContinue<CR>', {noremap = true})
 map('n', '<F9>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})

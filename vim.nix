@@ -34,12 +34,11 @@ in {
       cmp-vsnip
       editorconfig-vim
       gitsigns-nvim
-      Ionide-vim
       kommentary
-      kotlin-vim
       lightline-vim
       nordic-nvim
       nvim-cmp
+      nvim-config-local
       nvim-dap
       nvim-dap-ui
       nvim-dap-virtual-text
@@ -54,9 +53,10 @@ in {
       vim-markdown-toc
       vim-nix
       vim-rooter
-      # vim-terraform
       vim-tmux-navigator
       vim-vsnip
+      # TODO move to project file
+      Ionide-vim
     ];
     extraConfig = builtins.concatStringsSep "\n" [''
       luafile ${builtins.toString ./vim.lua}

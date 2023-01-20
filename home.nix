@@ -19,7 +19,7 @@ in {
         cachix
         nix-prefetch-git
         nixpkgs-fmt
-        # bash-completion
+        bash-completion
         coreutils-full
         curl
         direnv
@@ -30,27 +30,20 @@ in {
         gnupg
         jq
         less
+        luaformatter
         nixfmt
+        nodePackages.bash-language-server
+        nodePackages.diagnostic-languageserver
+        nodePackages.vscode-json-languageserver
+        nodePackages.yaml-language-server
         openssh
         pandoc
         ripgrep
+        rnix-lsp
         shellcheck
         unzip
         wget
         (optional pkgs.stdenv.isLinux [ gcc ])
-        # vim
-        netcoredbg
-        nodePackages.bash-language-server
-        nodePackages.diagnostic-languageserver
-        # nodePackages.dockerfile-language-server-nodejs
-        nodePackages.vscode-json-languageserver
-        # nodePackages.typescript-language-server
-        nodePackages.yaml-language-server
-        luaformatter
-        # pyright
-        rnix-lsp
-        # solargraph
-        # terraform-ls
       ];
     language = {
       base = "en_US.UTF-8";
