@@ -110,7 +110,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 local lspservers = {
   -- TODO move to project script
-  require('ionide'), lspconfig.bashls, lspconfig.jsonls, lspconfig.rnix, lspconfig.vimls,
+  require('ionide'), lspconfig.bashls, lspconfig.jsonls, lspconfig.kotlin_language_server, lspconfig.rnix, lspconfig.vimls,
   lspconfig.yamlls
 }
 for _, lspserver in ipairs(lspservers) do
