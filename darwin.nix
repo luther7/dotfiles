@@ -29,7 +29,6 @@ in {
       "tree"
     ];
     casks = [
-      "alt-tab"
       "betterdisplay"
       "caffeine"
       "docker"
@@ -45,8 +44,8 @@ in {
       "maccy"
       "libreoffice"
       "rectangle"
+      "shortcat"
       "swinsian"
-      "stats"
       "vlc"
     ];
   };
