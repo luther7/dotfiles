@@ -38,7 +38,7 @@ in {
       prw = "gh pr create --web";
       prv = "gh pr view --web";
     } // optionalAttrs pkgs.stdenv.isLinux {
-      rbs = "home-manager switch --flake $HOME/.config/nixpkgs";
+      rbs = "home-manager switch --impure --flake $HOME/.config/nixpkgs";
     } // optionalAttrs pkgs.stdenv.isDarwin {
       rbs = "darwin-rebuild switch --flake $HOME/.config/nixpkgs";
       awk = "gawk";

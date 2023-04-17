@@ -13,18 +13,18 @@
   };
   outputs = { nixpkgs, nixpkgs-unstable, home-manager, darwin, ... }:
     let
-      desktop = home-manager.lib.homeManagerConfiguration {
+      linux = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [ ./home.nix ];
       };
-      macbookpro = darwin.lib.darwinSystem {
+      darwin = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules =
           [ home-manager.darwinModules.home-manager (import ./darwin.nix) ];
       };
     in {
-      packages.x86_64-linux.homeConfigurations."luther@purple" = desktop;
-      packages.aarch64-darwin.darwinConfigurations."luther-macbookpro" =
-        macbookpro;
+      packages.x86_64-linux.homeConfigurations."luther@purple" = linux;
+      packages.x86_64-linux.homeConfigurations."luther" = linux;
+      packages.aarch64-darwin.darwinConfigurations."luther-macbookpro" = darwin;
     };
 }

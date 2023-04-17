@@ -5,7 +5,7 @@ let
   homeDirectory =
     if pkgs.stdenv.isDarwin then "/Users/" else "/home/" + username;
 in {
-  imports = [ ./bash.nix ./vim.nix ./tmux.nix ];
+  imports = [ ./alacritty.nix ./bash.nix ./vim.nix ./tmux.nix ];
   programs.home-manager.enable = true;
   programs.man.enable = true;
   programs.info.enable = false;
@@ -13,7 +13,7 @@ in {
     stateVersion = "21.11";
     username = username;
     # FIXME
-    # homeDirectory = homeDirectory;
+    homeDirectory = homeDirectory;
     packages = with pkgs;
       flatten [
         cachix
@@ -43,7 +43,24 @@ in {
         shellcheck
         unzip
         wget
-        (optional pkgs.stdenv.isLinux [ gcc ])
+        (optional pkgs.stdenv.isLinux [
+          _1password-gui
+          alacritty
+          bottles
+          cascadia-code
+          docker
+          firefox-devedition-bin
+          gcc
+          gimp
+          libreoffice
+          lm_sensors
+          mullvad-vpn
+          s-tui
+          stress
+          vlc
+          wineWowPackages.stable
+          winetricks
+        ])
       ];
     language = {
       base = "en_US.UTF-8";
@@ -74,4 +91,5 @@ in {
       url."ssh://git@host".insteadOf = "otherhost";
     };
   };
+  nixpkgs.config.allowUnfree = true;
 }
