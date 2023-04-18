@@ -45,7 +45,6 @@ in {
         (optional pkgs.stdenv.isLinux [
           _1password-gui
           alacritty
-          bottles
           cascadia-code
           gcc
           gimp
