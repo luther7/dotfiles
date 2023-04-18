@@ -16,7 +16,6 @@ in {
     homeDirectory = homeDirectory;
     packages = with pkgs;
       flatten [
-        cachix
         nix-prefetch-git
         nixpkgs-fmt
         bash-completion
@@ -48,15 +47,11 @@ in {
           alacritty
           bottles
           cascadia-code
-          docker
-          firefox-devedition-bin
           gcc
           gimp
           libreoffice
-          lm_sensors
-          mullvad-vpn
-          s-tui
-          stress
+          librewolf
+          signal-desktop
           vlc
           wineWowPackages.stable
           winetricks
@@ -91,5 +86,4 @@ in {
       url."ssh://git@host".insteadOf = "otherhost";
     };
   };
-  nixpkgs.config.allowUnfree = true;
 }

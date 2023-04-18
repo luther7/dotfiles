@@ -6,9 +6,7 @@
     baseIndex = 1;
     escapeTime = 50;
     keyMode = "vi";
-    terminal = "xterm-256color";
-    # FIXME
-    # shell = "/opt/homebrew/bin/bash";
+    terminal = "alacritty";
     plugins = with pkgs; [
       tmuxPlugins.vim-tmux-navigator
       {

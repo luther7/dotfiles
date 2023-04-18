@@ -25,10 +25,10 @@
             foreground = "CellBackground";
             background = "#88c0d0";
           };
-          footer_bar = {
-            background = "#434c5e";
-            foreground = "#d8dee9";
-          };
+        };
+        footer_bar = {
+          background = "#434c5e";
+          foreground = "#d8dee9";
         };
         normal = {
           black = "#3b4252";
@@ -61,18 +61,24 @@
           white = "#aeb3bb";
         };
       };
-      env.TERM = "alacritty";
+      env.TERM = "xterm-256color";
       font = {
         normal = {
+          family = "Cascadia Code";
+          style = "Regular";
+        };
+        bold = {
+          family = "Cascadia Code";
+          style = "Regular";
+        };
+        italic = {
           family = "Cascadia Code";
           style = "Regular";
         };
         size = 16;
       };
       selection.save_to_clipboard = true;
-      # shell.program = "${pkgs.bash}/bin/bash";
       window = {
-        # decorations = "none";
         padding = {
           x = 12;
           y = 6;
