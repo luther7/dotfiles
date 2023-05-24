@@ -13,7 +13,7 @@ in {
     stateVersion = "21.11";
     username = username;
     # FIXME
-    homeDirectory = homeDirectory;
+    #homeDirectory = homeDirectory;
     packages = with pkgs;
       flatten [
         nix-prefetch-git

@@ -17,7 +17,7 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [ ./home.nix ];
       };
-      darwin = darwin.lib.darwinSystem {
+      mac = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules =
           [ home-manager.darwinModules.home-manager (import ./darwin.nix) ];
@@ -25,6 +25,6 @@
     in {
       packages.x86_64-linux.homeConfigurations."luther@purple" = linux;
       packages.x86_64-linux.homeConfigurations."luther" = linux;
-      packages.aarch64-darwin.darwinConfigurations."luther-macbookpro" = darwin;
+      packages.aarch64-darwin.darwinConfigurations."luther-macbookpro" = mac;
     };
 }
