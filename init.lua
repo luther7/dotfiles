@@ -3,6 +3,35 @@ local map = vim.keymap.set
 local o = vim.o
 local g = vim.g
 
+-- Plugins
+
+cmd([[
+call plug#begin()
+Plug 'arcticicestudio/nord-vim'
+Plug 'RishabhRD/popfix'
+Plug 'airblade/vim-rooter'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
+Plug 'hrsh7th/cmp-nvim-lua'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'itchyny/lightline.vim'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'mzlogin/vim-markdown-toc'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.2' }
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'tpope/vim-commentary'
+call plug#end()
+]])
+
 -- Settings
 
 cmd('syntax on')
@@ -22,27 +51,32 @@ o.swapfile = false
 o.wb = false
 o.spell = true
 o.clipboard = 'unnamedplus'
-cmd('set noshowmode')
 vim.opt_global.completeopt = {'menu', 'menuone', 'noselect'}
--- vim.opt_global.shortmess:remove('F'):append('c')
-if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
 local disabled_built_ins = {
   'netrw', 'netrwPlugin', 'netrwSettings', 'netrwFileHandlers', 'gzip', 'zip', 'zipPlugin', 'tar',
   'tarPlugin', 'getscript', 'getscriptPlugin', 'vimball', 'vimballPlugin', '2html_plugin',
   'logipat', 'rrhelper', 'spellfile_plugin', 'matchit'
 }
 for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
+if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
 
 -- Theme
 
-require('nordic').colorscheme({
-  underline_option = 'none',
-  italic = false,
-  italic_comments = false,
-  minimal_mode = false,
-  alternate_backgrounds = false
-})
-cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
+cmd([[
+set termguicolors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set t_Co=256
+set background=dark
+colorscheme nord
+let g:nord_uniform_status_lines = 1
+let g:nord_uniform_diff_background = 1
+let g:nord_bold = 0
+let g:nord_italic = 0
+let g:nord_italic_comments = 0
+let g:nord_underline = 0
+let g:lightline = { 'colorscheme': 'nord', }
+]])
 
 -- cmp
 
@@ -73,20 +107,6 @@ cmp.setup.cmdline(':', {
 
 -- LSP
 
--- TODO move to project script
-g['fsharp#lsp_auto_setup'] = 0
-g['fsharp#fsautocomplete_command'] = {
-  'dotnet', 'tool', 'run', 'fsautocomplete', '--adaptive-lsp-server-enabled'
-}
-cmd([[
-if has('nvim') && exists('*nvim_open_win')
-  set updatetime=1000
-  augroup FSharpShowTooltip
-    autocmd!
-    autocmd CursorHold *.fs,*.fsi,*.fsx call fsharp#showTooltip()
-  augroup END
-endif
-]])
 local on_attach = function(client, bufnr)
   local bufopts = {noremap = true, silent = true, buffer = bufnr}
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -109,9 +129,7 @@ end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 local lspservers = {
-  -- TODO move to project script
-  require('ionide'), lspconfig.bashls, lspconfig.jsonls, lspconfig.kotlin_language_server, lspconfig.rnix, lspconfig.vimls,
-  lspconfig.yamlls
+  lspconfig.bashls, lspconfig.jsonls, lspconfig.vimls, lspconfig.yamlls
 }
 for _, lspserver in ipairs(lspservers) do
   lspserver.setup {
@@ -163,9 +181,9 @@ lspconfig.diagnosticls.setup {
     }
   }
 }
-cmd('highlight! link LspReferenceText CursorColumn')
-cmd('highlight! link LspReferenceRead CursorColumn')
-cmd('highlight! link LspReferenceWrite CursorColumn')
+-- cmd('highlight! link LspReferenceText CursorColumn')
+-- cmd('highlight! link LspReferenceRead CursorColumn')
+-- cmd('highlight! link LspReferenceWrite CursorColumn')
 
 -- Treesitter
 
@@ -199,68 +217,6 @@ require('telescope').setup {
   }
 }
 
--- Dap
-
--- TODO move to project script
-local dap = require('dap')
-local dapvirt = require('nvim-dap-virtual-text')
-local dapui = require('dapui')
-dapui.setup()
-dapvirt.setup()
-dap.adapters.coreclr = {
-  type = 'executable',
-  command = '/nix/store/2kr91b9sk6jcvz5xhvjyhw79cbah6b4j-netcoredbg-2.0.0-895/bin/netcoredbg',
-  args = {'--interpreter=vscode'}
-}
-vim.g.dotnet_build_project = function()
-  local default_path = vim.fn.getcwd() .. '/'
-  if vim.g['dotnet_last_proj_path'] ~= nil then default_path = vim.g['dotnet_last_proj_path'] end
-  local path = vim.fn.input('Path to your *proj file', default_path, 'file')
-  vim.g['dotnet_last_proj_path'] = path
-  local cmd = 'dotnet build -c Debug ' .. path .. ' > /dev/null'
-  print('')
-  print('Cmd to execute: ' .. cmd)
-  local f = os.execute(cmd)
-  if f == 0 then
-    print('\nBuild: ✔️ ')
-  else
-    print('\nBuild: ❌ (code: ' .. f .. ')')
-  end
-end
-vim.g.dotnet_get_dll_path = function()
-  local request = function()
-    return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
-  end
-
-  if vim.g['dotnet_last_dll_path'] == nil then
-    vim.g['dotnet_last_dll_path'] = request()
-  else
-    if vim.fn.confirm('Do you want to change the path to dll?\n' .. vim.g['dotnet_last_dll_path'],
-                      '&yes\n&no', 2) == 1 then vim.g['dotnet_last_dll_path'] = request() end
-  end
-
-  return vim.g['dotnet_last_dll_path']
-end
-local config = {
-  {
-    type = 'coreclr',
-    name = 'launch - netcoredbg',
-    request = 'launch',
-    program = function()
-      if vim.fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
-        vim.g.dotnet_build_project()
-      end
-      return vim.g.dotnet_get_dll_path()
-    end
-  }
-}
-dap.configurations.cs = config
-dap.configurations.fsharp = config
-
--- config-local
-
--- require('config-local').setup()
-
 -- Mappings
 
 local opts = {noremap = true, silent = true}
@@ -275,7 +231,4 @@ map('n', '<space>q', vim.diagnostic.setloclist, opts)
 map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true})
 map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
-map('n', '<F6>', dapui.toggle, {noremap = true})
-map('n', '<F7>', ':DapToggleBreakpoint<CR>', {noremap = true})
-map('n', '<F8>', ':DapContinue<CR>', {noremap = true})
 map('n', '<F9>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})

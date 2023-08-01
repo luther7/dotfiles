@@ -1,0 +1,26 @@
+set colorcolumn=100
+set clipboard=unnamedplus
+set history=100000
+
+set ideaput
+set ideajoin
+set idearefactormode=keep
+
+set ReplaceWithRegister
+set NERDTree
+
+set which-key
+set notimeout
+
+map Q gq
+
+nnoremap <c-k><c-w><up>
+nnoremap <c-j><c-w><down>
+nnoremap <c-h><c-w><left>
+nnoremap <c-l><c-w><right>
+nnoremap <c-o> :action Back<CR>
+nnoremap <c-i> :action Forward<CR>
+nnoremap <Space> :action LeaderAction<cr>
+
+inoremap <ctrl><CR> :action EditorCompleteStatement<CR>
+inoremap <c-v><Esc> :action $Paste<CR>aset clipboard+=ideaput
