@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+dotfiles_dir="$PWD"
+
+echo "--- Creating home directories."
+mkdir -p "$HOME/bin"
+mkdir -p "$HOME/lib"
+
+echo "--- Installing repositories."
+sudo apt-add-repository --yes universe
+# Microsoft
+declare repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
+wget "https://packages.microsoft.com/config/ubuntu/$repo_version/packages-microsoft-prod.deb" -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+cat <<EOF | sudo tee /etc/apt/preferences.d/99microsoft-dotnet.pref
+Package: *
+Pin: origin "packages.microsoft.com"
+Pin-Priority: 1001
+EOF
+# Neovim
+sudo add-apt-repository ppa:neovim-ppa/stable
+
+echo "--- Installing and upgrading apt packages."
+sudo apt update
+sudo apt --yes upgrade
+sudo apt --yes install \
+  apt-transport-https \
+  build-essential \
+  ca-certificates \
+  cmake \
+  coreutils \
+  curl \
+  dotnet-sdk-6.0 \
+  fd-find \
+  fonts-cascadia-code \
+  fzf \
+  gcc \
+  g++ \
+  gh \
+  git \
+  gnupg \
+  htop \
+  jq \
+  lm-sensors \
+  lsb-release \
+  neovim \
+  nodejs \
+  npm \
+  pandoc \
+  pkg-config \
+  ripgrep \
+  shellcheck \
+  tmux \
+  util-linux \
+  uuid-runtime \
+  wine \
+  winetricks \
+  wget
+sudo apt --yes autoremove
+
+echo "--- Installing snaps"
+snap install \
+  1password \
+  foobar2000 \
+  gimp \
+  godot4 \
+  krita \
+  libreoffice \
+  pogo \
+  rider \
+  signal-desktop \
+  vlc 
+
+echo "--- Installing mullvad"
+if [[ ! $(which mullvad) ]]; then
+  wget --content-disposition \
+    https://mullvad.net/download/app/deb/latest
+  sudo apt install --yes ./MullvadVPN-*_amd64.deb
+  rm MullvadVPN-*_amd64.deb
+fi
+
+echo "--- Installing node packages."
+sudo npm install --global \
+  bash-language-server \
+  diagnostic-languageserver \
+  prettier \
+  vscode-langservers-extracted \
+  yaml-language-server
+
+echo "--- Installing tpm"
+install_dir="$HOME/.tmux/plugins/tpm"
+if [[ ! -d "$install_dir" ]]; then
+  git clone https://github.com/tmux-plugins/tpm "$install_dir"
+fi
+
+echo "--- Installing vim plug"
+curl -fLo \
+  "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" \
+  --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+echo "--- Installing lua language server."
+
+install_dir="$HOME/lib/lua-language-server"
+wrapper_script="$HOME/bin/lua-language-server"
+version="3.6.25"
+if [[ ! -d "$install_dir" ]]; then
+  mkdir -p "$install_dir"
+  pushd "$install_dir"
+  wget "https://github.com/LuaLS/lua-language-server/releases/download/$version/lua-language-server-$version-linux-x64.tar.gz"
+  tar xvf "lua-language-server-$version-linux-x64.tar.gz"
+  popd
+fi
+if [[ ! -f "$wrapper_script" ]]; then
+  cat <<EOF > "$HOME/bin/lua-language-server"
+#!/usr/bin/env bash
+exec "$install_dir/bin/lua-language-server" "\$@"
+EOF
+  chmod +x "$HOME/bin/lua-language-server"
+fi
+which lua-language-server
+
+echo "--- Installing nord theme for gnome terminal."
+
+install_dir="$(mktemp --directory)"
+pushd "$install_dir"
+git clone https://github.com/nordtheme/gnome-terminal.git
+./gnome-terminal/src/nord.sh --profile luther
+popd
+
+config="/etc/throttled.conf"
+if [[ ! -f "$config" ]]; then
+  sudo apt install --yes \
+    python3-dev \
+    libdbus-glib-1-dev \
+    libgirepository1.0-dev \
+    libcairo2-dev \
+    python3-cairo-dev \
+    python3-venv \
+    python3-wheel
+  cd "$HOME/lib"
+  git clone https://github.com/erpalma/throttled.git
+  sudo ./throttled/install.sh
+  sudo cp "$dotfiles_dir/throttled.conf" "$config"
+  sudo systemctl stop thermald.service
+  sudo systemctl disable thermald.service
+  sudo systemctl mask thermald.service
+  sudo systemctl restart throttled.service
+fi
+
+

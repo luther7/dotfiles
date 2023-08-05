@@ -29,4 +29,6 @@ eval "$(test -x "$HOME/bin/hermit" && "$HOME/bin/hermit" shell-hooks --print --b
 alias awk="gawk"
 alias grep="ggrep"
 alias sed="gsed"
-# debian
+# ubuntu
+export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
+export DOTNET_ROOT="$HOME/.dotnet"
