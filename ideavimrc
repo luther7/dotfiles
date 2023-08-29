@@ -1,26 +1,70 @@
 set colorcolumn=100
 set clipboard=unnamedplus
+set hlsearch
 set history=100000
-
-set ideaput
 set ideajoin
+set ideamarks
 set idearefactormode=keep
-
-set ReplaceWithRegister
+set ignorecase
+set incsearch
 set NERDTree
-
-set which-key
 set notimeout
+set number
+set ReplaceWithRegister
+set scrolloff=15
+set showmode
+set smartcase
+set timeoutlen=1000
+set which-key
+let g:WhichKey_ShowVimActions = "true"
 
 map Q gq
+vnoremap v <Esc>
+nnoremap H ^
+vnoremap H ^
+nnoremap L $
+vnoremap L $
+nnoremap U <C-r>
+nnoremap Y y$
 
-nnoremap <c-k><c-w><up>
-nnoremap <c-j><c-w><down>
-nnoremap <c-h><c-w><left>
-nnoremap <c-l><c-w><right>
+nnoremap <c-k><up>
+nnoremap <c-j><down>
+nnoremap <c-h><left>
+nnoremap <c-l><right>
 nnoremap <c-o> :action Back<CR>
 nnoremap <c-i> :action Forward<CR>
-nnoremap <Space> :action LeaderAction<cr>
-
 inoremap <ctrl><CR> :action EditorCompleteStatement<CR>
 inoremap <c-v><Esc> :action $Paste<CR>aset clipboard+=ideaput
+nnoremap <space>gg :action Switcher<CR>
+nnoremap <space>gf :action GotoFile<CR>
+nnoremap <space>ga :action GotoAction<CR>
+nnoremap <space>gc :action GotoClass<CR>
+nnoremap <space>gp :action SelectInProjectView<CR>
+nnoremap <space>gr :action RecentFiles<CR>
+nnoremap <space>R :source ~/.ideavimrc<cr>
+nnoremap <space>si :action QuickImplementations<CR>
+nnoremap <space>su :action ShowUsages<CR>
+nnoremap <space>sI :action GotoImplementation<CR>
+nnoremap <space>sp :action ParameterInfo<CR>
+nnoremap <space>sop :action SelectPreviousOccurrence<CR>
+nnoremap <space>son :action SelectNextOccurrence<CR>
+nnoremap <space>soa :action SelectAllOccurrences<CR>
+nnoremap <space>ep :action GotoPreviousError<CR>
+nnoremap <space>en :action GotoNextError<CR>
+nnoremap <space>ed <Action>(ShowErrorDescription)
+vnoremap <space>f :action ReformatCode<CR>
+nnoremap <space>ff :action ReformatFile<CR>
+nnoremap <space>fi :action OptimizeImports<CR>
+nnoremap <space>fr :action Refactorings.QuickListPopupAction<cr>
+nnoremap <space>fu :action Vcs.RollbackChangedLines<CR>
+nnoremap <space>fn :action RenameElement<CR>
+nnoremap <space>rr :action Run<CR>
+nnoremap <space>rc :action ChooseRunConfiguration<CR>
+nnoremap <space>dd :action Debug<CR>
+nnoremap <space>dc :action ChooseDebugConfiguration<CR>
+nnoremap <space>db :action ToggleLineBreakpoint<CR>
+nnoremap <space>dg :action ViewBreakpoints<CR>
+nnoremap <space>tg :action GotoTest<CR>
+nnoremap <space>tf :action RunClass<CR>
+nnoremap <space>tr :action Rerun<CR>
+nnoremap <space>tf :action RerunFailedTests<CR>
