@@ -21,6 +21,8 @@ Pin-Priority: 1001
 EOF
 # Neovim
 sudo add-apt-repository ppa:neovim-ppa/stable
+# Fingerprint
+sudo add-apt-repository ppa:uunicorn/open-fprintd
 
 echo "--- Installing and upgrading apt packages."
 sudo apt update
@@ -32,15 +34,17 @@ sudo apt --yes install \
   cmake \
   coreutils \
   curl \
-  dotnet-sdk-6.0 \
+  direnv \
   fd-find \
   fonts-cascadia-code \
+  fprintd-clients \
   fzf \
   gcc \
   g++ \
   gh \
   git \
   gnupg \
+  gnome-tweaks \
   htop \
   jq \
   lm-sensors \
@@ -48,8 +52,10 @@ sudo apt --yes install \
   neovim \
   nodejs \
   npm \
+  open-fprintd \
   pandoc \
   pkg-config \
+  python3-validity
   ripgrep \
   shellcheck \
   tmux \
