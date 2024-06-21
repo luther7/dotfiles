@@ -2,6 +2,7 @@ set colorcolumn=100
 set clipboard=unnamedplus
 set hlsearch
 set history=100000
+set ideaput
 set ideajoin
 set ideamarks
 set idearefactormode=keep
@@ -17,7 +18,6 @@ set smartcase
 set timeoutlen=1000
 set which-key
 let g:WhichKey_ShowVimActions = "true"
-
 map Q gq
 vnoremap v <Esc>
 nnoremap H ^
@@ -26,7 +26,6 @@ nnoremap L $
 vnoremap L $
 nnoremap U <C-r>
 nnoremap Y y$
-
 nnoremap <c-k><up>
 nnoremap <c-j><down>
 nnoremap <c-h><left>

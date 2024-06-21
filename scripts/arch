@@ -9,6 +9,7 @@ pacman --sync --noconfirm \
   chromium \
   cmake \
   direnv \
+  docker \
   fd \
   firefox-developer-edition \
   fwupd \
@@ -18,6 +19,7 @@ pacman --sync --noconfirm \
   gnome \
   gnome-browser-connector \
   htop \
+  intellij-idea-community-edition \
   jq \
   krita \
   libreoffice \
@@ -44,4 +46,5 @@ yay --sync --noconfirm \
   mullvad-vpn \
   tmux-plugin-manager \
   ttf-cascadia-mono \
+  vim-language-server \
   vim-plug
