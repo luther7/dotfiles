@@ -9,20 +9,7 @@ mkdir -p "$HOME/lib"
 
 echo "--- Installing repositories."
 sudo apt-add-repository --yes universe
-# Microsoft
-declare repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
-wget "https://packages.microsoft.com/config/ubuntu/$repo_version/packages-microsoft-prod.deb" -O packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-rm packages-microsoft-prod.deb
-cat <<EOF | sudo tee /etc/apt/preferences.d/99microsoft-dotnet.pref
-Package: *
-Pin: origin "packages.microsoft.com"
-Pin-Priority: 1001
-EOF
-# Neovim
 sudo add-apt-repository ppa:neovim-ppa/stable
-# Fingerprint
-sudo add-apt-repository ppa:uunicorn/open-fprintd
 
 echo "--- Installing and upgrading apt packages."
 sudo apt update
@@ -55,7 +42,6 @@ sudo apt --yes install \
   open-fprintd \
   pandoc \
   pkg-config \
-  python3-validity
   ripgrep \
   shellcheck \
   tmux \
@@ -69,13 +55,9 @@ sudo apt --yes autoremove
 echo "--- Installing snaps"
 snap install \
   1password \
-  foobar2000 \
   gimp \
-  godot4 \
   krita \
   libreoffice \
-  pogo \
-  rider \
   signal-desktop \
   vlc 
 
@@ -108,7 +90,6 @@ curl -fLo \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 echo "--- Installing lua language server."
-
 install_dir="$HOME/lib/lua-language-server"
 wrapper_script="$HOME/bin/lua-language-server"
 version="3.6.25"
@@ -129,13 +110,13 @@ fi
 which lua-language-server
 
 echo "--- Installing nord theme for gnome terminal."
-
 install_dir="$(mktemp --directory)"
 pushd "$install_dir"
 git clone https://github.com/nordtheme/gnome-terminal.git
 ./gnome-terminal/src/nord.sh --profile luther
 popd
 
+echo "--- Installing throttled."
 config="/etc/throttled.conf"
 if [[ ! -f "$config" ]]; then
   sudo apt install --yes \

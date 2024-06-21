@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+pacman --sync --refresh --sysupgrade --noconfirm
+pacman --sync --noconfirm \
+  alacritty \
+  bash-language-server \
+  chromium \
+  cmake \
+  direnv \
+  fd \
+  firefox-developer-edition \
+  fwupd \
+  fzf \
+  gimp \
+  git \
+  gnome \
+  gnome-browser-connector \
+  htop \
+  jq \
+  krita \
+  libreoffice \
+  lm_sensors \
+  lua-language-server \
+  mesa \
+  msr-tools \
+  neovim \
+  prettier \
+  shellcheck \
+  signal-desktop \
+  throttled \
+  vscode-json-languageserver \
+  vulkan-nouveau \
+  wine \
+  winetricks \
+  xf86-video-intel \
+  yaml-language-server
+
+yay --sync --noconfirm \
+  1password \
+  diagnostic-languageserver \
+  github-cli \
+  mullvad-vpn \
+  tmux-plugin-manager \
+  ttf-cascadia-mono \
+  vim-plug

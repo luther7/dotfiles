@@ -7,9 +7,6 @@ local g = vim.g
 
 cmd([[
 call plug#begin()
-Plug 'arcticicestudio/nord-vim'
-Plug 'RishabhRD/popfix'
-Plug 'airblade/vim-rooter'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'hrsh7th/cmp-buffer'
@@ -28,7 +25,9 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.2' }
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'shaunsingh/nord.nvim'
 Plug 'tpope/vim-commentary'
+Plug 'RishabhRD/popfix'
 call plug#end()
 ]])
 
@@ -62,21 +61,15 @@ if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --sma
 
 -- Theme
 
-cmd([[
-set termguicolors
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-set t_Co=256
-set background=dark
-colorscheme nord
-let g:nord_uniform_status_lines = 1
-let g:nord_uniform_diff_background = 1
-let g:nord_bold = 0
-let g:nord_italic = 0
-let g:nord_italic_comments = 0
-let g:nord_underline = 0
-let g:lightline = { 'colorscheme': 'nord', }
-]])
+g.nord_contrast = true
+g.nord_borders = false
+g.nord_disable_background = false
+g.nord_uniform_diff_background = true
+g.nord_italic = false
+g.nord_bold = false
+o.termguicolors = true
+require('nord').set()
+cmd("let g:lightline = { 'colorscheme': 'nord', }")
 
 -- cmp
 
@@ -181,9 +174,6 @@ lspconfig.diagnosticls.setup {
     }
   }
 }
--- cmd('highlight! link LspReferenceText CursorColumn')
--- cmd('highlight! link LspReferenceRead CursorColumn')
--- cmd('highlight! link LspReferenceWrite CursorColumn')
 
 -- Treesitter
 
