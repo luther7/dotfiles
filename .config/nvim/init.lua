@@ -69,7 +69,7 @@ g.nord_italic = false
 g.nord_bold = false
 o.termguicolors = true
 require('nord').set()
-cmd("let g:lightline = { 'colorscheme': 'nord', }")
+cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
 
 -- cmp
 
@@ -86,7 +86,34 @@ cmp.setup({
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({select = true})
+    ['<CR>'] = cmp.mapping.confirm({select = true}),
+    -- If nothing is selected (including preselections) add a newline as usual.
+    -- If something has explicitly been selected by the user, select it.
+    ['<Enter>'] = cmp.mapping({
+      i = function(fallback)
+        if cmp.visible() and cmp.get_active_entry() then
+          cmp.confirm({behavior = cmp.ConfirmBehavior.Replace, select = false})
+        else
+          fallback()
+        end
+      end,
+      s = cmp.mapping.confirm({select = true}),
+      c = cmp.mapping.confirm({behavior = cmp.ConfirmBehavior.Replace, select = true})
+    }),
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      -- This little snippet will confirm with tab, and if no entry is selected, will confirm
+      -- the first item
+      if cmp.visible() then
+        local entry = cmp.get_selected_entry()
+        if not entry then
+          cmp.select_next_item({behavior = cmp.SelectBehavior.Select})
+        else
+          cmp.confirm()
+        end
+      else
+        fallback()
+      end
+    end, {'i', 's', 'c'})
   }),
   sources = cmp.config.sources({{name = 'nvim_lsp'}, {name = 'vsnip'}}, {{name = 'buffer'}})
 })
@@ -122,7 +149,8 @@ end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 local lspservers = {
-  lspconfig.bashls, lspconfig.jsonls, lspconfig.vimls, lspconfig.yamlls
+  lspconfig.bashls, lspconfig.dockerls, lspconfig.jsonls, lspconfig.pyright, lspconfig.terraformls,
+  lspconfig.tsserver, lspconfig.vimls, lspconfig.yamlls
 }
 for _, lspserver in ipairs(lspservers) do
   lspserver.setup {
@@ -135,15 +163,16 @@ end
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {focusable = false})
 lspconfig.diagnosticls.setup {
   on_attach = on_attach,
-  filetypes = {'json', 'markdown', 'sh', 'lua', 'nix'},
+  filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua'},
   init_options = {
     filetypes = {sh = 'shellcheck'},
     formatFiletypes = {
       json = 'prettier',
       markdown = 'prettier',
+      python = 'ruff',
+      terraform = 'terraform',
       yaml = 'prettier',
-      lua = 'luaformat',
-      nix = 'nixfmt'
+      lua = 'luaformat'
     },
     linters = {
       shellcheck = {
@@ -163,7 +192,12 @@ lspconfig.diagnosticls.setup {
       }
     },
     formatters = {
+      ruff = {
+        command = 'ruff',
+        args = { 'format', '--quiet', '-' },
+      },
       prettier = {command = 'prettier', args = {'--stdin-filepath', '%filepath'}},
+      terraform = {command = 'terraform', args = {'fmt', '-'}},
       luaformat = {
         command = 'lua-format',
         args = {
@@ -174,6 +208,9 @@ lspconfig.diagnosticls.setup {
     }
   }
 }
+cmd('highlight! link LspReferenceText CursorColumn')
+cmd('highlight! link LspReferenceRead CursorColumn')
+cmd('highlight! link LspReferenceWrite CursorColumn')
 
 -- Treesitter
 
@@ -210,10 +247,10 @@ require('telescope').setup {
 -- Mappings
 
 local opts = {noremap = true, silent = true}
-map('i', '<Tab>', 'v:lua.tab_complete()', {expr = true})
-map('s', '<Tab>', 'v:lua.tab_complete()', {expr = true})
-map('i', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
-map('s', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
+-- map('i', '<Tab>', 'v:lua.tab_complete()', {expr = true})
+-- map('s', '<Tab>', 'v:lua.tab_complete()', {expr = true})
+-- map('i', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
+-- map('s', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
 map('n', '<space>e', vim.diagnostic.open_float, opts)
 map('n', '[d', vim.diagnostic.goto_prev, opts)
 map('n', ']d', vim.diagnostic.goto_next, opts)
@@ -222,3 +259,4 @@ map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true}
 map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
 map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
 map('n', '<F9>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
+map('n', '<F10>', '<CMD>lua vim.lsp.buf.formatting() <CR>', {noremap = true})

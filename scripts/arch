@@ -29,9 +29,13 @@ pacman --sync --noconfirm \
   msr-tools \
   neovim \
   prettier \
+  pyright \
+  python-poetry \
+  python-ruff \
   shellcheck \
   signal-desktop \
   throttled \
+  terraform \
   vscode-json-languageserver \
   vulkan-nouveau \
   wine \
@@ -42,7 +46,9 @@ pacman --sync --noconfirm \
 yay --sync --noconfirm \
   1password \
   diagnostic-languageserver \
+  dockerfile-language-server \
   github-cli \
+  lua-format \
   mullvad-vpn \
   tmux-plugin-manager \
   ttf-cascadia-mono \
