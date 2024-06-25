@@ -86,7 +86,32 @@ start() {
 
 end() {
   message="${1}"
-  log "END" "${message}"
+  log " END " "${message}"
+}
+
+copy() {
+  source="${1}"
+  destination="${2}"
+  sudo="${3:-false}"
+  start "Diff ${source} to ${destination}"
+  diff "${source}" "${destination}" || true
+  end "Diff ${source} to ${destination}"
+  start "Copy ${source} to ${destination}"
+  # FIXME clean up
+  if [[ "${sudo}" =~ ^(true|on|1)$ ]]; then
+    sudo mkdir -p "$(dirname "${destination}")"
+    sudo cp "${source}" "${destination}"
+  else
+    mkdir -p "$(dirname "${destination}")"
+    cp "${source}" "${destination}"
+  fi
+  end "Copy ${source} to ${destination}"
+}
+
+copy_as_root() {
+  source="${1}"
+  destination="${2}"
+  copy "${source}" "${destination}" "true"
 }
 
 start "Arch setup script"
@@ -95,7 +120,7 @@ start "Check if password required for sudo"
 sudo true
 end "Check if password required for sudo"
 
-if ! command -v yay; then
+if ! command -v yay > /dev/null; then
   start "Install yay"
   pacman --sync --needed --noconfim git base-devel
   mkdir /tmp/yay
@@ -117,12 +142,13 @@ end "Install package"
 
 start "Update system configs files"
 for config in $(fd --type file --base-directory etc); do
-  start "Diff ${PWD}/etc/${config} to /etc/${config}"
-  diff "${PWD}/etc/${config}" "/etc/${config}"
-  end "Diff ${PWD}/etc/${config} to /etc/${config}"
-  start "Copy ${PWD}/etc/${config} to /etc/${config}"
-  sudo cp "${PWD}/etc/${config}" "/etc/${config}"
-  end "Copy ${PWD}/etc/${config} to /etc/${config}"
+  copy_as_root "${PWD}/etc/${config}" "/etc/${config}"
+done
+
+start "Update user configs files"
+copy "${PWD}/.bashrc" "${HOME}/.bashrc"
+for config in $(fd --type file --base-directory .config); do
+  copy "${PWD}/.config/${config}" "${HOME}/.config/${config}"
 done
 
 start "Enable and start systemd services"
@@ -133,4 +159,4 @@ for service in "${systemd_services[@]}"; do
 done
 end "Enable and start systemd services"
 
-end "Arch setup scrip"
+end "Arch setup script"
