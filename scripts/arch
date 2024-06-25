@@ -2,20 +2,23 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-sudo true
-sudo pacman --sync --refresh --sysupgrade --noconfirm
-sudo pacman --sync --needed --noconfirm \
+# Packages may be from repositories or the AUR.
+packages=( \
+  1password \
   alacritty \
   bash-language-server \
   cmake \
+  diagnostic-languageserver \
   direnv \
   docker \
+  dockerfile-language-server \
   fd \
   firefox-developer-edition \
   fwupd \
   fzf \
   gimp \
   git \
+  github-cli \
   gnome \
   gnome-browser-connector \
   htop \
@@ -24,9 +27,13 @@ sudo pacman --sync --needed --noconfirm \
   krita \
   libreoffice \
   lm_sensors \
+  lua-format \
   lua-language-server \
+  man-db \
+  man-pages \
   mesa \
   msr-tools \
+  mullvad-vpn \
   neovim \
   prettier \
   pyright \
@@ -36,8 +43,13 @@ sudo pacman --sync --needed --noconfirm \
   qt6ct \
   shellcheck \
   signal-desktop \
-  throttled \
   terraform \
+  texinfo \
+  throttled \
+  ttf-cascadia-code \
+  tmux-plugin-manager \
+  vim-language-server \
+  vim-plug
   vlc \
   vscode-json-languageserver \
   vulkan-nouveau \
@@ -45,16 +57,80 @@ sudo pacman --sync --needed --noconfirm \
   winetricks \
   xf86-video-intel \
   yaml-language-server \
-  zip
+  zip \
+)
 
-yay --sync --needed --noconfirm \
-  1password \
-  diagnostic-languageserver \
-  dockerfile-language-server \
-  github-cli \
-  lua-format \
-  mullvad-vpn \
-  tmux-plugin-manager \
-  ttf-cascadia-code \
-  vim-language-server \
-  vim-plug
+systemd_services=( \
+  systemd-boot-update \
+  NetworkManager \
+  gdm \
+  throttlestop \
+  throttled \
+  docker \
+)
+
+
+log() {
+  action="${1}"
+  message="${2}"
+  echo -en "\033[0;33m---\033[0m "
+  echo -en "\033[0;34m${action}\033[0m "
+  echo -en "\033[0;33m-->\033[0m "
+  echo -e "\033[0;32m${message}\033[0m"
+}
+
+start() {
+  message="${1}"
+  log "START" "${message}"
+}
+
+end() {
+  message="${1}"
+  log "END" "${message}"
+}
+
+start "Arch setup script"
+
+start "Check if password required for sudo"
+sudo true
+end "Check if password required for sudo"
+
+if ! command -v yay; then
+  start "Install yay"
+  pacman --sync --needed --noconfim git base-devel
+  mkdir /tmp/yay
+  git clone https://aur.archlinux.org/yay.git /tmp/yay
+  (
+    cd /tmp/yay && \
+      makepkg --syncdeps --install --noconfirm
+  )
+  end "Install yay"
+fi
+
+start "System upgrade"
+yay --sync --refresh --sysupgrade --noconfirm
+end "System upgrade"
+
+start "Install packages"
+yay --sync --needed --noconfirm "${packages[@]}"
+end "Install package"
+
+start "Update system configs files"
+for config in $(fd --type file --base-directory etc); do
+  start "Diff ${PWD}/etc/${config} to /etc/${config}"
+  diff "${PWD}/etc/${config}" "/etc/${config}"
+  end "Diff ${PWD}/etc/${config} to /etc/${config}"
+  start "Copy ${PWD}/etc/${config} to /etc/${config}"
+  sudo cp "${PWD}/etc/${config}" "/etc/${config}"
+  end "Copy ${PWD}/etc/${config} to /etc/${config}"
+done
+
+start "Enable and start systemd services"
+for service in "${systemd_services[@]}"; do
+  start "Enable systemd service '${service}'"
+  sudo systemctl enable --now "${service}.service"
+  end "Enable systemd service '${service}'"
+done
+end "Enable and start systemd services"
+
+end "Arch setup scrip"
