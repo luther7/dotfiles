@@ -46,6 +46,7 @@ packages=( \
   terraform \
   texinfo \
   throttled \
+  tree \
   ttf-cascadia-code \
   tmux-plugin-manager \
   vim-language-server \
@@ -69,7 +70,6 @@ systemd_services=( \
   docker \
 )
 
-
 log() {
   action="${1}"
   message="${2}"
@@ -87,6 +87,11 @@ start() {
 end() {
   message="${1}"
   log " END " "${message}"
+}
+
+find_files() {
+  base_directory="${1}"
+  fd --type file --hidden --base-directory "${base_directory}"
 }
 
 copy() {
@@ -138,18 +143,22 @@ end "System upgrade"
 
 start "Install packages"
 yay --sync --needed --noconfirm "${packages[@]}"
-end "Install package"
+end "Install packages"
 
 start "Update system configs files"
-for config in $(fd --type file --base-directory etc); do
+for config in $(find_files etc); do
   copy_as_root "${PWD}/etc/${config}" "/etc/${config}"
 done
+end "Update system configs files"
 
 start "Update user configs files"
-copy "${PWD}/.bashrc" "${HOME}/.bashrc"
-for config in $(fd --type file --base-directory .config); do
-  copy "${PWD}/.config/${config}" "${HOME}/.config/${config}"
+for config in $(find_files home); do
+  copy "${PWD}/home/${config}" "${HOME}/${config}"
 done
+for config in $(find_files config); do
+  copy "${PWD}/config/${config}" "${HOME}/.config/${config}"
+done
+end "Update user configs files"
 
 start "Enable and start systemd services"
 for service in "${systemd_services[@]}"; do
