@@ -50,7 +50,7 @@ packages=( \
   ttf-cascadia-code \
   tmux-plugin-manager \
   vim-language-server \
-  vim-plug
+  vim-plug \
   vlc \
   vscode-json-languageserver \
   vulkan-nouveau \
