@@ -2,11 +2,11 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-pacman --sync --refresh --sysupgrade --noconfirm
-pacman --sync --noconfirm \
+sudo true
+sudo pacman --sync --refresh --sysupgrade --noconfirm
+sudo pacman --sync --needed --noconfirm \
   alacritty \
   bash-language-server \
-  chromium \
   cmake \
   direnv \
   docker \
@@ -32,18 +32,22 @@ pacman --sync --noconfirm \
   pyright \
   python-poetry \
   python-ruff \
+  qbittorrent \
+  qt6ct \
   shellcheck \
   signal-desktop \
   throttled \
   terraform \
+  vlc \
   vscode-json-languageserver \
   vulkan-nouveau \
   wine \
   winetricks \
   xf86-video-intel \
-  yaml-language-server
+  yaml-language-server \
+  zip
 
-yay --sync --noconfirm \
+yay --sync --needed --noconfirm \
   1password \
   diagnostic-languageserver \
   dockerfile-language-server \
@@ -51,6 +55,6 @@ yay --sync --noconfirm \
   lua-format \
   mullvad-vpn \
   tmux-plugin-manager \
-  ttf-cascadia-mono \
+  ttf-cascadia-code \
   vim-language-server \
   vim-plug
