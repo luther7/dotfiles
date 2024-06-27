@@ -95,12 +95,12 @@ arch_user_shell="/bin/bash"
 log_action() {
   message="${1}"
   echo -en "\033[0;33m---\033[0m "
-  echo -en "\033[0;32m${message}\033[0m "
-  echo -e "\033[0;33m-->\033[0m"
+  echo -e "\033[0;32m${message}\033[0m "
 }
 
 log() {
   message="${1}"
+  echo -en "\033[0;33m-\033[0m "
   echo -e "\033[0;32m${message}\033[0m"
 }
 
@@ -118,7 +118,7 @@ diff_and_backup() {
   sudo="${3:-false}"
   sudo_prefix=
   [[ "${sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
-  log "Diff ${source} to ${destination}"
+  log "Diff source to ${destination}"
   if ${sudo_prefix} diff "${source}" "${destination}"; then
     log "${destination} is unchanged."
     return 0
@@ -128,6 +128,7 @@ diff_and_backup() {
     ${sudo_prefix} mkdir -p "$(dirname "${destination}")"
     log "Backup ${destination} to ${destination}.bak"
     ${sudo_prefix} cp "${destination}" "${destination}.bak"
+    return 1
   fi
 }
 
@@ -137,7 +138,6 @@ copy() {
   sudo="${3:-false}"
   sudo_prefix=
   [[ "${sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
-  log_action "Copy ${source} to ${destination}"
   if ! diff_and_backup "${source}" "${destination}" "${sudo}"; then
     log "Copy ${source} to ${destination}"
     ${sudo_prefix} cp "${source}" "${destination}"
@@ -156,11 +156,15 @@ set_content() {
   sudo="${3:-false}"
   sudo_prefix=
   [[ "${3:-sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
-  log_action "Set content of ${destination}"
-  if ! diff_and_backup <(echo "${content}") "${destination}" "${sudo}"; then
+  log "Create temporary file with contents for ${destination}"
+  tempfile="$(mktemp --suffix "$(basename "${destination}")")"
+  echo "${content}" > "${tempfile}"
+  if ! diff_and_backup "${tempfile}" "${destination}" "${sudo}"; then
     log "Set ${destination} content."
     echo "${content}" | ${sudo_prefix} tee "${destination}" > /dev/null
   fi
+  log "Remove temporary file with contents for ${destination}"
+  rm "${tempfile}"
 }
 
 log_action "Arch setup script"
@@ -196,7 +200,7 @@ else
 fi
 
 log_action "Checking if language is configured"
-if [[ "$(cat /etc/locale.conf)" != "${arch_language}" ]]; then
+if [[ "$(cat /etc/locale.conf)" != "LANG=${arch_language}" ]]; then
   log "Configuring language."
   set_content "LANG=${arch_language}" /etc/locale.conf true
   export LANG="${arch_language}"
@@ -248,11 +252,11 @@ fi
 
 log_action "Updating pacman mirrors with reflector"
 sudo reflector \
-  --country="AU" \
-  --fastest=6 \
-  --latest=6 \
-  --number=6 \
-  --save=/etc/pacman.d/mirrorlist
+  --country "AU" \
+  --fastest 6 \
+  --latest 6 \
+  --number 6 \
+  --save /etc/pacman.d/mirrorlist
 
 log_action "Checking if yay is installed"
 if ! command -v yay > /dev/null; then
