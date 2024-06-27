@@ -1,0 +1,299 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+# cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.."
+
+# Packages may be from repositories or the AUR.
+arch_packages=( \
+  1password \
+  alacritty \
+  bash-language-server \
+  cmake \
+  cups \
+  diagnostic-languageserver \
+  direnv \
+  docker \
+  dockerfile-language-server \
+  epson-inkjet-printer-escpr \
+  fd \
+  firefox-developer-edition \
+  fwupd \
+  fzf \
+  gimp \
+  git \
+  github-cli \
+  gnome \
+  gnome-browser-connector \
+  godot \
+  gst-plugins-good \
+  htop \
+  inetutils 
+  intellij-idea-community-edition \
+  jq \
+  krita \
+  ldns \
+  libreoffice \
+  lm_sensors \
+  lua-format \
+  lua-language-server \
+  man-db \
+  man-pages \
+  mesa \
+  msr-tools \
+  mullvad-vpn \
+  neovim \
+  prettier \
+  pyright \
+  python-poetry \
+  python-ruff \
+  qbittorrent \
+  quodlibet \
+  qt6ct \
+  shellcheck \
+  signal-desktop \
+  terraform \
+  texinfo \
+  throttled \
+  tree \
+  ttf-cascadia-code \
+  tmux-plugin-manager \
+  usbutils \
+  vim-language-server \
+  vim-plug \
+  vlc \
+  vscode-json-languageserver \
+  vulkan-nouveau \
+  wine \
+  winetricks \
+  xf86-video-intel \
+  yaml-language-server \
+  zip \
+  zoom \
+)
+
+arch_systemd_services=( \
+  cups \
+  docker \
+  gdm \
+  NetworkManager \
+  systemd-boot-update \
+  systemd-timesyncd \
+  throttlestop \
+  throttled \
+)
+
+arch_timezone="Australia/Melbourne"
+arch_locales="
+en_US.UTF-8 UTF-8
+en_AU.UTF-8 UTF-8"
+arch_language="en_AU.UTF-8"
+arch_hostname="wendigo"
+arch_user="luther"
+arch_user_groups="wheel"
+arch_user_shell="/bin/bash"
+
+log_action() {
+  message="${1}"
+  echo -en "\033[0;33m---\033[0m "
+  echo -en "\033[0;32m${message}\033[0m "
+  echo -e "\033[0;33m-->\033[0m"
+}
+
+log() {
+  message="${1}"
+  echo -e "\033[0;32m${message}\033[0m"
+}
+
+find_files() {
+  base_directory="${1}"
+  fd \
+    --type=file \
+    --hidden \
+    --base-directory="${base_directory}"
+}
+
+diff_and_backup() {
+  source="${1}"
+  destination="${2}"
+  sudo="${3:-false}"
+  sudo_prefix=
+  [[ "${sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
+  log "Diff ${source} to ${destination}"
+  if ${sudo_prefix} diff "${source}" "${destination}"; then
+    log "${destination} is unchanged."
+    return 0
+  else
+    log "${destination} will change."
+    log "Create directories along $(dirname "${destination}")"
+    ${sudo_prefix} mkdir -p "$(dirname "${destination}")"
+    log "Backup ${destination} to ${destination}.bak"
+    ${sudo_prefix} cp "${destination}" "${destination}.bak"
+  fi
+}
+
+copy() {
+  source="${1}"
+  destination="${2}"
+  sudo="${3:-false}"
+  sudo_prefix=
+  [[ "${sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
+  log_action "Copy ${source} to ${destination}"
+  if ! diff_and_backup "${source}" "${destination}" "${sudo}"; then
+    log "Copy ${source} to ${destination}"
+    ${sudo_prefix} cp "${source}" "${destination}"
+  fi
+}
+
+copy_as_root() {
+  source="${1}"
+  destination="${2}"
+  copy "${source}" "${destination}" "true"
+}
+
+set_content() {
+  content="${1}"
+  destination="${2}"
+  sudo="${3:-false}"
+  sudo_prefix=
+  [[ "${3:-sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
+  log_action "Set content of ${destination}"
+  if ! diff_and_backup <(echo "${content}") "${destination}" "${sudo}"; then
+    log "Set ${destination} content."
+    echo "${content}" | ${sudo_prefix} tee "${destination}" > /dev/null
+  fi
+}
+
+log_action "Arch setup script"
+
+log_action "Checking if password is required for sudo"
+sudo true
+
+log_action "Checking if timezone is set"
+if [ -f /etc/localtime ] \
+  && [[ "$(sudo realpath /etc/localtime)" \
+    == "/usr/share/zoneinfo/${arch_timezone}" ]]; then
+  log "Timezone is set."
+else
+  log "Setting timezone to ${arch_timezone}"
+  sudo rm /etc/localtime
+  sudo ln \
+    --symbolic \
+    --force \
+    "/usr/share/zoneinfo/${arch_timezone}"
+    /etc/localtime
+fi
+
+log_action "Setting RTC from system clock."
+sudo hwclock --systohc --utc
+
+log_action "Checking if locales are generated"
+if [[ "$(cat /etc/locale.gen)" != "${arch_locales}" ]]; then
+  log "Generating locales."
+  set_content "${arch_locales}" /etc/locale.gen true
+  sudo locale-gen
+else
+  log "Locales are generated."
+fi
+
+log_action "Checking if language is configured"
+if [[ "$(cat /etc/locale.conf)" != "${arch_language}" ]]; then
+  log "Configuring language."
+  set_content "LANG=${arch_language}" /etc/locale.conf true
+  export LANG="${arch_language}"
+else
+  log "Language is configured."
+fi
+
+log_action "Checking if hostname is configured"
+if [[ "$(cat /etc/hostname)" != "${arch_hostname}" ]]; then
+  log "Configuring hostname."
+  set_content "${arch_hostname}" /etc/hostname true
+else
+  log "Hostname is configured."
+fi
+
+log_action "Checking if systemd-boot is installed in the ESP"
+if ! sudo bootctl is-installed > /dev/null; then
+  log "Installing systemd-boot into the ESP."
+  sudo bootctl install
+else
+  log "systemd-boot is installed in the ESP."
+fi
+
+log_action "Update boot config files"
+for config in $(find_files boot); do
+  copy_as_root "${PWD}/boot/${config}" "/boot/${config}"
+done
+
+arch_user_created=false
+log_action "Checking if user ${arch_user} exists"
+if ! id "${arch_user}" > /dev/null; then
+  log "Creating user ${arch_user}"
+  useradd \
+    --create-home \
+    --shell "${arch_user_shell}" \
+    --groups "${arch_user_groups}"
+  arch_user_created=true
+else
+  log "User ${arch_user} exists."
+fi
+
+log_action "Checking if reflector is installed"
+if ! command -v yay > /dev/null; then
+  log "Installing reflector."
+  pacman --sync --needed --noconfim git reflector
+else
+  log "reflector is installed."
+fi
+
+log_action "Updating pacman mirrors with reflector"
+sudo reflector \
+  --country="AU" \
+  --fastest=6 \
+  --latest=6 \
+  --number=6 \
+  --save=/etc/pacman.d/mirrorlist
+
+log_action "Checking if yay is installed"
+if ! command -v yay > /dev/null; then
+  log "Installing yay."
+  pacman --sync --needed --noconfim git base-devel
+  mkdir /tmp/yay
+  git clone https://aur.archlinux.org/yay.git /tmp/yay
+  (
+    cd /tmp/yay && \
+      makepkg --syncdeps --install --noconfirm
+  )
+else
+  log "yay is already installed."
+fi
+
+log_action "System upgrade"
+yay --sync --refresh --sysupgrade --noconfirm
+
+log_action "Install packages"
+yay --sync --needed --noconfirm "${arch_packages[@]}"
+
+log_action "Update system config files"
+for config in $(find_files etc); do
+  copy_as_root "${PWD}/etc/${config}" "/etc/${config}"
+done
+
+log_action "Update user config files"
+for config in $(find_files home); do
+  copy "${PWD}/home/${config}" "${HOME}/${config}"
+done
+for config in $(find_files config); do
+  copy "${PWD}/config/${config}" "${HOME}/.config/${config}"
+done
+
+log_action "Enable and log systemd services"
+for service in "${arch_systemd_services[@]}"; do
+  log "Enable systemd service ${service}"
+  sudo systemctl enable --now "${service}.service"
+done
+
+log "Arch setup script complete!"
+log "This script does not set the root password. Set it with: sudo passwd"
+[[ "${arch_user_created}" =~ ^(true|on|1)$ ]] \
+  && log "User ${arch_user} was created. Set the user's password with: passwd ${arch_user}"
