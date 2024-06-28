@@ -15,8 +15,10 @@ arch_packages=( \
   direnv \
   docker \
   dockerfile-language-server \
+  dosfstools \
   efitools \
   efibootmgr \
+  exfat-tools \
   fd \
   firefox-developer-edition \
   fwupd \
@@ -26,6 +28,10 @@ arch_packages=( \
   github-cli \
   gnome \
   gnome-browser-connector \
+  gnome-shell-extension-dash-to-panel \
+  gnome-shell-extension-forge \
+  gnome-shell-extension-freon \
+  gnome-tweaks \
   godot \
   gst-plugin-pipewire \
   gst-plugins-good \
@@ -54,6 +60,7 @@ arch_packages=( \
   pipewire-pulse \
   pipewire-audio \
   pipewire-jack \
+  plymouth \
   prettier \
   pyright \
   python-poetry \
@@ -64,6 +71,7 @@ arch_packages=( \
   rsync \
   shellcheck \
   signal-desktop \
+  strace \
   terraform \
   texinfo \
   throttled \
@@ -71,7 +79,6 @@ arch_packages=( \
   ttf-cascadia-code \
   tmux-plugin-manager \
   tpm2-tss \
-  unixodbc \
   usbutils \
   vim-language-server \
   vim-plug \
