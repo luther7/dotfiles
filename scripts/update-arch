@@ -1,20 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
-# cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.."
 
 # Packages may be from repositories or the AUR.
 arch_packages=( \
   1password \
   alacritty \
   bash-language-server \
+  btrfs-progs \
   cmake \
   cups \
+  cryptsetup \
   diagnostic-languageserver \
   direnv \
   docker \
   dockerfile-language-server \
-  epson-inkjet-printer-escpr \
+  efitools \
+  efibootmgr \
   fd \
   firefox-developer-edition \
   fwupd \
@@ -25,14 +27,20 @@ arch_packages=( \
   gnome \
   gnome-browser-connector \
   godot \
+  gst-plugin-pipewire \
   gst-plugins-good \
+  helvum \
   htop \
   inetutils 
   intellij-idea-community-edition \
   jq \
   krita \
   ldns \
+  lib32-pipewire \
+  lib32-pulse \
   libreoffice \
+  linux \
+  linux-firmware \
   lm_sensors \
   lua-format \
   lua-language-server \
@@ -42,6 +50,10 @@ arch_packages=( \
   msr-tools \
   mullvad-vpn \
   neovim \
+  pipewire \
+  pipewire-pulse \
+  pipewire-audio \
+  pipewire-jack \
   prettier \
   pyright \
   python-poetry \
@@ -49,6 +61,7 @@ arch_packages=( \
   qbittorrent \
   quodlibet \
   qt6ct \
+  rsync \
   shellcheck \
   signal-desktop \
   terraform \
@@ -57,18 +70,22 @@ arch_packages=( \
   tree \
   ttf-cascadia-code \
   tmux-plugin-manager \
+  tpm2-tss \
+  unixodbc \
   usbutils \
   vim-language-server \
   vim-plug \
   vlc \
   vscode-json-languageserver \
   vulkan-nouveau \
-  wine \
+  wine-staging \
   winetricks \
+  wireplumber \
   xf86-video-intel \
   yaml-language-server \
   zip \
   zoom \
+  zenity \
 )
 
 arch_systemd_services=( \
@@ -78,19 +95,15 @@ arch_systemd_services=( \
   NetworkManager \
   systemd-boot-update \
   systemd-timesyncd \
-  throttlestop \
   throttled \
+  throttlestop \
 )
 
-arch_timezone="Australia/Melbourne"
-arch_locales="
-en_US.UTF-8 UTF-8
-en_AU.UTF-8 UTF-8"
-arch_language="en_AU.UTF-8"
-arch_hostname="wendigo"
-arch_user="luther"
-arch_user_groups="wheel"
-arch_user_shell="/bin/bash"
+arch_systemd_user_services=( \
+  pipewire \
+  pipewire-pulse \
+  wireplumber \
+)
 
 log_action() {
   message="${1}"
@@ -150,102 +163,15 @@ copy_as_root() {
   copy "${source}" "${destination}" "true"
 }
 
-set_content() {
-  content="${1}"
-  destination="${2}"
-  sudo="${3:-false}"
-  sudo_prefix=
-  [[ "${3:-sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
-  log "Create temporary file with contents for ${destination}"
-  tempfile="$(mktemp --suffix "$(basename "${destination}")")"
-  echo "${content}" > "${tempfile}"
-  if ! diff_and_backup "${tempfile}" "${destination}" "${sudo}"; then
-    log "Set ${destination} content."
-    echo "${content}" | ${sudo_prefix} tee "${destination}" > /dev/null
-  fi
-  log "Remove temporary file with contents for ${destination}"
-  rm "${tempfile}"
-}
-
 log_action "Arch setup script"
 
 log_action "Checking if password is required for sudo"
 sudo true
 
-log_action "Checking if timezone is set"
-if [ -f /etc/localtime ] \
-  && [[ "$(sudo realpath /etc/localtime)" \
-    == "/usr/share/zoneinfo/${arch_timezone}" ]]; then
-  log "Timezone is set."
-else
-  log "Setting timezone to ${arch_timezone}"
-  sudo rm /etc/localtime
-  sudo ln \
-    --symbolic \
-    --force \
-    "/usr/share/zoneinfo/${arch_timezone}"
-    /etc/localtime
-fi
-
-log_action "Setting RTC from system clock."
-sudo hwclock --systohc --utc
-
-log_action "Checking if locales are generated"
-if [[ "$(cat /etc/locale.gen)" != "${arch_locales}" ]]; then
-  log "Generating locales."
-  set_content "${arch_locales}" /etc/locale.gen true
-  sudo locale-gen
-else
-  log "Locales are generated."
-fi
-
-log_action "Checking if language is configured"
-if [[ "$(cat /etc/locale.conf)" != "LANG=${arch_language}" ]]; then
-  log "Configuring language."
-  set_content "LANG=${arch_language}" /etc/locale.conf true
-  export LANG="${arch_language}"
-else
-  log "Language is configured."
-fi
-
-log_action "Checking if hostname is configured"
-if [[ "$(cat /etc/hostname)" != "${arch_hostname}" ]]; then
-  log "Configuring hostname."
-  set_content "${arch_hostname}" /etc/hostname true
-else
-  log "Hostname is configured."
-fi
-
-log_action "Checking if systemd-boot is installed in the ESP"
-if ! sudo bootctl is-installed > /dev/null; then
-  log "Installing systemd-boot into the ESP."
-  sudo bootctl install
-else
-  log "systemd-boot is installed in the ESP."
-fi
-
-log_action "Update boot config files"
-for config in $(find_files boot); do
-  copy_as_root "${PWD}/boot/${config}" "/boot/${config}"
-done
-
-arch_user_created=false
-log_action "Checking if user ${arch_user} exists"
-if ! id "${arch_user}" > /dev/null; then
-  log "Creating user ${arch_user}"
-  useradd \
-    --create-home \
-    --shell "${arch_user_shell}" \
-    --groups "${arch_user_groups}"
-  arch_user_created=true
-else
-  log "User ${arch_user} exists."
-fi
-
 log_action "Checking if reflector is installed"
 if ! command -v yay > /dev/null; then
   log "Installing reflector."
-  pacman --sync --needed --noconfim git reflector
+  sudo pacman --sync --needed --noconfirm git reflector
 else
   log "reflector is installed."
 fi
@@ -261,7 +187,7 @@ sudo reflector \
 log_action "Checking if yay is installed"
 if ! command -v yay > /dev/null; then
   log "Installing yay."
-  pacman --sync --needed --noconfim git base-devel
+  sudo pacman --sync --needed --noconfirm git base-devel
   mkdir /tmp/yay
   git clone https://aur.archlinux.org/yay.git /tmp/yay
   (
@@ -283,6 +209,11 @@ for config in $(find_files etc); do
   copy_as_root "${PWD}/etc/${config}" "/etc/${config}"
 done
 
+log_action "Update system scripts"
+for script in $(find_files bin); do
+  copy_as_root "${PWD}/bin/${script}" "/usr/local/bin/${script}"
+done
+
 log_action "Update user config files"
 for config in $(find_files home); do
   copy "${PWD}/home/${config}" "${HOME}/${config}"
@@ -291,13 +222,16 @@ for config in $(find_files config); do
   copy "${PWD}/config/${config}" "${HOME}/.config/${config}"
 done
 
-log_action "Enable and log systemd services"
+log_action "Enable and start systemd services"
 for service in "${arch_systemd_services[@]}"; do
   log "Enable systemd service ${service}"
   sudo systemctl enable --now "${service}.service"
 done
 
+log_action "Enable and start systemd user services"
+for service in "${arch_systemd_user_services[@]}"; do
+  log "Enable systemd user service ${service}"
+  sudo systemctl --user enable --now "${service}.service"
+done
+
 log "Arch setup script complete!"
-log "This script does not set the root password. Set it with: sudo passwd"
-[[ "${arch_user_created}" =~ ^(true|on|1)$ ]] \
-  && log "User ${arch_user} was created. Set the user's password with: passwd ${arch_user}"
