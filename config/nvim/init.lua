@@ -1,40 +1,84 @@
 local cmd = vim.cmd
+local api = vim.api
 local map = vim.keymap.set
+local mapopts = { noremap = true, silent = true }
 local o = vim.o
+local g = vim.g
 local g = vim.g
 
 -- Plugins
+require('packer').startup(function(use)
+  use 'wbthomason/packer.nvim'
+  -- lspconfig
+  use {
+    'williamboman/mason.nvim',
+    requires = {
+      'neovim/nvim-lspconfig', 'williamboman/mason-lspconfig.nvim',
+      'j-hui/fidget.nvim', 'folke/neodev.nvim', 'mfussenegger/nvim-dap',
+      'rcarriga/nvim-dap-ui', 'nvim-neotest/nvim-nio',
+      'mhartington/formatter.nvim', 'mfussenegger/nvim-lint',
+      'WhoIsSethDaniel/mason-tool-installer.nvim'
+    },
+  }
+  -- cmp
+  use {
+    'hrsh7th/nvim-cmp',
+    requires = {
+      'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ',
+      'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-cmdline',
+      'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-nvim-lsp-document-symbol',
+      'hrsh7th/cmp-nvim-lsp-signature-help', 'hrsh7th/cmp-nvim-lua',
+      'hrsh7th/cmp-path'
+    }
+  }
+  -- treesitter
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = function()
+      pcall(require('nvim-treesitter.install').update { with_sync = true })
+    end
+  }
+  use {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    after = 'nvim-treesitter'
+  }
+  -- telescope
+  use {
+    'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    requires = { 'nvim-lua/plenary.nvim' }
+  }
 
-cmd([[
-call plug#begin()
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
-Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-Plug 'hrsh7th/cmp-nvim-lua'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'itchyny/lightline.vim'
-Plug 'lewis6991/gitsigns.nvim'
-Plug 'mzlogin/vim-markdown-toc'
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
-Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.2' }
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'shaunsingh/nord.nvim'
-Plug 'tpope/vim-commentary'
-Plug 'RishabhRD/popfix'
-call plug#end()
-]])
+  use {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    run = 'make',
+    cond = vim.fn.executable 'make' == 1
+  }
+  -- which-key
+  use {
+    "folke/which-key.nvim",
+    config = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+      require("which-key").setup {}
+    end
+  }
+  -- Theme
+  use 'shaunsingh/nord.nvim'
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = { 'nvim-tree/nvim-web-devicons', opt = true }
+  }
+  use 'lewis6991/gitsigns.nvim'
+  -- Utilities
+  use 'RishabhRD/popfix'
+  use 'christoomey/vim-tmux-navigator'
+  use 'numToStr/Comment.nvim'
+  use 'editorconfig/editorconfig-vim'
+  use 'mzlogin/vim-markdown-toc'
+end)
 
 -- Settings
-
-cmd('syntax on')
-cmd('filetype plugin indent on')
 o.compatible = false
 o.encoding = 'UTF-8'
 o.fileencodings = 'UTF-8'
@@ -50,17 +94,15 @@ o.swapfile = false
 o.wb = false
 o.spell = true
 o.clipboard = 'unnamedplus'
-vim.opt_global.completeopt = {'menu', 'menuone', 'noselect'}
-local disabled_built_ins = {
-  'netrw', 'netrwPlugin', 'netrwSettings', 'netrwFileHandlers', 'gzip', 'zip', 'zipPlugin', 'tar',
-  'tarPlugin', 'getscript', 'getscriptPlugin', 'vimball', 'vimballPlugin', '2html_plugin',
-  'logipat', 'rrhelper', 'spellfile_plugin', 'matchit'
-}
-for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 0 end
-if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
+api.nvim_set_option("clipboard", "unnamedplus")
+vim.opt_global.completeopt = { 'menu', 'menuone', 'noselect' }
+if vim.fn.executable 'rg' == 1 then
+  o.grepprg = 'rg --vimgrep --no-heading --smart-case'
+end
+g.mapleader = ' '
+g.maplocalleader = ' '
 
--- Theme
-
+-- nord
 g.nord_contrast = true
 g.nord_borders = false
 g.nord_disable_background = false
@@ -69,194 +111,230 @@ g.nord_italic = false
 g.nord_bold = false
 o.termguicolors = true
 require('nord').set()
-cmd('let g:lightline = { \'colorscheme\': \'nord\', }')
+
+-- lualine
+require('lualine').setup {
+  options = {
+    icons_enabled = false,
+    theme = 'nord',
+    component_separators = { left = '', right = '' },
+    section_separators = { left = '', right = '' }
+  }
+}
+
+-- Comment
+require('Comment').setup()
+
+-- treesitter
+local parser_install_dir = vim.fn.stdpath('cache') .. '/treesitters'
+vim.fn.mkdir(parser_install_dir, 'p')
+vim.opt.runtimepath:append(parser_install_dir)
+require 'nvim-treesitter.configs'.setup {
+  parser_install_dir = parser_install_dir,
+  ensure_installed = {
+    'bash', 'python', 'java', 'javascript', 'kotlin', 'lua', 'toml',
+    'typescript', 'vim', 'yaml'
+  },
+  sync_install = false,
+  ignore_install = {},
+  highlight = {
+    enable = true,
+    disable = {},
+    additional_vim_regex_highlighting = false
+  },
+  indent = { enable = true }
+}
+
+-- telescope
+local actions = require('telescope.actions')
+require('telescope').setup {
+  defaults = {
+    mappings = {
+      i = { ['<esc>'] = actions.close },
+      n = { ['<esc>'] = actions.close, ['q'] = actions.close }
+    },
+    file_ignore_patterns = {
+      '.git', 'node_modules', '%.png', 'h.jpg', '%.jpeg'
+    },
+    theme = 'get_ivy',
+    layout_strategy = 'flex'
+  }
+}
+pcall(require('telescope').load_extension, 'fzf')
+local builtin = require('telescope.builtin')
+map('n', '<leader>fb', builtin.buffers, { unpack(mapopts), desc = "Buffers" })
+map('n', '<leader>fg', builtin.live_grep, { unpack(mapopts), desc = "Live grep" })
+map('n', '<leader>fr', builtin.oldfiles,
+  { unpack(mapopts), desc = "Recent files" })
+map('n', '<leader>es', builtin.spell_suggest, { unpack(mapopts), desc = "Spell" })
 
 -- cmp
-
+local has_words_before = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and
+      vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col,
+        col)
+      :match("%s") == nil
+end
+local feedkey = function(key, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true),
+    mode, true)
+end
 local cmp = require 'cmp'
 cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn['vsnip#anonymous'](args.body) -- For `vsnip` users.
-    end
-  },
-  window = {completion = cmp.config.window.bordered(), documentation = cmp.config.window.bordered()},
+  snippet = { expand = function(args) vim.fn['vsnip#anonymous'](args.body) end },
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({select = true}),
-    -- If nothing is selected (including preselections) add a newline as usual.
-    -- If something has explicitly been selected by the user, select it.
-    ['<Enter>'] = cmp.mapping({
-      i = function(fallback)
-        if cmp.visible() and cmp.get_active_entry() then
-          cmp.confirm({behavior = cmp.ConfirmBehavior.Replace, select = false})
-        else
-          fallback()
-        end
-      end,
-      s = cmp.mapping.confirm({select = true}),
-      c = cmp.mapping.confirm({behavior = cmp.ConfirmBehavior.Replace, select = true})
-    }),
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      -- This little snippet will confirm with tab, and if no entry is selected, will confirm
-      -- the first item
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
-        local entry = cmp.get_selected_entry()
-        if not entry then
-          cmp.select_next_item({behavior = cmp.SelectBehavior.Select})
-        else
-          cmp.confirm()
-        end
+        cmp.select_next_item()
+      elseif vim.fn["vsnip#available"](1) == 1 then
+        feedkey("<Plug>(vsnip-expand-or-jump)", "")
+      elseif has_words_before() then
+        cmp.complete()
       else
         fallback()
       end
-    end, {'i', 's', 'c'})
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function()
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+        feedkey("<Plug>(vsnip-jump-prev)", "")
+      end
+    end, { "i", "s" })
   }),
-  sources = cmp.config.sources({{name = 'nvim_lsp'}, {name = 'vsnip'}}, {{name = 'buffer'}})
+  sources = cmp.config.sources({ { name = 'nvim_lsp' }, { name = 'vsnip' } },
+    { { name = 'buffer' } })
 })
-cmp.setup.filetype('gitcommit', {sources = cmp.config.sources({{name = 'buffer'}})})
-cmp.setup.cmdline({'/', '?'},
-                  {mapping = cmp.mapping.preset.cmdline(), sources = {{name = 'buffer'}}})
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({{name = 'path'}}, {{name = 'cmdline'}})
+
+-- mason
+require('mason').setup()
+require('mason-tool-installer').setup {
+  ensure_installed = {
+    'bash-language-server',
+    'dockerfile-language-server',
+    'shfmt',
+    'json-lsp',
+    'pyright',
+    'lua-language-server',
+    'luaformatter',
+    'typescript-language-server',
+    'ruff',
+    'shellcheck',
+    'terraform-ls',
+    'vim-language-server',
+    'yaml-language-server',
+  },
+  auto_update = true,
+  run_on_start = true,
+  debounce_hours = 5,
+}
+
+-- lint
+require('lint').linters_by_ft = {
+  sh = { 'shellcheck' },
+  python = { 'ruff' }
+}
+
+-- formatter
+local lua_format = function()
+  return {
+    exe = "lua-format",
+    args = {
+      '--inplace', '--column-limit=100', '--column-table-limit=100',
+      '--indent-width=2', '--no-use-tab', '--break-after-operator',
+      '--double-quote-to-single-quote'
+    },
+    stdin = true
+  }
+end
+local prettier = function()
+  return {
+    exe = "prettier",
+    args = { "--stdin-filepath", api.nvim_buf_get_name(0), "--double-quote" },
+    stdin = true
+  }
+end
+local ruff = function()
+  return { exe = "ruff", args = { "format", "--quiet", "-" }, stdin = true }
+end
+local shfmt = function()
+  return { exe = "shfmt", args = { "-ci", "-s", "-bn" }, stdin = true }
+end
+local terraform = function()
+  return { exe = "terraform", args = { "fmt", "-" }, stdin = true }
+end
+require("formatter").setup({
+  filetype = {
+    javascript = { prettier },
+    typescript = { prettier },
+    html = { prettier },
+    lua = { lua_format },
+    markdown = { prettier },
+    python = { ruff },
+    sh = { shfmt },
+    terraform = { terraform }
+  }
 })
 
 -- LSP
-
-local on_attach = function(client, bufnr)
-  local bufopts = {noremap = true, silent = true, buffer = bufnr}
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  map('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  map('n', 'gd', vim.lsp.buf.definition, bufopts)
-  map('n', 'K', vim.lsp.buf.hover, bufopts)
-  map('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  map('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  map('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  map('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  map('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
-      bufopts)
-  map('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  map('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  map('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  map('n', 'gr', vim.lsp.buf.references, bufopts)
-  map('n', '<space>f', function() vim.lsp.buf.format {async = true} end, bufopts)
-  map('n', '<F10>', function() vim.lsp.buf.format {async = true} end, bufopts)
+local on_attach = function(_, bufnr)
+  map('n', '<leader>ef', function() vim.lsp.buf.format { async = true } end,
+    { unpack(mapopts), buffer = bufnr, desc = 'Format' })
+  map('n', '<leader>er', vim.lsp.buf.rename,
+    { unpack(mapopts), buffer = bufnr, desc = 'Rename' })
+  map('n', '<leader>ea', vim.lsp.buf.code_action,
+    { unpack(mapopts), buffer = bufnr, desc = 'Code actions' })
+  map('n', '<leader>ld', vim.lsp.buf.definition,
+    { unpack(mapopts), buffer = bufnr, desc = 'Definition' })
+  map('n', '<leader>lD', vim.lsp.buf.declaration,
+    { unpack(mapopts), buffer = bufnr, desc = 'Declaration' })
+  map('n', '<leader>lr', builtin.lsp_references,
+    { unpack(mapopts), buffer = bufnr, desc = 'References' })
+  map('n', '<leader>li', vim.lsp.buf.implementation,
+    { unpack(mapopts), buffer = bufnr, desc = 'Implementation' })
+  map('n', '<leader>lt', vim.lsp.buf.type_definition,
+    { unpack(mapopts), buffer = bufnr, desc = 'Type definition' })
+  map('n', '<leader>ls', builtin.lsp_document_symbols,
+    { unpack(mapopts), buffer = bufnr, desc = 'Document symbols' })
+  map('n', '<leader>lS', builtin.lsp_dynamic_workspace_symbols,
+    { unpack(mapopts), buffer = bufnr, desc = 'Workspace symbols' })
+  map('n', '<leader>lh', vim.lsp.buf.hover,
+    { unpack(mapopts), buffer = bufnr, desc = 'Hover documentation' })
+  map('n', '<leader>ly', vim.lsp.buf.signature_help,
+    { unpack(mapopts), buffer = bufnr, desc = 'Signature documentation' })
 end
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-local lspconfig = require('lspconfig')
-local lspservers = {
-  lspconfig.bashls, lspconfig.dockerls, lspconfig.jsonls, lspconfig.pyright, lspconfig.terraformls,
-  lspconfig.tsserver, lspconfig.vimls, lspconfig.yamlls
-}
-for _, lspserver in ipairs(lspservers) do
-  lspserver.setup {
-    autostart = true,
-    on_attach = on_attach,
-    flags = {debounce_text_changes = 150},
-    capabilities = capabilities
-  }
-end
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {focusable = false})
-lspconfig.diagnosticls.setup {
-  on_attach = on_attach,
-  filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'dockerfile', 'lua'},
-  init_options = {
-    filetypes = {sh = 'shellcheck'},
-    formatFiletypes = {
-      json = 'prettier',
-      markdown = 'prettier',
-      python = 'ruff',
-      terraform = 'terraform',
-      yaml = 'prettier',
-      lua = 'luaformat'
-    },
-    linters = {
-      shellcheck = {
-        sourceName = 'shellcheck',
-        command = 'shellcheck',
-        args = {'--format', 'json', '-'},
-        debounce = 100,
-        parseJson = {
-          line = 'line',
-          column = 'column',
-          endLine = 'endLine',
-          endColumn = 'endColumn',
-          message = '${message} { ${code} }',
-          security = 'level'
-        },
-        securities = {error = 'error', warning = 'warning', info = 'info', style = 'hint'}
-      }
-    },
-    formatters = {
-      ruff = {
-        command = 'ruff',
-        args = { 'format', '--quiet', '-' },
-      },
-      prettier = {command = 'prettier', args = {'--stdin-filepath', '%filepath'}},
-      terraform = {command = 'terraform', args = {'fmt', '-'}},
-      luaformat = {
-        command = 'lua-format',
-        args = {
-          '-i', '--column-limit=100', '--column-table-limit=100', '--indent-width=2',
-          '--no-use-tab', '--break-after-operator', '--double-quote-to-single-quote'
-        }
-      }
+require('neodev').setup()
+capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+servers = { 'bashls', 'dockerls', 'jsonls', 'pyright', 'lua_ls', 'terraformls', 'tsserver', 'vimls', 'yamlls' }
+mason_lspconfig = require('mason-lspconfig')
+mason_lspconfig.setup({})
+mason_lspconfig.setup_handlers {
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name]
     }
-  }
+  end
 }
-cmd('highlight! link LspReferenceText CursorColumn')
-cmd('highlight! link LspReferenceRead CursorColumn')
-cmd('highlight! link LspReferenceWrite CursorColumn')
+require('fidget').setup()
 
--- Treesitter
+-- dap
+require("neodev").setup({ library = { plugins = { "nvim-dap-ui" }, types = true } })
 
-local parser_install_dir = vim.fn.stdpath('cache') .. '/treesitters'
-vim.fn.mkdir(parser_install_dir, 'p')
-vim.opt.runtimepath:append(parser_install_dir)
-require'nvim-treesitter.configs'.setup {
-  parser_install_dir = parser_install_dir,
-  ensure_installed = {
-    'bash', 'c', 'cpp', 'c_sharp', 'go', 'python', 'java', 'javascript', 'kotlin', 'lua', 'nix',
-    'ruby', 'toml', 'typescript', 'vim', 'yaml'
-  },
-  sync_install = false,
-  ignore_install = {},
-  highlight = {enable = true, disable = {}, additional_vim_regex_highlighting = false},
-  indent = {enable = true}
-}
-
--- Telescope
-
-local actions = require('telescope.actions')
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {['<esc>'] = actions.close},
-      n = {['<esc>'] = actions.close, ['q'] = actions.close}
-    },
-    file_ignore_patterns = {'.git', 'node_modules', '%.png', 'h.jpg', '%.jpeg'},
-    theme = 'get_ivy',
-    layout_strategy = 'flex'
-  }
-}
-
--- Mappings
-
-local opts = {noremap = true, silent = true}
--- map('i', '<Tab>', 'v:lua.tab_complete()', {expr = true})
--- map('s', '<Tab>', 'v:lua.tab_complete()', {expr = true})
--- map('i', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
--- map('s', '<S-Tab>', 'v:lua.s_tab_complete()', {expr = true})
-map('n', '<space>e', vim.diagnostic.open_float, opts)
-map('n', '[d', vim.diagnostic.goto_prev, opts)
-map('n', ']d', vim.diagnostic.goto_next, opts)
-map('n', '<space>q', vim.diagnostic.setloclist, opts)
-map('n', '<F1>', '<CMD>Telescope buffers previewer=false <CR>', {noremap = true})
-map('n', '<F2>', '<CMD>Telescope find_files hidden=true previewer=false <CR>', {noremap = true})
-map('n', '<F3>', '<CMD>Telescope live_grep previewer=false <CR>', {noremap = true})
-map('n', '<F9>', '<CMD>Telescope spell_suggest <CR>', {noremap = true})
-map('n', '<F10>', '<CMD>lua vim.lsp.buf.formatting() <CR>', {noremap = true})
+-- which-key
+local wk = require("which-key")
+wk.register({
+  e = '+Edit',
+  f = '+Find',
+  l = '+LSP',
+  p = '+Problems'
+}, { prefix = "<leader>" })

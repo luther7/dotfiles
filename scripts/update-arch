@@ -68,8 +68,10 @@ arch_packages=( \
   qbittorrent \
   quodlibet \
   qt6ct \
+  ripgrep \
   rsync \
   shellcheck \
+  shfmt \
   signal-desktop \
   strace \
   terraform \
@@ -81,13 +83,13 @@ arch_packages=( \
   tpm2-tss \
   usbutils \
   vim-language-server \
-  vim-plug \
   vlc \
   vscode-json-languageserver \
   vulkan-nouveau \
   wine-staging \
   winetricks \
   wireplumber \
+  wl-clipboard
   xf86-video-intel \
   yaml-language-server \
   zip \
