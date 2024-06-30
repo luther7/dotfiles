@@ -7,6 +7,8 @@ arch_packages=( \
   1password \
   alacritty \
   bash-language-server \
+  bluez \
+  bluez-utils \
   btrfs-progs \
   cmake \
   cups \
@@ -98,6 +100,7 @@ arch_packages=( \
 )
 
 arch_systemd_services=( \
+  bluetooth \
   cups \
   docker \
   gdm \
