@@ -17,6 +17,7 @@ set showmode
 set smartcase
 set timeoutlen=1000
 set which-key
+set clipboard^=ideaput
 let g:WhichKey_ShowVimActions = "true"
 map Q gq
 vnoremap v <Esc>
@@ -34,36 +35,50 @@ nnoremap <c-o> :action Back<CR>
 nnoremap <c-i> :action Forward<CR>
 inoremap <ctrl><CR> :action EditorCompleteStatement<CR>
 inoremap <c-v><Esc> :action $Paste<CR>aset clipboard+=ideaput
-nnoremap <space>gg :action Switcher<CR>
-nnoremap <space>gf :action GotoFile<CR>
-nnoremap <space>ga :action GotoAction<CR>
-nnoremap <space>gc :action GotoClass<CR>
-nnoremap <space>gp :action SelectInProjectView<CR>
-nnoremap <space>gr :action RecentFiles<CR>
-nnoremap <space>R :source ~/.ideavimrc<cr>
-nnoremap <space>si :action QuickImplementations<CR>
-nnoremap <space>su :action ShowUsages<CR>
-nnoremap <space>sI :action GotoImplementation<CR>
-nnoremap <space>sp :action ParameterInfo<CR>
-nnoremap <space>sop :action SelectPreviousOccurrence<CR>
-nnoremap <space>son :action SelectNextOccurrence<CR>
-nnoremap <space>soa :action SelectAllOccurrences<CR>
-nnoremap <space>ep :action GotoPreviousError<CR>
-nnoremap <space>en :action GotoNextError<CR>
-nnoremap <space>ed <Action>(ShowErrorDescription)
-vnoremap <space>f :action ReformatCode<CR>
-nnoremap <space>ff :action ReformatFile<CR>
-nnoremap <space>fi :action OptimizeImports<CR>
-nnoremap <space>fr :action Refactorings.QuickListPopupAction<cr>
-nnoremap <space>fu :action Vcs.RollbackChangedLines<CR>
-nnoremap <space>fn :action RenameElement<CR>
-nnoremap <space>rr :action Run<CR>
-nnoremap <space>rc :action ChooseRunConfiguration<CR>
-nnoremap <space>dd :action Debug<CR>
+let g:WhichKeyDesc_debug = "<Space>d Debug"
+let g:WhichKeyDesc_debug_go_to_test = "<Space>dg Go to test"
+nnoremap <space>dg :action GotoTest<CR>
+let g:WhichKeyDesc_debug_run = "<Space>dr Run"
+nnoremap <space>dr :action RunClass<CR>
+let g:WhichKeyDesc_debug_rereun = "<Space>dR Rerun"
+nnoremap <space>dR :action Rerun<CR>
+let g:WhichKeyDesc_debug_rerun_failed = "<Space>df Rerun failed"
+nnoremap <space>df :action RerunFailedTests<CR>
+let g:WhichKeyDesc_debug_choose_debug_configuration = "<Space>dc Choose debug configuration"
 nnoremap <space>dc :action ChooseDebugConfiguration<CR>
+let g:WhichKeyDesc_debug_choose_run_configuration = "<Space>dC Choose run configuration"
+nnoremap <space>dC :action ChooseRunConfiguration<CR>
+let g:WhichKeyDesc_debug_toggle_breakpoint = "<Space>db Toggle breakpoint"
 nnoremap <space>db :action ToggleLineBreakpoint<CR>
-nnoremap <space>dg :action ViewBreakpoints<CR>
-nnoremap <space>tg :action GotoTest<CR>
-nnoremap <space>tf :action RunClass<CR>
-nnoremap <space>tr :action Rerun<CR>
-nnoremap <space>tf :action RerunFailedTests<CR>
+let g:WhichKeyDesc_debug_toggle_line_breakpoint = "<Space>dv View breakpoints"
+nnoremap <space>dv :action ViewBreakpoints<CR>
+let g:WhichKeyDesc_edit = "<Space>e Edit"
+let g:WhichKeyDesc_edit_rename_file = "<Space>er Rename file"
+nnoremap <space>eR :action RenameFile<CR>
+let g:WhichKeyDesc_edit_rename_element = "<Space>eR Rename element"
+nnoremap <space>er :action RenameElement<CR>
+let g:WhichKeyDesc_edit_code_actions = "<Space>ea Code actions"
+nnoremap <space>ea :action Refactorings.QuickListPopupAction<cr>
+let g:WhichKeyDesc_edit_format = "<Space>ef Format"
+nnoremap <space>ef :action ReformatFile<CR>
+let g:WhichKeyDesc_find = "<Space>f Find"
+let g:WhichKeyDesc_find_files = "<Space>ff Files"
+nnoremap <space>ff :action GotoFile<CR>
+let g:WhichKeyDesc_find_revent_files = "<Space>fr Recent files"
+nnoremap <space>fr :action RecentFiles<CR>
+let g:WhichKeyDesc_find_project_view = "<Space>fp Project view"
+nnoremap <space>ef :action SelectInProjectView<CR>
+let g:WhichKeyDesc_lsp = "<Space>l LSP"
+let g:WhichKeyDesc_lsp_references = "<Space>lr References"
+nnoremap <space>lr :action ShowUsages<CR>
+let g:WhichKeyDesc_lsp_implementation = "<Space>li Implementation"
+nnoremap <space>li :action GotoImplementation<CR>
+let g:WhichKeyDesc_problems = "<Space>p Problems"
+let g:WhichKeyDesc_problems_previous = "<Space>pp Previous"
+nnoremap <space>pp :action GotoPreviousError<CR>
+let g:WhichKeyDesc_problems_next = "<Space>pn Next"
+nnoremap <space>pn :action GotoNextError<CR>
+let g:WhichKeyDesc_problems_description = "<Space>pd Show description"
+nnoremap <space>pd <Action>(ShowErrorDescription)
+let g:WhichKeyDesc_switcher = "<Space>s Swswitcheritcher"
+nnoremap <space>s :action Switcher<CR>

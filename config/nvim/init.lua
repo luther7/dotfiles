@@ -287,8 +287,8 @@ require("formatter").setup({
 local on_attach = function(_, bufnr)
   map('n', '<leader>ef', function() vim.lsp.buf.format { async = true } end,
     { unpack(mapopts), buffer = bufnr, desc = 'Format' })
-  map('n', '<leader>er', vim.lsp.buf.rename,
-    { unpack(mapopts), buffer = bufnr, desc = 'Rename' })
+  map('n', '<leader>eR', vim.lsp.buf.rename,
+    { unpack(mapopts), buffer = bufnr, desc = 'Rename file' })
   map('n', '<leader>ea', vim.lsp.buf.code_action,
     { unpack(mapopts), buffer = bufnr, desc = 'Code actions' })
   map('n', '<leader>ld', vim.lsp.buf.definition,
