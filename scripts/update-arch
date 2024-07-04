@@ -6,6 +6,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 arch_packages=( \
   1password \
   alacritty \
+  amazon-corretto-21-bin \
   bash-language-server \
   bluez \
   bluez-utils \
@@ -35,13 +36,16 @@ arch_packages=( \
   gnome-shell-extension-freon \
   gnome-tweaks \
   godot \
+  gradle \
   gst-plugin-pipewire \
   gst-plugins-good \
   helvum \
   htop \
   inetutils 
   intellij-idea-community-edition \
+  java-runtime-common \
   jq \
+  kotlin \
   krita \
   ldns \
   lib32-pipewire \
@@ -80,6 +84,7 @@ arch_packages=( \
   texinfo \
   throttled \
   tree \
+  ttf-aptos \
   ttf-cascadia-code \
   tmux-plugin-manager \
   tpm2-tss \

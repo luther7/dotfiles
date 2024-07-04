@@ -35,23 +35,39 @@ nnoremap <c-o> :action Back<CR>
 nnoremap <c-i> :action Forward<CR>
 inoremap <ctrl><CR> :action EditorCompleteStatement<CR>
 inoremap <c-v><Esc> :action $Paste<CR>aset clipboard+=ideaput
+
 let g:WhichKeyDesc_debug = "<Space>d Debug"
+let g:WhichKeyDesc_debug_debug = "<Space>dd Debug"
+nnoremap <space>dd :action Debug<CR>
+let g:WhichKeyDesc_debug_actions = "<Space>da Actions"
+nnoremap <space>da :action DebuggerActions<CR>
 let g:WhichKeyDesc_debug_go_to_test = "<Space>dg Go to test"
 nnoremap <space>dg :action GotoTest<CR>
-let g:WhichKeyDesc_debug_run = "<Space>dr Run"
-nnoremap <space>dr :action RunClass<CR>
-let g:WhichKeyDesc_debug_rereun = "<Space>dR Rerun"
-nnoremap <space>dR :action Rerun<CR>
-let g:WhichKeyDesc_debug_rerun_failed = "<Space>df Rerun failed"
-nnoremap <space>df :action RerunFailedTests<CR>
+let g:WhichKeyDesc_debug_debug_class = "<Space>dr Debug class"
+nnoremap <space>dr :action DebugClass<CR>
 let g:WhichKeyDesc_debug_choose_debug_configuration = "<Space>dc Choose debug configuration"
 nnoremap <space>dc :action ChooseDebugConfiguration<CR>
-let g:WhichKeyDesc_debug_choose_run_configuration = "<Space>dC Choose run configuration"
-nnoremap <space>dC :action ChooseRunConfiguration<CR>
 let g:WhichKeyDesc_debug_toggle_breakpoint = "<Space>db Toggle breakpoint"
 nnoremap <space>db :action ToggleLineBreakpoint<CR>
 let g:WhichKeyDesc_debug_toggle_line_breakpoint = "<Space>dv View breakpoints"
 nnoremap <space>dv :action ViewBreakpoints<CR>
+let g:WhichKeyDesc_debug_add_to_watch = "<Space>dw Add to watch"
+nnoremap <space>dw :action Debugger.AddToWatch<CR>
+
+let g:WhichKeyDesc_run = "<Space>r Run"
+let g:WhichKeyDesc_run_run = "<Space>rd Run"
+nnoremap <space>rd :action Run<CR>
+let g:WhichKeyDesc_run_go_to_test = "<Space>rg Go to test"
+nnoremap <space>rg :action GotoTest<CR>
+let g:WhichKeyDesc_run_run_class = "<Space>rr Run class"
+nnoremap <space>rr :action RunClass<CR>
+let g:WhichKeyDesc_run_rereun = "<Space>re Rerun"
+nnoremap <space>re :action Rerun<CR>
+let g:WhichKeyDesc_run_rerun_failed = "<Space>rf Rerun failed"
+nnoremap <space>rf :action RerunFailedTests<CR>
+let g:WhichKeyDesc_run_choose_configuration = "<Space>rc Choose configuration"
+nnoremap <space>rc :action ChooseRunConfiguration<CR>
+
 let g:WhichKeyDesc_edit = "<Space>e Edit"
 let g:WhichKeyDesc_edit_rename_file = "<Space>er Rename file"
 nnoremap <space>eR :action RenameFile<CR>
@@ -61,18 +77,23 @@ let g:WhichKeyDesc_edit_code_actions = "<Space>ea Code actions"
 nnoremap <space>ea :action Refactorings.QuickListPopupAction<cr>
 let g:WhichKeyDesc_edit_format = "<Space>ef Format"
 nnoremap <space>ef :action ReformatFile<CR>
+
 let g:WhichKeyDesc_find = "<Space>f Find"
 let g:WhichKeyDesc_find_files = "<Space>ff Files"
 nnoremap <space>ff :action GotoFile<CR>
-let g:WhichKeyDesc_find_revent_files = "<Space>fr Recent files"
+let g:WhichKeyDesc_find_recent_files = "<Space>fr Recent files"
 nnoremap <space>fr :action RecentFiles<CR>
 let g:WhichKeyDesc_find_project_view = "<Space>fp Project view"
-nnoremap <space>ef :action SelectInProjectView<CR>
+nnoremap <space>fp :NERDTree<CR>
+let g:WhichKeyDesc_find_project_view_search = "<Space>fs Search in project view"
+nnoremap <space>fs :NERDTreeFind<CR>
+
 let g:WhichKeyDesc_lsp = "<Space>l LSP"
 let g:WhichKeyDesc_lsp_references = "<Space>lr References"
 nnoremap <space>lr :action ShowUsages<CR>
 let g:WhichKeyDesc_lsp_implementation = "<Space>li Implementation"
 nnoremap <space>li :action GotoImplementation<CR>
+
 let g:WhichKeyDesc_problems = "<Space>p Problems"
 let g:WhichKeyDesc_problems_previous = "<Space>pp Previous"
 nnoremap <space>pp :action GotoPreviousError<CR>
@@ -80,5 +101,43 @@ let g:WhichKeyDesc_problems_next = "<Space>pn Next"
 nnoremap <space>pn :action GotoNextError<CR>
 let g:WhichKeyDesc_problems_description = "<Space>pd Show description"
 nnoremap <space>pd <Action>(ShowErrorDescription)
-let g:WhichKeyDesc_switcher = "<Space>s Swswitcheritcher"
-nnoremap <space>s :action Switcher<CR>
+
+let g:WhichKeyDesc_window = "<Space>s Splits"
+et g:WhichKeyDesc_window_close = "<Space>sq Quit"
+nnoremap <space>sq :action CloseContent<cr>
+let g:WhichKeyDesc_window_reopen = "<Space>srReopen"
+nnormap <space>sr :action ReopenClosedTab<cr>
+let g:WhichKeyDesc_window_previous = "<Space>sp Previous"
+nnoremap <space>sp :action PrevSplitter<cr>
+let g:WhichKeyDesc_window_next = "<Space>sn Next"
+nnoremap <space>sn :action NextSplitter<cr>
+let g:WhichKeyDesc_window_fullscreen = "<Space>sf Fullscreeen"
+nnoremap <space>sf :action HideAllWindows<cr>
+let g:WhichKeyDesc_window_split_horizontally = "<Space>sh Split horizontally"
+nnoremap <space>sh :action SplitHorizontally<cr>
+let g:WhichKeyDesc_window_split_vertically = "<Space>sv Split vertically"
+nnoremap <space>sv :action SplitVertically<cr>
+let g:WhichKeyDesc_window_unsplit = "<Space>su Unsplit"
+nnoremap <space>su :action Unsplit<cr>
+let g:WhichKeyDesc_window_unsplit_all = "<Space>sU Unsplit all"
+nnoremap <space>sU :action Unsplit<cr>
+let g:WhichKeyDesc_window_open_in_opposite = "<Space>so Open in opposite"
+nnoremap <space>so :action OpenEditorInOppositeTabGroup<cr>
+let g:WhichKeyDesc_window_pin = "<Space>sd Pin"
+nnoremap <space>sd :action PinActiveTabToggle<cr>
+
+let g:WhichKeyDesc_tools = "<Space>t Tools"
+let g:WhichKeyDesc_tools_switcher = "<Space>ts Switcher"
+nnoremap <space>ts :action Switcher<CR>
+let g:WhichKeyDesc_tools_gradle = "<Space>tg Gradle"
+nnoremap <space>tg :action ActivateGradleToolWindow<cr>
+let g:WhichKeyDesc_tools_structure = "<Space>tr Structure"
+nnoremap <space>tr :action ActivateStructureToolWindow<cr>
+let g:WhichKeyDesc_tools_event_log = "<Space>te Event log"
+nnoremap <space>te :action ActivateStructureToolWindow<cr>
+let g:WhichKeyDesc_tools_settings = "<Space>tj Settings"
+nnoremap <space>tj :action ShowSettings<cr>
+let g:WhichKeyDesc_tools_hide_active_window = "<Space>tq Hide active window"
+nnoremap <space>tq :action HideActiveWindow<cr>
+let g:WhichKeyDesc_tools_hide_all_windows = "<Space>tw Hide all windows"
+nnoremap <space>tw :action HideAllWindows<cr>
