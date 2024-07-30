@@ -21,6 +21,7 @@ alias vim="nvim"
 alias rv="gh repo view -w"
 alias prw="gh pr create --web"
 alias prv="gh pr view --web"
+alias update-arch="\$HOME/workspace/dotfiles/scripts/update-arch"
 # macos
 # export BASH_SILENCE_DEPRECATION_WARNING=1
 # export PATH="/opt/homebrew/bin:$PATH"
