@@ -29,6 +29,7 @@ arch_packages=( \
   gimp \
   git \
   github-cli \
+  glxinfo \
   gnome \
   gnome-browser-connector \
   gnome-shell-extension-dash-to-panel \
@@ -48,8 +49,6 @@ arch_packages=( \
   kotlin \
   krita \
   ldns \
-  lib32-pipewire \
-  lib32-pulse \
   libreoffice \
   linux \
   linux-firmware \
@@ -92,12 +91,12 @@ arch_packages=( \
   vim-language-server \
   vlc \
   vscode-json-languageserver \
-  vulkan-nouveau \
-  wine-staging \
+  vulkan-intel \
+  wine \
   winetricks \
   wireplumber \
   wl-clipboard
-  xf86-video-intel \
+  xdg-desktop-portal-gnome \
   yaml-language-server \
   zip \
   zoom \
@@ -248,7 +247,7 @@ done
 log_action "Enable and start systemd user services"
 for service in "${arch_systemd_user_services[@]}"; do
   log "Enable systemd user service ${service}"
-  sudo systemctl --user enable --now "${service}.service"
+  systemctl --user enable --now "${service}.service"
 done
 
 log "Arch setup script complete!"
