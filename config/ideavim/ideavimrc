@@ -36,6 +36,8 @@ nnoremap <c-i> :action Forward<CR>
 inoremap <ctrl><CR> :action EditorCompleteStatement<CR>
 inoremap <c-v><Esc> :action $Paste<CR>aset clipboard+=ideaput
 
+" https://gist.github.com/zchee/9c78f91cc5ad771c1f5d
+
 let g:WhichKeyDesc_debug = "<Space>d Debug"
 let g:WhichKeyDesc_debug_debug = "<Space>dd Debug"
 nnoremap <space>dd :action Debug<CR>
@@ -69,14 +71,16 @@ let g:WhichKeyDesc_run_choose_configuration = "<Space>rc Choose configuration"
 nnoremap <space>rc :action ChooseRunConfiguration<CR>
 
 let g:WhichKeyDesc_edit = "<Space>e Edit"
-let g:WhichKeyDesc_edit_rename_file = "<Space>er Rename file"
-nnoremap <space>eR :action RenameFile<CR>
-let g:WhichKeyDesc_edit_rename_element = "<Space>eR Rename element"
+let g:WhichKeyDesc_edit_rename_file = "<Space>et Rename file"
+nnoremap <space>et :action RenameFile<CR>
+let g:WhichKeyDesc_edit_rename_element = "<Space>er Rename element"
 nnoremap <space>er :action RenameElement<CR>
 let g:WhichKeyDesc_edit_code_actions = "<Space>ea Code actions"
 nnoremap <space>ea :action Refactorings.QuickListPopupAction<cr>
-let g:WhichKeyDesc_edit_format = "<Space>ef Format"
-nnoremap <space>ef :action ReformatFile<CR>
+let g:WhichKeyDesc_edit_reformat_code = "<Space>ef Reformat code"
+nnoremap <space>ef :action ReformatCode<CR>
+let g:WhichKeyDesc_edit_code_cleanup = "<Space>ec Code cleanup"
+nnoremap <space>ec :action ReformatFile<CR>
 
 let g:WhichKeyDesc_find = "<Space>f Find"
 let g:WhichKeyDesc_find_files = "<Space>ff Files"
@@ -103,10 +107,10 @@ let g:WhichKeyDesc_problems_description = "<Space>pd Show description"
 nnoremap <space>pd <Action>(ShowErrorDescription)
 
 let g:WhichKeyDesc_window = "<Space>s Splits"
-et g:WhichKeyDesc_window_close = "<Space>sq Quit"
+let g:WhichKeyDesc_window_close = "<Space>sq Quit"
 nnoremap <space>sq :action CloseContent<cr>
-let g:WhichKeyDesc_window_reopen = "<Space>srReopen"
-nnormap <space>sr :action ReopenClosedTab<cr>
+let g:WhichKeyDesc_window_reopen = "<Space>sr Reopen"
+nnoremap <space>sr :action ReopenClosedTab<cr>
 let g:WhichKeyDesc_window_previous = "<Space>sp Previous"
 nnoremap <space>sp :action PrevSplitter<cr>
 let g:WhichKeyDesc_window_next = "<Space>sn Next"
