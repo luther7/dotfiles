@@ -7,6 +7,7 @@ arch_packages=( \
   1password \
   alacritty \
   amazon-corretto-21-bin \
+  aws-cli-v2 \
   bash-language-server \
   bluez \
   bluez-utils \
@@ -14,6 +15,7 @@ arch_packages=( \
   cmake \
   cups \
   cryptsetup \
+  davfs2 \
   diagnostic-languageserver \
   direnv \
   docker \
@@ -37,6 +39,7 @@ arch_packages=( \
   gnome-shell-extension-freon \
   gnome-tweaks \
   godot \
+  google-cloud-cli \
   gradle \
   gst-plugin-pipewire \
   gst-plugins-good \
@@ -61,6 +64,7 @@ arch_packages=( \
   msr-tools \
   mullvad-vpn \
   neovim \
+  opentofu \
   pipewire \
   pipewire-pulse \
   pipewire-audio \
@@ -79,6 +83,7 @@ arch_packages=( \
   shfmt \
   signal-desktop \
   strace \
+  tailscale \
   terraform \
   texinfo \
   throttled \
@@ -111,6 +116,7 @@ arch_systemd_services=( \
   NetworkManager \
   systemd-boot-update \
   systemd-timesyncd \
+  tailscaled \
   throttled \
   throttlestop \
 )
