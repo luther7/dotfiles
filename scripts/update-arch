@@ -15,6 +15,7 @@ arch_packages=( \
   cmake \
   cups \
   cryptsetup \
+  darktable \
   davfs2 \
   diagnostic-languageserver \
   direnv \
@@ -25,6 +26,7 @@ arch_packages=( \
   efibootmgr \
   exfat-tools \
   fd \
+  ffmpeg \
   firefox-developer-edition \
   fwupd \
   fzf \
@@ -46,12 +48,17 @@ arch_packages=( \
   helvum \
   htop \
   inetutils 
+  intel-gpu-tools \
+  intel-media-driver \
   intellij-idea-community-edition \
   java-runtime-common \
   jq \
   kotlin \
   krita \
   ldns \
+  libva-vdpau-driver \
+  libva-utils \
+  libvdpau-va-gl \
   libreoffice \
   linux \
   linux-firmware \
@@ -83,6 +90,7 @@ arch_packages=( \
   shfmt \
   signal-desktop \
   strace \
+  tartube \
   tailscale \
   terraform \
   texinfo \
@@ -93,6 +101,7 @@ arch_packages=( \
   tmux-plugin-manager \
   tpm2-tss \
   usbutils \
+  vdpauinfo \
   vim-language-server \
   vlc \
   vscode-json-languageserver \
@@ -103,6 +112,7 @@ arch_packages=( \
   wl-clipboard
   xdg-desktop-portal-gnome \
   yaml-language-server \
+  yt-dlp \
   zip \
   zoom \
   zenity \
