@@ -69,7 +69,6 @@ arch_packages=( \
   man-pages \
   mesa \
   msr-tools \
-  mullvad-vpn \
   neovim \
   opentofu \
   pipewire \
