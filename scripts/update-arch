@@ -76,6 +76,7 @@ arch_packages=( \
   pipewire-audio \
   pipewire-jack \
   plymouth \
+  podman \
   prettier \
   pyright \
   python-poetry \
