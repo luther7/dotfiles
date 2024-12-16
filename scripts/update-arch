@@ -3,138 +3,142 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 # Packages may be from repositories or the AUR.
-arch_packages=( \
-  1password \
-  alacritty \
-  amazon-corretto-21-bin \
-  aws-cli-v2 \
-  bash-language-server \
-  bluez \
-  bluez-utils \
-  btrfs-progs \
-  cmake \
-  cups \
-  cryptsetup \
-  darktable \
-  davfs2 \
-  diagnostic-languageserver \
-  direnv \
-  docker \
-  dockerfile-language-server \
-  dosfstools \
-  efitools \
-  efibootmgr \
-  exfat-tools \
-  fd \
-  ffmpeg \
-  firefox-developer-edition \
-  fwupd \
-  fzf \
-  gimp \
-  git \
-  github-cli \
-  glxinfo \
-  gnome \
-  gnome-browser-connector \
-  gnome-shell-extension-dash-to-panel \
-  gnome-shell-extension-forge \
-  gnome-shell-extension-freon \
-  gnome-tweaks \
-  godot \
-  google-cloud-cli \
-  gradle \
-  gst-plugin-pipewire \
-  gst-plugins-good \
-  helvum \
-  htop \
-  inetutils 
-  intel-gpu-tools \
-  intel-media-driver \
-  intellij-idea-community-edition \
-  java-runtime-common \
-  jq \
-  kotlin \
-  krita \
-  ldns \
-  libva-vdpau-driver \
-  libva-utils \
-  libvdpau-va-gl \
-  libreoffice \
-  linux \
-  linux-firmware \
-  lm_sensors \
-  lua-format \
-  lua-language-server \
-  man-db \
-  man-pages \
-  mesa \
-  msr-tools \
-  neovim \
-  opentofu \
-  pipewire \
-  pipewire-pulse \
-  pipewire-audio \
-  pipewire-jack \
-  plymouth \
-  podman \
-  prettier \
-  pyright \
-  python-poetry \
-  python-ruff \
-  qbittorrent \
-  quodlibet \
-  qt6ct \
-  ripgrep \
-  rsync \
-  shellcheck \
-  shfmt \
-  signal-desktop \
-  strace \
-  tartube \
-  tailscale \
-  terraform \
-  texinfo \
-  throttled \
-  tree \
-  ttf-aptos \
-  ttf-cascadia-code \
-  tmux-plugin-manager \
-  tpm2-tss \
-  usbutils \
-  vdpauinfo \
-  vim-language-server \
-  vlc \
-  vscode-json-languageserver \
-  vulkan-intel \
-  wine \
-  winetricks \
-  wireplumber \
+arch_packages=(
+  1password
+  alacritty
+  amazon-corretto-21-bin
+  aws-cli-v2
+  bash-language-server
+  bitwarden
+  bluez
+  bluez-utils
+  btrfs-progs
+  cmake
+  compsize
+  cups
+  cryptsetup
+  darktable
+  davfs2
+  diagnostic-languageserver
+  direnv
+  docker
+  dockerfile-language-server
+  dosfstools
+  efitools
+  efibootmgr
+  exfat-tools
+  fd
+  ffmpeg
+  firefox-developer-edition
+  foobar2000
+  fwupd
+  fzf
+  gimp
+  git
+  github-cli
+  glxinfo
+  gnome
+  gnome-browser-connector
+  gnome-shell-extension-dash-to-panel
+  gnome-shell-extension-forge
+  gnome-shell-extension-freon
+  gnome-tweaks
+  godot
+  google-cloud-cli
+  gradle
+  gst-plugin-pipewire
+  gst-plugins-good
+  helvum
+  htop
+  inetutils
+  intel-gpu-tools
+  intel-media-driver
+  intellij-idea-community-edition
+  java-runtime-common
+  jq
+  kotlin
+  krita
+  ldns
+  libva-vdpau-driver
+  libva-utils
+  libvdpau-va-gl
+  libreoffice
+  linux
+  linux-firmware
+  lm_sensors
+  lua-format
+  lua-language-server
+  man-db
+  man-pages
+  mesa
+  msr-tools
+  neovim
+  netcat
+  opentofu
+  pipewire
+  pipewire-pulse
+  pipewire-audio
+  pipewire-jack
+  plymouth
+  podman
+  prettier
+  pyright
+  python-poetry
+  python-ruff
+  qbittorrent
+  qt6ct
+  ripgrep
+  rsync
+  rustup
+  shellcheck
+  shfmt
+  signal-desktop
+  strace
+  tailscale
+  terraform
+  texinfo
+  throttled
+  tree
+  ttf-aptos
+  ttf-cascadia-code
+  tmux-plugin-manager
+  tpm2-tss
+  usbutils
+  vdpauinfo
+  vim-language-server
+  vlc
+  vscode-json-languageserver
+  vulkan-intel
+  wine
+  winetricks
+  wireplumber
   wl-clipboard
-  xdg-desktop-portal-gnome \
-  yaml-language-server \
-  yt-dlp \
-  zip \
-  zoom \
-  zenity \
+  xdg-desktop-portal-gnome
+  yaml-language-server
+  yt-dlp
+  yt-dlg-git
+  zip
+  zoom
+  zenity
 )
 
-arch_systemd_services=( \
-  bluetooth \
-  cups \
-  docker \
-  gdm \
-  NetworkManager \
-  systemd-boot-update \
-  systemd-timesyncd \
-  tailscaled \
-  throttled \
-  throttlestop \
+arch_systemd_services=(
+  bluetooth
+  cups
+  docker
+  gdm
+  NetworkManager
+  systemd-boot-update
+  systemd-timesyncd
+  tailscaled
+  throttled
+  throttlestop
 )
 
-arch_systemd_user_services=( \
-  pipewire \
-  pipewire-pulse \
-  wireplumber \
+arch_systemd_user_services=(
+  pipewire
+  pipewire-pulse
+  wireplumber
 )
 
 log_action() {
@@ -201,7 +205,7 @@ log_action "Checking if password is required for sudo"
 sudo true
 
 log_action "Checking if reflector is installed"
-if ! command -v yay > /dev/null; then
+if ! command -v yay >/dev/null; then
   log "Installing reflector."
   sudo pacman --sync --needed --noconfirm git reflector
 else
@@ -217,13 +221,13 @@ sudo reflector \
   --save /etc/pacman.d/mirrorlist
 
 log_action "Checking if yay is installed"
-if ! command -v yay > /dev/null; then
+if ! command -v yay >/dev/null; then
   log "Installing yay."
   sudo pacman --sync --needed --noconfirm git base-devel
   mkdir /tmp/yay
   git clone https://aur.archlinux.org/yay.git /tmp/yay
   (
-    cd /tmp/yay && \
+    cd /tmp/yay &&
       makepkg --syncdeps --install --noconfirm
   )
 else
