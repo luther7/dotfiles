@@ -19,6 +19,7 @@ arch_packages=(
   cryptsetup
   darktable
   davfs2
+  deluge-gtk
   diagnostic-languageserver
   direnv
   docker
@@ -30,7 +31,6 @@ arch_packages=(
   fd
   ffmpeg
   firefox-developer-edition
-  foobar2000
   fwupd
   fzf
   gimp
@@ -85,8 +85,8 @@ arch_packages=(
   pyright
   python-poetry
   python-ruff
-  qbittorrent
   qt6ct
+  quodlibet
   ripgrep
   rsync
   rustup
