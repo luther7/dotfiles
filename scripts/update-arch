@@ -55,6 +55,8 @@ arch_packages=(
   intel-media-driver
   intellij-idea-community-edition
   java-runtime-common
+  jellyfin-server
+  jellyfin-web
   jq
   kotlin
   krita
@@ -127,6 +129,7 @@ arch_systemd_services=(
   cups
   docker
   gdm
+  jellyfin
   NetworkManager
   systemd-boot-update
   systemd-timesyncd
