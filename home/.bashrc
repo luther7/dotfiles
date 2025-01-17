@@ -3,7 +3,7 @@
 shopt -s histappend
 shopt -q -s extglob
 shopt -q -s checkwinsize
-set -o notify 
+set -o notify
 export PAGER=less
 export EDITOR=nvim
 export VISUAL=nvim
@@ -18,6 +18,7 @@ export PATH="$HOME/bin:$PATH"
 [[ -z "$SSH_AUTH_SOCK" ]] && eval "$(ssh-agent -s)"
 eval "$(direnv hook bash)"
 eval "$(fzf --bash)"
+eval "$(beet completion)"
 alias vim="nvim"
 alias rv="gh repo view -w"
 alias prw="gh pr create --web"
