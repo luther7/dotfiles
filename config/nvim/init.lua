@@ -52,7 +52,7 @@ require('packer').startup(function(use)
     end
   }
   -- Theme
-  use 'shaunsingh/nord.nvim'
+  use {"catppuccin/nvim", as = "catppuccin"}
   use {'nvim-lualine/lualine.nvim', requires = {'nvim-tree/nvim-web-devicons', opt = true}}
   use 'lewis6991/gitsigns.nvim'
   -- Utilities
@@ -84,22 +84,14 @@ vim.opt_global.completeopt = {'menu', 'menuone', 'noselect'}
 if vim.fn.executable 'rg' == 1 then o.grepprg = 'rg --vimgrep --no-heading --smart-case' end
 g.mapleader = ' '
 g.maplocalleader = ' '
-
--- nord
-g.nord_contrast = true
-g.nord_borders = false
-g.nord_disable_background = false
-g.nord_uniform_diff_background = true
-g.nord_italic = false
-g.nord_bold = false
 o.termguicolors = true
-require('nord').set()
+cmd.colorscheme 'catppuccin-mocha'
 
 -- lualine
 require('lualine').setup {
   options = {
     icons_enabled = false,
-    theme = 'nord',
+    theme = 'catppuccin-mocha',
     component_separators = {left = '', right = ''},
     section_separators = {left = '', right = ''}
   }

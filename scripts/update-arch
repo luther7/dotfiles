@@ -106,6 +106,7 @@ arch_packages=(
   tree
   ttf-aptos
   ttf-cascadia-code
+  ttf-comic-mono-git
   tmux-plugin-manager
   tpm2-tss
   usbutils

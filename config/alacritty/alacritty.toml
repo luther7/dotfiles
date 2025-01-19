@@ -2,70 +2,98 @@
 TERM = "xterm-256color"
 
 [font]
-size = 16.0
+size = 18.0
+
+[font.normal]
+family = "Comic Mono"
+style = "Light"
 
 [font.bold]
-family = "Cascadia Code NF"
+family = "Comic Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "Cascadia Code NF"
+family = "Comic Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "Cascadia Code NF"
+family = "Comic Mono"
 style = "Italic"
 
-[font.normal]
-family = "Cascadia Code NF"
-style = "Regular"
-[colors.bright]
-black = "#4c566a"
-blue = "#81a1c1"
-cyan = "#8fbcbb"
-green = "#a3be8c"
-magenta = "#b48ead"
-red = "#bf616a"
-white = "#eceff4"
-yellow = "#ebcb8b"
-
-[colors.cursor]
-cursor = "#d8dee9"
-text = "#2e3440"
-
-[colors.dim]
-black = "#373e4d"
-blue = "#68809a"
-cyan = "#6d96a5"
-green = "#809575"
-magenta = "#8c738c"
-red = "#94545d"
-white = "#aeb3bb"
-yellow = "#b29e75"
-
-[colors.normal]
-black = "#3b4252"
-blue = "#81a1c1"
-cyan = "#88c0d0"
-green = "#a3be8c"
-magenta = "#b48ead"
-red = "#bf616a"
-white = "#e5e9f0"
-yellow = "#ebcb8b"
+# https://github.com/alacritty/alacritty-theme/blob/master/themes/catppuccin_mocha.toml
 
 [colors.primary]
-background = "#2e3440"
-dim_foreground = "#a5abb6"
-foreground = "#d8dee9"
+background = '#1E1E2E' # base
+foreground = '#CDD6F4' # text
+# Bright and dim foreground colors
+dim_foreground = '#CDD6F4' # text
+bright_foreground = '#CDD6F4' # text
 
-[colors.search.matches]
-background = "#88c0d0"
-foreground = "CellBackground"
-
-[colors.selection]
-background = "#4c566a"
-text = "CellForeground"
+# Cursor colors
+[colors.cursor]
+text = '#1E1E2E' # base
+cursor = '#F5E0DC' # rosewater
 
 [colors.vi_mode_cursor]
-cursor = "#d8dee9"
-text = "#2e3440"
+text = '#1E1E2E' # base
+cursor = '#B4BEFE' # lavender
+
+# Search colors
+[colors.search.matches]
+foreground = '#1E1E2E' # base
+background = '#A6ADC8' # subtext0
+
+[colors.search.focused_match]
+foreground = '#1E1E2E' # base
+background = '#A6E3A1' # green
+
+[colors.footer_bar]
+foreground = '#1E1E2E' # base
+background = '#A6ADC8' # subtext0
+
+# Keyboard regex hints
+[colors.hints.start]
+foreground = '#1E1E2E' # base
+background = '#F9E2AF' # yellow
+
+[colors.hints.end]
+foreground = '#1E1E2E' # base
+background = '#A6ADC8' # subtext0
+
+# Selection colors
+[colors.selection]
+text = '#1E1E2E' # base
+background = '#F5E0DC' # rosewater
+
+# Normal colors
+[colors.normal]
+black = '#45475A' # surface1
+red = '#F38BA8' # red
+green = '#A6E3A1' # green
+yellow = '#F9E2AF' # yellow
+blue = '#89B4FA' # blue
+magenta = '#F5C2E7' # pink
+cyan = '#94E2D5' # teal
+white = '#BAC2DE' # subtext1
+
+# Bright colors
+[colors.bright]
+black = '#585B70' # surface2
+red = '#F38BA8' # red
+green = '#A6E3A1' # green
+yellow = '#F9E2AF' # yellow
+blue = '#89B4FA' # blue
+magenta = '#F5C2E7' # pink
+cyan = '#94E2D5' # teal
+white = '#A6ADC8' # subtext0
+
+# Dim colors
+[colors.dim]
+black = '#45475A' # surface1
+red = '#F38BA8' # red
+green = '#A6E3A1' # green
+yellow = '#F9E2AF' # yellow
+blue = '#89B4FA' # blue
+magenta = '#F5C2E7' # pink
+cyan = '#94E2D5' # teal
+white = '#BAC2DE' # subtext1
