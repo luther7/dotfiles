@@ -102,6 +102,10 @@ arch_packages=(
   tailscale
   terraform
   texinfo
+  texlive-binextra
+  texlive-latex
+  texlive-latexrecommended
+  texlive-fontsrecommended
   throttled
   tree
   ttf-aptos
