@@ -80,6 +80,7 @@ arch_packages=(
   neovim
   netcat
   opentofu
+  pandoc
   pipewire
   pipewire-pulse
   pipewire-audio
