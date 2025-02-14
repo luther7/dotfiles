@@ -10,6 +10,7 @@ arch_packages=(
   aws-cli-v2
   bash-completion
   bash-language-server
+  brother-hl-1110
   beets
   bitwarden
   bluez
@@ -100,6 +101,7 @@ arch_packages=(
   shfmt
   signal-desktop
   strace
+  system-config-printer
   tailscale
   terraform
   texinfo
