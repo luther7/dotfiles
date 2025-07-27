@@ -1,0 +1,4 @@
+font-family = Comic Mono
+font-size = 20
+macos-option-as-alt = true
+theme = catppuccin-mocha
