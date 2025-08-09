@@ -12,6 +12,7 @@ require('packer').startup(function(use)
   use 'christoomey/vim-tmux-navigator'
   use 'editorconfig/editorconfig-vim'
   use 'folke/which-key.nvim'
+  use 'folke/trouble.nvim'
   use {
     'hrsh7th/nvim-cmp',
     requires = {
@@ -86,8 +87,22 @@ require('telescope').setup {
       n = {['<esc>'] = actions.close, ['q'] = actions.close}
     },
     file_ignore_patterns = {'.git', 'node_modules'},
-    -- theme = 'get_ivy',
+    theme = 'get_ivy',
     layout_strategy = 'flex'
+  },
+  pickers = {
+    buffers = {theme = 'ivy'},
+    find_files = {theme = 'ivy'},
+    live_grep = {theme = 'ivy'},
+    help_tags = {theme = 'ivy'},
+    spell_suggest = {theme = 'ivy'},
+    lsp_references = {theme = 'ivy'},
+    lsp_definitions = {theme = 'ivy'},
+    lsp_type_definitions = {theme = 'ivy'},
+    lsp_implementations = {theme = 'ivy'},
+    lsp_document_symbols = {theme = 'ivy'},
+    lsp_workspace_symbols = {theme = 'ivy'},
+    diagnostics = {theme = 'ivy'}
   }
 }
 pcall(require('telescope').load_extension, 'fzf')
@@ -98,12 +113,24 @@ map('n', '<leader>f', builtin.find_files, {unpack(mapopts), desc = 'Files'})
 map('n', '<leader>h', builtin.help_tags, {unpack(mapopts), desc = 'Help tags'})
 map('n', '<leader>es', builtin.spell_suggest, {unpack(mapopts), desc = 'Spell'})
 
+-- LSP pickers
+map('n', '<leader>lr', builtin.lsp_references, {unpack(mapopts), desc = 'LSP References'})
+map('n', '<leader>ld', builtin.lsp_definitions, {unpack(mapopts), desc = 'LSP Definitions'})
+map('n', '<leader>lt', builtin.lsp_type_definitions,
+    {unpack(mapopts), desc = 'LSP Type Definitions'})
+map('n', '<leader>li', builtin.lsp_implementations, {unpack(mapopts), desc = 'LSP Implementations'})
+map('n', '<leader>ls', builtin.lsp_document_symbols,
+    {unpack(mapopts), desc = 'LSP Document Symbols'})
+map('n', '<leader>lw', builtin.lsp_workspace_symbols,
+    {unpack(mapopts), desc = 'LSP Workspace Symbols'})
+map('n', '<leader>la', builtin.diagnostics, {unpack(mapopts), desc = 'LSP Diagnostics'})
+
 -- cmp
 local has_words_before = function()
   unpack = unpack or table.unpack
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
   return col ~= 0 and
-             vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
+           vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
 end
 local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
@@ -136,16 +163,18 @@ cmp.setup({
 local on_attach = function(_, bufnr)
   map('n', '<leader>ef', function() vim.lsp.buf.format {async = true} end,
       {unpack(mapopts), buffer = bufnr, desc = 'Format'})
-  map('n', 'grd', vim.lsp.buf.definition, {unpack(mapopts), buffer = bufnr})
-  map('n', 'grD', vim.lsp.buf.declaration, {unpack(mapopts), buffer = bufnr})
-  map('n', 'grh', vim.lsp.buf.hover, {unpack(mapopts), buffer = bufnr})
+  map('n', 'grd', vim.lsp.buf.definition,
+      {unpack(mapopts), buffer = bufnr, desc = 'Go to definition'})
+  map('n', 'grD', vim.lsp.buf.declaration,
+      {unpack(mapopts), buffer = bufnr, desc = 'Go to declaration'})
+  map('n', 'grh', vim.lsp.buf.hover, {unpack(mapopts), buffer = bufnr, desc = 'Hover documentation'})
 end
 capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 local lspconfig = require('lspconfig')
 local lspservers = {
-  lspconfig.bashls, lspconfig.jsonls, lspconfig.pyright, lspconfig.terraformls, lspconfig.ts_ls,
-  lspconfig.yamlls
+  lspconfig.bashls, lspconfig.jsonls, lspconfig.phan, lspconfig.phpactor, lspconfig.pyright,
+  lspconfig.terraformls, lspconfig.ts_ls, lspconfig.yamlls
 }
 for _, lspserver in ipairs(lspservers) do
   lspserver.setup {
@@ -155,7 +184,6 @@ for _, lspserver in ipairs(lspservers) do
     capabilities = capabilities
   }
 end
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {focusable = false})
 lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   filetypes = {'json', 'markdown', 'python', 'sh', 'terraform', 'lua'},
@@ -202,16 +230,36 @@ lspconfig.diagnosticls.setup {
     }
   }
 }
--- cmd('highlight! link LspReferenceText CursorColumn')
--- cmd('highlight! link LspReferenceRead CursorColumn')
--- cmd('highlight! link LspReferenceWrite CursorColumn')
+vim.diagnostic.config({
+  virtual_text = false,
+  virtual_lines = false,
+  signs = true,
+  update_in_insert = false
+})
+cmd('highlight! link LspReferenceText CursorColumn')
+cmd('highlight! link LspReferenceRead CursorColumn')
+cmd('highlight! link LspReferenceWrite CursorColumn')
 
--- diagnostic
-vim.diagnostic.config({virtual_lines = true})
+-- trouble
+local trouble = require('trouble')
+trouble.setup {}
 
 -- which-key
 vim.o.timeout = true
 vim.o.timeoutlen = 300
 local wk = require('which-key')
 wk.setup {icons = {mappings = false, colors = false}, show_help = false, show_keys = false}
-wk.add({{'<leader>e', group = 'Edit'}, {'<leader>l', group = 'LSP'}})
+wk.add({
+  {'<leader>e', group = 'Edit'}, {'<leader>l', group = 'LSP'}, {'<leader>t', group = 'Trouble'},
+  {'<leader>tt', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Diagnostics (Trouble)'}, {
+    '<leader>tT',
+    '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
+    desc = 'Buffer Diagnostics (Trouble)'
+  }, {'<leader>ts', '<cmd>Trouble symbols toggle focus=false<cr>', desc = 'Symbols (Trouble)'}, {
+    '<leader>tl',
+    '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
+    desc = 'LSP Definitions / references / ... (Trouble)'
+  }, {'<leader>tL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location List (Trouble)'},
+  {'<leader>tQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List (Trouble)'}
+})
+
