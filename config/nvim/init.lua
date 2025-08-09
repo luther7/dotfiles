@@ -86,9 +86,7 @@ require('telescope').setup {
       i = {['<esc>'] = actions.close},
       n = {['<esc>'] = actions.close, ['q'] = actions.close}
     },
-    file_ignore_patterns = {'.git', 'node_modules'},
-    theme = 'get_ivy',
-    layout_strategy = 'flex'
+    file_ignore_patterns = {'.git', 'node_modules'}
   },
   pickers = {
     buffers = {theme = 'ivy'},
@@ -96,6 +94,7 @@ require('telescope').setup {
     live_grep = {theme = 'ivy'},
     help_tags = {theme = 'ivy'},
     spell_suggest = {theme = 'ivy'},
+    oldfiles = {theme = 'ivy'},
     lsp_references = {theme = 'ivy'},
     lsp_definitions = {theme = 'ivy'},
     lsp_type_definitions = {theme = 'ivy'},
@@ -110,6 +109,7 @@ local builtin = require('telescope.builtin')
 map('n', '<leader>b', builtin.buffers, {unpack(mapopts), desc = 'Buffers'})
 map('n', '<leader>g', builtin.live_grep, {unpack(mapopts), desc = 'Live grep'})
 map('n', '<leader>f', builtin.find_files, {unpack(mapopts), desc = 'Files'})
+map('n', '<leader>r', builtin.oldfiles, {unpack(mapopts), desc = 'Recent files'})
 map('n', '<leader>h', builtin.help_tags, {unpack(mapopts), desc = 'Help tags'})
 map('n', '<leader>es', builtin.spell_suggest, {unpack(mapopts), desc = 'Spell'})
 
@@ -250,7 +250,8 @@ vim.o.timeoutlen = 300
 local wk = require('which-key')
 wk.setup {icons = {mappings = false, colors = false}, show_help = false, show_keys = false}
 wk.add({
-  {'<leader>e', group = 'Edit'}, {'<leader>l', group = 'LSP'}, {'<leader>t', group = 'Trouble'},
+  {'<leader>e', group = 'Edit'}, {'<leader>l', group = 'LSP'}, {'<leader>m', group = 'Marks'},
+  {'<leader>t', group = 'Trouble'},
   {'<leader>tt', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Diagnostics (Trouble)'}, {
     '<leader>tT',
     '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
@@ -260,6 +261,29 @@ wk.add({
     '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
     desc = 'LSP Definitions / references / ... (Trouble)'
   }, {'<leader>tL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location List (Trouble)'},
-  {'<leader>tQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List (Trouble)'}
+  {'<leader>tQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List (Trouble)'}, -- Marks
+  {'<leader>ml', builtin.marks, desc = 'List all marks'}, {
+    '<leader>ms',
+    function()
+      local mark = vim.fn.input('Set local mark: ')
+      if mark ~= '' then vim.cmd('mark ' .. mark) end
+    end,
+    desc = 'Set local mark'
+  }, {
+    '<leader>mS',
+    function()
+      local mark = vim.fn.input('Set global mark: ')
+      if mark ~= '' then vim.cmd('mark ' .. mark:upper()) end
+    end,
+    desc = 'Set global mark'
+  }, {
+    '<leader>md',
+    function()
+      local mark = vim.fn.input('Delete mark: ')
+      if mark ~= '' then vim.cmd('delmark ' .. mark) end
+    end,
+    desc = 'Delete mark'
+  }, {'<leader>mD', '<cmd>delmarks!<cr>', desc = 'Delete all local marks'},
+  {'<leader>mG', '<cmd>delmarks A-Z<cr>', desc = 'Delete all global marks'}
 })
 
