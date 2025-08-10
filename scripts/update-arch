@@ -46,6 +46,7 @@ arch_packages=(
   gnome-shell-extension-dash-to-panel
   gnome-shell-extension-forge
   gnome-shell-extension-freon
+  gnome-shell-extension-paperwm-git
   gnome-tweaks
   godot
   google-cloud-cli
@@ -54,6 +55,8 @@ arch_packages=(
   gst-plugins-good
   helvum
   htop
+  httpie
+  img2pdf
   inetutils
   intel-gpu-tools
   intel-media-driver
@@ -80,8 +83,10 @@ arch_packages=(
   msr-tools
   neovim
   netcat
+  nvm
   opentofu
   pandoc
+  pdftk
   pipewire
   pipewire-pulse
   pipewire-audio
@@ -91,6 +96,7 @@ arch_packages=(
   prettier
   pyright
   python-poetry
+  python-poetry-plugin-shell
   python-ruff
   qt6ct
   quodlibet
