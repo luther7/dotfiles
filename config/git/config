@@ -22,7 +22,7 @@
   autoSetupRemote = true
   # followTags = true
 [pull]
-	rebase = true
+	# rebase = true
 [fetch]
   prune = true
   # pruneTags = true
