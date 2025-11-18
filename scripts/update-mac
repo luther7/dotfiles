@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -eou pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+echo "--- Check for recent sudo"
+sudo true
+
+echo "--- Installing and updating brew packages from Brewfile"
+brew bundle --file "$HOME/.config/homebrew/Brewfile" install
+
+echo "--- Installing php packages"
+composer global require \
+  phan/phan
+pecl install \
+  xdebug
+
+echo "--- Installing lua packages"
+luarocks install --server=https://luarocks.org/dev --force \
+  luaformatter

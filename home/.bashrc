@@ -18,6 +18,7 @@ export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/scripts:$PATH"
 export NVM_DIR="$HOME/.nvm"
 # export DOCKER_BUILDKIT=0
+export COMPOSE_BAKE=true
 [[ -z "$SSH_AUTH_SOCK" ]] && eval "$(ssh-agent -s)"
 # shellcheck disable=SC1091
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -27,17 +28,22 @@ eval "$(direnv hook bash)"
 eval "$(fzf --bash)"
 # eval "$(beet completion)"
 alias vim="nvim"
-alias rv="gh repo view -w"
-alias prw="gh pr create --web"
-alias prv="gh pr view --web"
+cd() {
+  builtin cd "$@" || exit
+  if [ -f .nvmrc ]; then
+    nvm use
+  fi
+}
 
 # linux
-# alias update-arch="\$HOME/workspace/dotfiles/scripts/update-arch"
+# alias update-packages="\$HOME/workspace/dotfiles/scripts/update-arch"
 #
 # macos
 # export BASH_SILENCE_DEPRECATION_WARNING=1
 # export PATH="/opt/homebrew/bin:$PATH"
+# export PATH="/Users/luther/.config/composer/vendor/bin:$PATH"
 # eval "$(/opt/homebrew/bin/brew shellenv)"
 # alias awk="gawk"
 # alias grep="ggrep"
 # alias sed="gsed"
+# alias update-packages="\$HOME/workspace/dotfiles/scripts/update-mac"
