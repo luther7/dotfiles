@@ -22,7 +22,7 @@
   autoSetupRemote = true
   # followTags = true
 [pull]
-	# rebase = true
+	rebase = true
 [fetch]
   prune = true
   # pruneTags = true
@@ -39,3 +39,5 @@
   autoSquash = true
   autoStash = true
   updateRefs = true
+[merge]
+  conflictStyle = zdiff3
