@@ -1,9 +1,13 @@
 # shellcheck shell=bash
+#
 [[ $- != *i* ]] && return
+
 shopt -s histappend
 shopt -q -s extglob
 shopt -q -s checkwinsize
+
 set -o notify
+
 export PAGER=less
 export EDITOR=nvim
 export VISUAL=nvim
@@ -19,15 +23,16 @@ export PATH="$HOME/scripts:$PATH"
 export NVM_DIR="$HOME/.nvm"
 # export DOCKER_BUILDKIT=0
 export COMPOSE_BAKE=true
+
 [[ -z "$SSH_AUTH_SOCK" ]] && eval "$(ssh-agent -s)"
 # shellcheck disable=SC1091
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
 # shellcheck disable=SC1091
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+[[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
 eval "$(direnv hook bash)"
 eval "$(fzf --bash)"
 # eval "$(beet completion)"
-alias vim="nvim"
+
 cd() {
   builtin cd "$@" || exit
   if [ -f .nvmrc ]; then
@@ -35,9 +40,20 @@ cd() {
   fi
 }
 
+cl() {
+  local _number="${1}"
+  if [[ ! "${_number}" =~ ^[0-9]+$ ]]; then
+    echo "-cl: ERROR: argument must be an integer number" >&2
+    exit 1
+  fi
+  awk "{ print \$${_number}}"
+}
+
+alias vim="nvim"
+
 # linux
 # alias update-packages="\$HOME/workspace/dotfiles/scripts/update-arch"
-#
+
 # macos
 # export BASH_SILENCE_DEPRECATION_WARNING=1
 # export PATH="/opt/homebrew/bin:$PATH"
