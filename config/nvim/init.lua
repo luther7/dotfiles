@@ -11,6 +11,7 @@ vim.pack.add({
   { src = "https://github.com/nvim-lua/plenary.nvim" },
   { src = "https://github.com/nvim-lualine/lualine.nvim" },
   { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
+  { src = "https://github.com/nvim-telescope/telescope-frecency.nvim" },
   { src = "https://github.com/nvim-telescope/telescope.nvim" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
@@ -37,6 +38,8 @@ vim.o.breakindentopt = "list:-1"
 vim.o.clipboard = "unnamedplus"
 vim.o.colorcolumn = "100"
 vim.o.compatible = false
+vim.o.complete = ".,w,b,kspell"
+vim.o.completeopt = "menuone,noselect,fuzzy,nosort"
 vim.o.cursorline = true
 vim.o.encoding = "UTF-8"
 vim.o.expandtab = true
@@ -44,6 +47,7 @@ vim.o.fileencodings = "UTF-8"
 vim.o.ignorecase = true
 vim.o.incsearch = true
 vim.o.infercase = true
+vim.o.iskeyword = "@,48-57,_,192-255,-"
 vim.o.linebreak = true
 vim.o.list = true
 vim.o.mouse = "a"
@@ -108,7 +112,7 @@ local wk = require("which-key")
 wk.setup({ icons = { mappings = false, colors = false }, show_help = false, show_keys = false })
 wk.add({
   { "<leader>e", group = "Edit" },
-  { "<leader>g", group = "Git" },
+  { "<leader>v", group = "Git" },
   { "<leader>l", group = "LSP" },
   { "<leader>p", group = "Errors" },
   { "<leader>x", group = "Session" },
@@ -126,6 +130,7 @@ require("telescope").setup({
   },
 })
 pcall(require("telescope").load_extension, "fzf")
+pcall(require("telescope").load_extension, "frecency")
 local builtin = require("telescope.builtin")
 local ivy = function(picker_fn)
   return function()
@@ -133,10 +138,11 @@ local ivy = function(picker_fn)
   end
 end
 map("n", "<leader>b", ivy(builtin.buffers), { desc = "Buffers" })
-map("n", "<leader>/", ivy(builtin.live_grep), { desc = "Live grep" })
-map("n", "<leader>f", ivy(builtin.find_files), { desc = "Files" })
+map("n", "<leader>g", ivy(builtin.live_grep), { desc = "Search" })
+map("n", "<leader>f", "<cmd>Telescope frecency workspace=CWD theme=ivy<cr>", { desc = "Files" })
+map("n", "<leader>j", "<cmd>Telescope frecency theme=ivy<cr>", { desc = "Global files" })
 map("n", "<leader>r", ivy(builtin.oldfiles), { desc = "Recent files" })
-map("n", "<leader>h", ivy(builtin.help_tags), { desc = "Help tags" })
+map("n", "<leader>h", ivy(builtin.help_tags), { desc = "Help" })
 map("n", "<leader>es", ivy(builtin.spell_suggest), { desc = "Spell" })
 
 local group = vim.api.nvim_create_augroup("BlinkCmpLazyLoad", { clear = true })
@@ -155,7 +161,12 @@ vim.api.nvim_create_autocmd("InsertEnter", {
       },
       completion = {
         documentation = { auto_show = false },
-        menu = { draw = { columns = { { "label", "label_description", gap = 1 }, { "kind" } } } },
+        ghost_text = { enabled = true },
+        menu = {
+          auto_show = true,
+          border = "",
+          draw = { columns = { { "label", "label_description", gap = 1 }, { "kind" } } },
+        },
       },
       sources = {
         default = { "lsp", "path", "buffer" },
@@ -307,15 +318,15 @@ map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 map("n", "<leader>-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 require("gitsigns").setup({})
-map("n", "<leader>gb", "<cmd>Gitsigns blame_line<cr>", { desc = "Blame line" })
-map("n", "<leader>gB", "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Toggle blame" })
-map("n", "<leader>gd", "<cmd>Gitsigns diffthis<cr>", { desc = "Diff this" })
-map("n", "<leader>gD", "<cmd>Gitsigns toggle_deleted<cr>", { desc = "Toggle deleted" })
-map("n", "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", { desc = "Preview hunk" })
-map("n", "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>", { desc = "Reset hunk" })
-map("n", "<leader>gR", "<cmd>Gitsigns reset_buffer<cr>", { desc = "Reset buffer" })
-map("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<cr>", { desc = "Stage hunk" })
-map("n", "<leader>gS", "<cmd>Gitsigns stage_buffer<cr>", { desc = "Stage buffer" })
-map("n", "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", { desc = "Undo stage hunk" })
+map("n", "<leader>vb", "<cmd>Gitsigns blame_line<cr>", { desc = "Blame line" })
+map("n", "<leader>vB", "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Toggle blame" })
+map("n", "<leader>vd", "<cmd>Gitsigns diffthis<cr>", { desc = "Diff this" })
+map("n", "<leader>vD", "<cmd>Gitsigns toggle_deleted<cr>", { desc = "Toggle deleted" })
+map("n", "<leader>vp", "<cmd>Gitsigns preview_hunk<cr>", { desc = "Preview hunk" })
+map("n", "<leader>vr", "<cmd>Gitsigns reset_hunk<cr>", { desc = "Reset hunk" })
+map("n", "<leader>vR", "<cmd>Gitsigns reset_buffer<cr>", { desc = "Reset buffer" })
+map("n", "<leader>vs", "<cmd>Gitsigns stage_hunk<cr>", { desc = "Stage hunk" })
+map("n", "<leader>vS", "<cmd>Gitsigns stage_buffer<cr>", { desc = "Stage buffer" })
+map("n", "<leader>vu", "<cmd>Gitsigns undo_stage_hunk<cr>", { desc = "Undo stage hunk" })
 map("n", "[h", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Previous hunk" })
 map("n", "]h", "<cmd>Gitsigns next_hunk<cr>", { desc = "Next hunk" })
