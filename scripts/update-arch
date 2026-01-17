@@ -2,21 +2,16 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-# Packages may be from repositories or the AUR.
 arch_packages=(
-  1password
-  alacritty
   amazon-corretto-21-bin
-  aws-cli-v2
   bash-completion
-  bash-language-server
   brother-hl-1110
-  beets
   bitwarden
   bluez
   bluez-utils
   btrfs-progs
-  calibre
+  burpsuite
+  chromium
   cmake
   compsize
   cups
@@ -24,10 +19,7 @@ arch_packages=(
   darktable
   davfs2
   deluge-gtk
-  diagnostic-languageserver
   direnv
-  docker
-  dockerfile-language-server
   dosfstools
   efitools
   efibootmgr
@@ -49,8 +41,6 @@ arch_packages=(
   gnome-shell-extension-paperwm-git
   gnome-tweaks
   godot
-  google-cloud-cli
-  gradle
   gst-plugin-pipewire
   gst-plugins-good
   helvum
@@ -60,12 +50,8 @@ arch_packages=(
   inetutils
   intel-gpu-tools
   intel-media-driver
-  intellij-idea-community-edition
   java-runtime-common
-  jellyfin-server
-  jellyfin-web
   jq
-  kotlin
   krita
   ldns
   libva-vdpau-driver
@@ -75,16 +61,14 @@ arch_packages=(
   linux
   linux-firmware
   lm_sensors
-  lua-format
-  lua-language-server
   man-db
   man-pages
   mesa
   msr-tools
-  neovim
   netcat
   nvm
   opentofu
+  pacman-contrib
   pandoc
   pdftk
   pipewire
@@ -94,22 +78,17 @@ arch_packages=(
   plymouth
   podman
   prettier
-  pyright
-  python-poetry
-  python-poetry-plugin-shell
   python-ruff
   qt6ct
-  quodlibet
   ripgrep
   rsync
-  rustup
   shellcheck
   shfmt
   signal-desktop
   strace
   system-config-printer
+  syncthing
   tailscale
-  terraform
   texinfo
   texlive-binextra
   texlive-latex
@@ -117,16 +96,14 @@ arch_packages=(
   texlive-fontsrecommended
   throttled
   tree
-  ttf-aptos
   ttf-cascadia-code
   ttf-comic-mono-git
   tmux-plugin-manager
   tpm2-tss
+  unityhub
   usbutils
   vdpauinfo
-  vim-language-server
   vlc
-  vscode-json-languageserver
   vulkan-intel
   wine
   winetricks
@@ -134,19 +111,18 @@ arch_packages=(
   wl-clipboard
   xdg-desktop-portal-gnome
   yaml-language-server
+  yarn
   yt-dlp
   yt-dlg-git
   zip
-  zoom
   zenity
+  zoom
 )
 
 arch_systemd_services=(
   bluetooth
   cups
-  docker
   gdm
-  jellyfin
   NetworkManager
   systemd-boot-update
   systemd-timesyncd
