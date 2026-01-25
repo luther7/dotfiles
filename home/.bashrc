@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-#
+
 [[ $- != *i* ]] && return
 
 shopt -s histappend
@@ -32,7 +32,6 @@ export COMPOSE_BAKE=true
 [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
 eval "$(direnv hook bash)"
 eval "$(fzf --bash)"
-# eval "$(beet completion)"
 
 cd() {
   builtin cd "$@" || exit
@@ -52,15 +51,19 @@ cl() {
 
 alias vim="nvim"
 
-# linux
-# alias update-packages="\$HOME/workspace/dotfiles/scripts/update-arch"
+declare os=
+command -v uname >/dev/null && os="$(uname --kernel-name)"
+export OS="${os}"
 
-# macos
-# export BASH_SILENCE_DEPRECATION_WARNING=1
-# export PATH="/opt/homebrew/bin:$PATH"
-# export PATH="/Users/luther/.config/composer/vendor/bin:$PATH"
-# eval "$(/opt/homebrew/bin/brew shellenv)"
-# alias awk="gawk"
-# alias grep="ggrep"
-# alias sed="gsed"
-# alias update-packages="\$HOME/workspace/dotfiles/scripts/update-mac"
+if [ "${os}" = "Linux" ]; then
+  alias update-packages="\$HOME/workspace/dotfiles/scripts/update-arch"
+elif [ "${os}" = "Darwin" ]; then
+  export BASH_SILENCE_DEPRECATION_WARNING=1
+  export PATH="/opt/homebrew/bin:$PATH"
+  export PATH="/Users/luther/.config/composer/vendor/bin:$PATH"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  alias awk="gawk"
+  alias grep="ggrep"
+  alias sed="gsed"
+  alias update-packages="\$HOME/workspace/dotfiles/scripts/update-mac"
+fi
