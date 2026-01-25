@@ -22,6 +22,8 @@ arch_packages=(
   deluge-gtk
   direnv
   dosfstools
+  dotnet-runtime
+  dotnet-sdk
   efitools
   efibootmgr
   exfat-tools
