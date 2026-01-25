@@ -4,6 +4,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 arch_packages=(
   amazon-corretto-21-bin
+  asprite
   bash-completion
   brother-hl-1110
   bitwarden
@@ -105,6 +106,7 @@ arch_packages=(
   vdpauinfo
   vlc
   vulkan-intel
+  waterfox-bin
   wine
   winetricks
   wireplumber
