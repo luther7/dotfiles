@@ -52,7 +52,7 @@ cl() {
 alias vim="nvim"
 
 declare os=
-command -v uname >/dev/null && os="$(uname --kernel-name)"
+command -v uname >/dev/null && os="$(uname -s)"
 export OS="${os}"
 
 if [ "${os}" = "Linux" ]; then
@@ -60,7 +60,6 @@ if [ "${os}" = "Linux" ]; then
 elif [ "${os}" = "Darwin" ]; then
   export BASH_SILENCE_DEPRECATION_WARNING=1
   export PATH="/opt/homebrew/bin:$PATH"
-  export PATH="/Users/luther/.config/composer/vendor/bin:$PATH"
   eval "$(/opt/homebrew/bin/brew shellenv)"
   alias awk="gawk"
   alias grep="ggrep"
