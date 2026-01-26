@@ -2,18 +2,13 @@
 set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
+brew_bundle() {
+  subcommand="${1}"
+  brew bundle --file "$HOME/.config/homebrew/Brewfile" "${subcommand}"
+}
+
 echo "--- Check for recent sudo"
 sudo true
 
 echo "--- Installing and updating brew packages from Brewfile"
-brew bundle --file "$HOME/.config/homebrew/Brewfile" install
-
-echo "--- Installing php packages"
-composer global require \
-  phan/phan
-pecl install \
-  xdebug
-
-echo "--- Installing lua packages"
-luarocks install --server=https://luarocks.org/dev --force \
-  luaformatter
+brew_bundle check || brew_bundle install

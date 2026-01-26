@@ -1,5 +1,0 @@
-directory: /run/media/luther/hog/music
-library: /run/media/luther/hog/music/musiclibrary.db
-import:
-  move: yes
-asciify_paths: true
