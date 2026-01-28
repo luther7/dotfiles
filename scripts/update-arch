@@ -153,42 +153,37 @@ find_files() {
     --base-directory="${base_directory}"
 }
 
-diff_and_backup() {
+symlink() {
   source="${1}"
   destination="${2}"
   sudo="${3:-false}"
   sudo_prefix=
   [[ "${sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
-  log "Diff source to ${destination}"
-  if ${sudo_prefix} diff "${source}" "${destination}"; then
-    log "${destination} is unchanged."
-    return 0
-  else
-    log "${destination} will change."
-    log "Create directories along $(dirname "${destination}")"
-    ${sudo_prefix} mkdir -p "$(dirname "${destination}")"
+
+  if ${sudo_prefix} [ -L "${destination}" ]; then
+    current_target=$(${sudo_prefix} readlink -f "${destination}")
+    if [ "${current_target}" == "${source}" ]; then
+      log "${destination} is already symlinked to ${source}."
+      return
+    fi
+  fi
+
+  if ${sudo_prefix} [ -e "${destination}" ] || ${sudo_prefix} [ -L "${destination}" ]; then
     log "Backup ${destination} to ${destination}.bak"
-    ${sudo_prefix} cp "${destination}" "${destination}.bak"
-    return 1
+    ${sudo_prefix} mv "${destination}" "${destination}.bak"
   fi
+
+  log "Create directories along $(dirname "${destination}")"
+  ${sudo_prefix} mkdir -p "$(dirname "${destination}")"
+
+  log "Symlink ${source} to ${destination}"
+  ${sudo_prefix} ln -s "${source}" "${destination}"
 }
 
-copy() {
+symlink_as_root() {
   source="${1}"
   destination="${2}"
-  sudo="${3:-false}"
-  sudo_prefix=
-  [[ "${sudo}" =~ ^(true|on|1)$ ]] && sudo_prefix=sudo
-  if ! diff_and_backup "${source}" "${destination}" "${sudo}"; then
-    log "Copy ${source} to ${destination}"
-    ${sudo_prefix} cp "${source}" "${destination}"
-  fi
-}
-
-copy_as_root() {
-  source="${1}"
-  destination="${2}"
-  copy "${source}" "${destination}" "true"
+  symlink "${source}" "${destination}" "true"
 }
 
 log_action "Arch setup script"
@@ -234,20 +229,20 @@ yay --sync --needed --noconfirm "${arch_packages[@]}"
 
 log_action "Update system config files"
 for config in $(find_files etc); do
-  copy_as_root "${PWD}/etc/${config}" "/etc/${config}"
+  symlink_as_root "${PWD}/etc/${config}" "/etc/${config}"
 done
 
 log_action "Update system scripts"
 for script in $(find_files bin); do
-  copy_as_root "${PWD}/bin/${script}" "/usr/local/bin/${script}"
+  symlink_as_root "${PWD}/bin/${script}" "/usr/local/bin/${script}"
 done
 
 log_action "Update user config files"
 for config in $(find_files home); do
-  copy "${PWD}/home/${config}" "${HOME}/${config}"
+  symlink "${PWD}/home/${config}" "${HOME}/${config}"
 done
 for config in $(find_files config); do
-  copy "${PWD}/config/${config}" "${HOME}/.config/${config}"
+  symlink "${PWD}/config/${config}" "${HOME}/.config/${config}"
 done
 
 log_action "Enable and start systemd services"
