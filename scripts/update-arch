@@ -80,6 +80,7 @@ arch_packages=(
   ripgrep
   rsync
   shellcheck
+  shfmt
   signal-desktop
   strace
   system-config-printer
