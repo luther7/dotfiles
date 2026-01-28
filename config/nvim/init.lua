@@ -230,7 +230,7 @@ if system == "Darwin" then
 	})
 elseif system == "Linux" then
 	concat(ensure_installed, {
-		"csharp-language-server",
+		"omnisharp-mono",
 		"csharpier",
 	})
 end
@@ -244,6 +244,15 @@ local on_attach = function(_, bufnr)
 	map("n", "grd", vim.lsp.buf.definition, { buffer = bufnr, desc = "vim.lsp.buf.definition()" })
 	map("n", "grD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "vim.lsp.buf.declaration()" })
 	map("n", "grh", vim.lsp.buf.hover, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
+end
+if system == "Linux" then
+	vim.lsp.config("omnisharp_mono", {
+		cmd = { "omnisharp-mono", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
+		filetypes = { "cs" },
+		root_dir = vim.fs.dirname(vim.fs.find({ "*.sln", "*.csproj", ".git" }, { upward = true })[1]),
+		settings = {},
+	})
+	vim.lsp.enable("omnisharp_mono")
 end
 local lsp_servers = {
 	"bashls", -- bash-language-server
@@ -259,10 +268,6 @@ if system == "Darwin" then
 		"phpactor", -- phpactor
 		"psalm", --psalm
 		"ts_ls", -- typescript-language-server
-	})
-elseif system == "Linux" then
-	concat(lsp_servers, {
-		"csharp_ls", -- csharp-language-server
 	})
 end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -289,6 +294,7 @@ vim.cmd(
 local conform_formatters = {
 	bash = { "shfmt" },
 	json = { "prettier" },
+	html = { "prettier" },
 	lua = { "stylua" },
 	markdown = { "prettier" },
 	python = { "ruff" },
@@ -303,7 +309,7 @@ if system == "Darwin" then
 	})
 elseif system == "Linux" then
 	concat(conform_formatters, {
-		csharp = { "csharpier" },
+		cs = { "csharpier" },
 	})
 end
 require("conform").setup({

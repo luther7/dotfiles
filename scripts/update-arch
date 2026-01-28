@@ -3,8 +3,6 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 arch_packages=(
-  amazon-corretto-21-bin
-  asprite
   bash-completion
   brother-hl-1110
   bitwarden
@@ -19,7 +17,6 @@ arch_packages=(
   cryptsetup
   darktable
   davfs2
-  deluge-gtk
   direnv
   dosfstools
   dotnet-runtime
@@ -39,11 +36,8 @@ arch_packages=(
   gnome
   gnome-browser-connector
   gnome-shell-extension-dash-to-panel
-  gnome-shell-extension-forge
   gnome-shell-extension-freon
-  gnome-shell-extension-paperwm-git
   gnome-tweaks
-  godot
   gst-plugin-pipewire
   gst-plugins-good
   helvum
@@ -54,6 +48,7 @@ arch_packages=(
   intel-gpu-tools
   intel-media-driver
   java-runtime-common
+  jdk-openjdk
   jq
   krita
   ldns
@@ -81,12 +76,10 @@ arch_packages=(
   plymouth
   podman
   prettier
-  python-ruff
   qt6ct
   ripgrep
   rsync
   shellcheck
-  shfmt
   signal-desktop
   strace
   system-config-printer
@@ -103,7 +96,6 @@ arch_packages=(
   ttf-comic-mono-git
   tmux-plugin-manager
   tpm2-tss
-  unityhub
   usbutils
   vdpauinfo
   vlc
@@ -114,7 +106,6 @@ arch_packages=(
   wireplumber
   wl-clipboard
   xdg-desktop-portal-gnome
-  yaml-language-server
   yarn
   yt-dlp
   yt-dlg-git
@@ -139,6 +130,7 @@ arch_systemd_user_services=(
   pipewire
   pipewire-pulse
   wireplumber
+  syncthing
 )
 
 log_action() {

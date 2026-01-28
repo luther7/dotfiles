@@ -28,13 +28,11 @@ export COMPOSE_BAKE=true
 [[ -z "$SSH_AUTH_SOCK" ]] && eval "$(ssh-agent -s)"
 # shellcheck disable=SC1091
 [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
-# shellcheck disable=SC1091
-[[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
 eval "$(direnv hook bash)"
 eval "$(fzf --bash)"
 
 cd() {
-  builtin cd "$@" || exit
+  builtin cd "$@"
   if [ -f .nvmrc ]; then
     nvm use
   fi
@@ -50,13 +48,17 @@ cl() {
 }
 
 alias vim="nvim"
+alias tmux="direnv exec / tmux"
 
 declare os=
 command -v uname >/dev/null && os="$(uname -s)"
 export OS="${os}"
 
 if [ "${os}" = "Linux" ]; then
+  export PATH="$HOME/.dotnet/tools:$PATH"
   alias update-packages="\$HOME/workspace/dotfiles/scripts/update-arch"
+  # shellcheck disable=SC1091
+  [[ -s "/usr/share/nvm/init-nvm.sh" ]] && \. "/usr/share/nvm/init-nvm.sh"
 elif [ "${os}" = "Darwin" ]; then
   export BASH_SILENCE_DEPRECATION_WARNING=1
   export PATH="/opt/homebrew/bin:$PATH"

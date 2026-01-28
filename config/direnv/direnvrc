@@ -1,0 +1,16 @@
+#!/bin/bash
+set -euo pipefail
+
+use_nvm() {
+  watch_file .nvmrc
+  export NVM_DIR="$HOME/.nvm"
+  # shellcheck disable=SC1091
+  [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
+  nvm install
+  layout node
+}
+
+use_uv() {
+  [ -d .venv ] || uv venv
+  source_env .venv/bin/activate
+}
