@@ -2,10 +2,25 @@
 set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
+. ./scripts/lib.bash
+
 brew_bundle() {
   subcommand="${1}"
   brew bundle --file "$HOME/.config/homebrew/Brewfile" "${subcommand}"
 }
 
-echo "--- Installing and updating brew packages from Brewfile"
+log_action "Update user config files"
+for config in $(find_files home); do
+  symlink "${PWD}/home/${config}" "${HOME}/${config}"
+done
+for config in $(find_files config/common); do
+  symlink "${PWD}/config/common/${config}" "${HOME}/.config/${config}"
+done
+for config in $(find_files config/mac); do
+  symlink "${PWD}/config/mac/${config}" "${HOME}/.config/${config}"
+done
+
+echo "--- Updating brew packages"
 brew_bundle check >/dev/null || brew_bundle install
+
+log "Mac setup script complete!"
