@@ -7,8 +7,5 @@ brew_bundle() {
   brew bundle --file "$HOME/.config/homebrew/Brewfile" "${subcommand}"
 }
 
-echo "--- Check for recent sudo"
-sudo true
-
 echo "--- Installing and updating brew packages from Brewfile"
-brew_bundle check || brew_bundle install
+brew_bundle check >/dev/null || brew_bundle install

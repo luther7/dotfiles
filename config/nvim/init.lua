@@ -81,6 +81,7 @@ vim.o.tabstop = 2
 vim.o.termguicolors = true
 vim.o.timeout = true
 vim.o.timeoutlen = 300
+vim.o.exrc = true
 vim.o.undofile = true
 vim.o.virtualedit = "block"
 vim.o.wb = false
@@ -198,7 +199,7 @@ local treesitter_configs = {
 	"yaml",
 }
 if system == "Darwin" then
-	concat(treesitter_configs, { "php", "javascript", "typescript" })
+	concat(treesitter_configs, { "javascript", "typescript" })
 elseif system == "Linux" then
 	concat(treesitter_configs, { "c_sharp" })
 end
@@ -224,10 +225,7 @@ local ensure_installed = {
 if system == "Darwin" then
 	concat(ensure_installed, {
 		"eslint-lsp",
-		"phpactor",
-		"psalm",
 		"typescript-language-server",
-		"phpstan",
 	})
 end
 for _, tool in ipairs(ensure_installed) do
@@ -252,8 +250,6 @@ local lsp_servers = {
 if system == "Darwin" then
 	concat(lsp_servers, {
 		"eslint", -- eslint-lsp
-		"phpactor", -- phpactor
-		"psalm", --psalm
 		"ts_ls", -- typescript-language-server
 	})
 end
@@ -292,7 +288,6 @@ if system == "Darwin" then
 	concat(conform_formatters, {
 		javascript = { "prettier" },
 		typescript = { "prettier" },
-		php = { "prettier" },
 	})
 end
 require("conform").setup({
