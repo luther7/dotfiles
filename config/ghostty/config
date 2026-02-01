@@ -1,9 +1,8 @@
 font-family = Comic Mono
-font-size = 16
+font-size = 14
 theme = Catppuccin Mocha
 cursor-style = block
 bell-features = no-audio
-shell-integration-features = cursor sudo ssh-env ssh-terminfo
 app-notifications = no-clipboard-copy
 maximize = true
 window-show-tab-bar = never
@@ -11,6 +10,7 @@ window-subtitle = false
 mouse-hide-while-typing = true
 quit-after-last-window-closed = true
 gtk-single-instance = true
+keybind = ctrl+v=paste_from_clipboard
 macos-option-as-alt = true
 macos-titlebar-style = hidden
 macos-window-buttons = hidden

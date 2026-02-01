@@ -35,10 +35,12 @@ arch_packages=(
   glxinfo
   gnome
   gnome-browser-connector
+  gnome-shell-extension-appindicator
   gnome-shell-extension-dash-to-panel
   gnome-shell-extension-freon
   gnome-tweaks
   gst-plugin-pipewire
+  gst-plugin-va
   gst-plugins-good
   helvum
   htop
@@ -47,12 +49,12 @@ arch_packages=(
   inetutils
   intel-gpu-tools
   intel-media-driver
+  intel-media-sdk
   java-runtime-common
   jdk-openjdk
   jq
   krita
   ldns
-  libva-vdpau-driver
   libva-utils
   libvdpau-va-gl
   libreoffice
@@ -101,6 +103,8 @@ arch_packages=(
   vdpauinfo
   vlc
   vulkan-intel
+  vulkan-tools
+  lib32-vulkan-intel
   waterfox-bin
   wine
   winetricks

@@ -1,7 +1,6 @@
 [user]
-	email = TODO
-	name = TODO
-	signingkey = TODO
+	email = franz@franzneulistcarroll.com
+	name = Franz Neulist Carroll
 [gpg]
 	format = ssh
 [column]

@@ -86,6 +86,7 @@ vim.o.virtualedit = "block"
 vim.o.wb = false
 vim.o.winborder = "single"
 vim.o.wrap = true
+vim.o.exrc = true
 vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
 if vim.fn.executable("rg") == 1 then
 	vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
@@ -228,11 +229,6 @@ if system == "Darwin" then
 		"typescript-language-server",
 		"phpstan",
 	})
-elseif system == "Linux" then
-	concat(ensure_installed, {
-		"omnisharp-mono",
-		"csharpier",
-	})
 end
 for _, tool in ipairs(ensure_installed) do
 	if not mason_registry.is_installed(tool) then
@@ -244,15 +240,6 @@ local on_attach = function(_, bufnr)
 	map("n", "grd", vim.lsp.buf.definition, { buffer = bufnr, desc = "vim.lsp.buf.definition()" })
 	map("n", "grD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "vim.lsp.buf.declaration()" })
 	map("n", "grh", vim.lsp.buf.hover, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
-end
-if system == "Linux" then
-	vim.lsp.config("omnisharp_mono", {
-		cmd = { "omnisharp-mono", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
-		filetypes = { "cs" },
-		root_dir = vim.fs.dirname(vim.fs.find({ "*.sln", "*.csproj", ".git" }, { upward = true })[1]),
-		settings = {},
-	})
-	vim.lsp.enable("omnisharp_mono")
 end
 local lsp_servers = {
 	"bashls", -- bash-language-server
@@ -306,10 +293,6 @@ if system == "Darwin" then
 		javascript = { "prettier" },
 		typescript = { "prettier" },
 		php = { "prettier" },
-	})
-elseif system == "Linux" then
-	concat(conform_formatters, {
-		cs = { "csharpier" },
 	})
 end
 require("conform").setup({
