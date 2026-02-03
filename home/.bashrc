@@ -20,7 +20,6 @@ export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/scripts:$PATH"
-export PATH="$HOME/workspace/tools/scripts:$PATH"
 export PATH="$HOME/.yarn/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 # export DOCKER_BUILDKIT=0
@@ -58,11 +57,10 @@ export OS="${os}"
 if [ "${os}" = "Linux" ]; then
   export PATH="$HOME/.dotnet/tools:$PATH"
   alias update-packages="\$HOME/workspace/dotfiles/scripts/update-arch"
-  # shellcheck disable=SC1091
-  [[ -s "/usr/share/nvm/init-nvm.sh" ]] && \. "/usr/share/nvm/init-nvm.sh"
 elif [ "${os}" = "Darwin" ]; then
   export BASH_SILENCE_DEPRECATION_WARNING=1
   export PATH="/opt/homebrew/bin:$PATH"
+  export PATH="$HOME/workspace/tools/scripts:$PATH"
   [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
   eval "$(/opt/homebrew/bin/brew shellenv)"
   alias awk="gawk"

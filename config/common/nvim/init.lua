@@ -1,35 +1,35 @@
 local system = os.getenv("OS")
 
 local concat = function(destination, source)
-	for k, v in pairs(source) do
-		destination[k] = v
-	end
+  for k, v in pairs(source) do
+    destination[k] = v
+  end
 end
 
 vim.pack.add({
-	{ src = "https://github.com/catppuccin/nvim" },
-	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
-	{ src = "https://github.com/editorconfig/editorconfig-vim" },
-	{ src = "https://github.com/folke/persistence.nvim" },
-	{ src = "https://github.com/folke/trouble.nvim" },
-	{ src = "https://github.com/folke/which-key.nvim" },
-	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
-	{ src = "https://github.com/mzlogin/vim-markdown-toc" },
-	{ src = "https://github.com/neovim/nvim-lspconfig" },
-	{ src = "https://github.com/nvim-lua/plenary.nvim" },
-	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
-	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
-	{ src = "https://github.com/nvim-telescope/telescope-frecency.nvim" },
-	{ src = "https://github.com/nvim-telescope/telescope.nvim" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
-	{
-		src = "https://github.com/saghen/blink.cmp",
-		version = vim.version.range("^1"),
-	},
-	{ src = "https://github.com/stevearc/conform.nvim" },
-	{ src = "https://github.com/stevearc/oil.nvim" },
-	{ src = "https://github.com/williamboman/mason.nvim" },
+  { src = "https://github.com/catppuccin/nvim" },
+  { src = "https://github.com/christoomey/vim-tmux-navigator" },
+  { src = "https://github.com/editorconfig/editorconfig-vim" },
+  { src = "https://github.com/folke/persistence.nvim" },
+  { src = "https://github.com/folke/trouble.nvim" },
+  { src = "https://github.com/folke/which-key.nvim" },
+  { src = "https://github.com/lewis6991/gitsigns.nvim" },
+  { src = "https://github.com/mzlogin/vim-markdown-toc" },
+  { src = "https://github.com/neovim/nvim-lspconfig" },
+  { src = "https://github.com/nvim-lua/plenary.nvim" },
+  { src = "https://github.com/nvim-lualine/lualine.nvim" },
+  { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
+  { src = "https://github.com/nvim-telescope/telescope-frecency.nvim" },
+  { src = "https://github.com/nvim-telescope/telescope.nvim" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
+  {
+    src = "https://github.com/saghen/blink.cmp",
+    version = vim.version.range("^1"),
+  },
+  { src = "https://github.com/stevearc/conform.nvim" },
+  { src = "https://github.com/stevearc/oil.nvim" },
+  { src = "https://github.com/williamboman/mason.nvim" },
 })
 
 vim.g.mapleader = " "
@@ -37,7 +37,7 @@ vim.g.maplocalleader = " "
 
 vim.cmd("filetype plugin indent on")
 if vim.fn.exists("syntax_on") ~= 1 then
-	vim.cmd("syntax enable")
+  vim.cmd("syntax enable")
 end
 vim.cmd.colorscheme("catppuccin-mocha")
 
@@ -90,215 +90,233 @@ vim.o.wrap = true
 vim.o.exrc = true
 vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
 if vim.fn.executable("rg") == 1 then
-	vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
+  vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
 end
 vim.diagnostic.config({
-	virtual_text = true,
-	virtual_lines = false,
-	signs = true,
-	update_in_insert = false,
+  virtual_text = true,
+  virtual_lines = false,
+  signs = true,
+  update_in_insert = false,
 })
 
 local function map(mode, lhs, rhs, opts)
-	local options = { noremap = true, silent = true }
-	if opts then
-		for k, v in pairs(opts) do
-			options[k] = v
-		end
-	end
-	vim.keymap.set(mode, lhs, rhs, options)
+  local options = { noremap = true, silent = true }
+  if opts then
+    for k, v in pairs(opts) do
+      options[k] = v
+    end
+  end
+  vim.keymap.set(mode, lhs, rhs, options)
 end
 
 require("lualine").setup({
-	options = {
-		icons_enabled = false,
-		theme = "catppuccin-mocha",
-		component_separators = { left = "", right = "" },
-		section_separators = { left = "", right = "" },
-	},
+  options = {
+    icons_enabled = false,
+    theme = "catppuccin-mocha",
+    component_separators = { left = "", right = "" },
+    section_separators = { left = "", right = "" },
+  },
 })
 
 local wk = require("which-key")
 wk.setup({ icons = { mappings = false, colors = false }, show_help = false, show_keys = false })
 wk.add({
-	{ "<leader>e", group = "Edit" },
-	{ "<leader>v", group = "Git" },
-	{ "<leader>l", group = "LSP" },
-	{ "<leader>p", group = "Errors" },
-	{ "<leader>x", group = "Session" },
+  { "<leader>e", group = "Edit" },
+  { "<leader>v", group = "Git" },
+  { "<leader>l", group = "LSP" },
+  { "<leader>p", group = "Errors" },
+  { "<leader>x", group = "Session" },
 })
 
 local actions = require("telescope.actions")
 local themes = require("telescope.themes")
 require("telescope").setup({
-	defaults = {
-		mappings = {
-			i = { ["<esc>"] = actions.close },
-			n = { ["<esc>"] = actions.close, ["q"] = actions.close },
-		},
-		file_ignore_patterns = { ".git", "node_modules" },
-	},
+  defaults = {
+    file_ignore_patterns = { ".git", "node_modules" },
+    frecency = {
+      db_validate_threshold = 100,
+    },
+    mappings = {
+      i = { ["<esc>"] = actions.close },
+      n = { ["<esc>"] = actions.close, ["q"] = actions.close },
+    },
+    previewer = false,
+  },
 })
 pcall(require("telescope").load_extension, "fzf")
 pcall(require("telescope").load_extension, "frecency")
 local builtin = require("telescope.builtin")
 local ivy = function(picker_fn)
-	return function()
-		picker_fn(themes.get_ivy())
-	end
+  return function()
+    picker_fn(themes.get_ivy())
+  end
 end
 map("n", "<leader>b", ivy(builtin.buffers), { desc = "Buffers" })
 map("n", "<leader>g", ivy(builtin.live_grep), { desc = "Search" })
-map("n", "<leader>f", "<cmd>Telescope frecency workspace=CWD theme=ivy<cr>", { desc = "Files" })
-map("n", "<leader>j", "<cmd>Telescope frecency theme=ivy<cr>", { desc = "Global files" })
+map("n", "<leader>f", "<cmd>Telescope frecency workspace=CWD theme=ivy previewer=false<cr>", { desc = "Files" })
+map("n", "<leader>j", "<cmd>Telescope frecency theme=ivy previewer=false<cr>", { desc = "Global files" })
 map("n", "<leader>r", ivy(builtin.oldfiles), { desc = "Recent files" })
 map("n", "<leader>h", ivy(builtin.help_tags), { desc = "Help" })
 map("n", "<leader>es", ivy(builtin.spell_suggest), { desc = "Spell" })
 
 local group = vim.api.nvim_create_augroup("BlinkCmpLazyLoad", { clear = true })
 vim.api.nvim_create_autocmd("InsertEnter", {
-	pattern = "*",
-	group = group,
-	once = true,
-	callback = function()
-		require("blink.cmp").setup({
-			keymap = {
-				preset = "super-tab",
-			},
-			appearance = {
-				nerd_font_variant = "mono",
-				use_nvim_cmp_as_default = true,
-			},
-			completion = {
-				documentation = { auto_show = false },
-				ghost_text = { enabled = true },
-				menu = {
-					auto_show = true,
-					border = "",
-					draw = { columns = { { "label", "label_description", gap = 1 }, { "kind" } } },
-				},
-			},
-			sources = {
-				default = { "lsp", "path", "buffer" },
-			},
-			fuzzy = { implementation = "prefer_rust_with_warning" },
-		})
-	end,
+  pattern = "*",
+  group = group,
+  once = true,
+  callback = function()
+    require("blink.cmp").setup({
+      keymap = {
+        preset = "super-tab",
+      },
+      appearance = {
+        nerd_font_variant = "mono",
+        use_nvim_cmp_as_default = true,
+      },
+      completion = {
+        documentation = { auto_show = false },
+        ghost_text = { enabled = true },
+        menu = {
+          auto_show = true,
+          border = "",
+          draw = { columns = { { "label", "label_description", gap = 1 }, { "kind" } } },
+        },
+      },
+      sources = {
+        default = { "lsp", "path", "buffer" },
+      },
+      fuzzy = { implementation = "prefer_rust_with_warning" },
+    })
+  end,
 })
 
 local treesitter_configs = {
-	"bash",
-	"javascript",
-	"lua",
-	"markdown",
-	"markdown_inline",
-	"python",
-	"query",
-	"toml",
-	"sql",
-	"yaml",
+  "bash",
+  "dockerfile",
+  "git_config",
+  "git_rebase",
+  "gitignore",
+  "gitcommit",
+  "json",
+  "jsonc",
+  "lua",
+  "make",
+  "markdown",
+  "markdown_inline",
+  "python",
+  "query",
+  "sql",
+  "tmux",
+  "toml",
+  "typescript",
+  "vimdoc",
+  "yaml",
 }
 if system == "Darwin" then
-	concat(treesitter_configs, { "javascript", "typescript" })
+  concat(treesitter_configs, {
+    "javascript",
+    "graphql",
+    "typescript",
+  })
 elseif system == "Linux" then
-	concat(treesitter_configs, { "c_sharp" })
+  concat(treesitter_configs, { "c_sharp" })
 end
 require("nvim-treesitter.configs").setup({
-	ensure_installed = treesitter_configs,
+  ensure_installed = treesitter_configs,
 })
 
 require("mason").setup()
 local mason_registry = require("mason-registry")
 local ensure_installed = {
-	"bash-language-server",
-	"dockerfile-language-server",
-	"lua-language-server",
-	"prettier",
-	"pyright",
-	"shfmt",
-	"shellcheck",
-	"stylua",
-	"sqlls",
-	"ruff",
-	"yaml-language-server",
+  "bash-language-server",
+  "dockerfile-language-server",
+  "lua-language-server",
+  "prettier",
+  "pyright",
+  "shfmt",
+  "shellcheck",
+  "stylua",
+  "sqlls",
+  "ruff",
+  "yaml-language-server",
 }
 if system == "Darwin" then
-	concat(ensure_installed, {
-		"eslint-lsp",
-		"typescript-language-server",
-	})
+  concat(ensure_installed, {
+    "eslint-lsp",
+    "typescript-language-server",
+  })
 end
 for _, tool in ipairs(ensure_installed) do
-	if not mason_registry.is_installed(tool) then
-		vim.cmd("MasonInstall " .. tool)
-	end
+  if not mason_registry.is_installed(tool) then
+    vim.cmd("MasonInstall " .. tool)
+  end
 end
 
 local on_attach = function(_, bufnr)
-	map("n", "grd", vim.lsp.buf.definition, { buffer = bufnr, desc = "vim.lsp.buf.definition()" })
-	map("n", "grD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "vim.lsp.buf.declaration()" })
-	map("n", "grh", vim.lsp.buf.hover, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
+  map("n", "grd", vim.lsp.buf.definition, { buffer = bufnr, desc = "vim.lsp.buf.definition()" })
+  map("n", "grD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "vim.lsp.buf.declaration()" })
+  map("n", "grh", vim.lsp.buf.hover, { buffer = bufnr, desc = "vim.lsp.buf.hover()" })
 end
 local lsp_servers = {
-	"bashls", -- bash-language-server
-	"dockerls", -- dockerfile-language-server
-	"lua_ls", -- lua-language-server
-	"pyright", -- pyright
-	"sqlls", -- sql-language-server
-	"yamlls", -- yaml-language-server
+  "bashls", -- bash-language-server
+  "dockerls", -- dockerfile-language-server
+  "lua_ls", -- lua-language-server
+  "pyright", -- pyright
+  "sqlls", -- sql-language-server
+  "yamlls", -- yaml-language-server
 }
 if system == "Darwin" then
-	concat(lsp_servers, {
-		"eslint", -- eslint-lsp
-		"ts_ls", -- typescript-language-server
-	})
+  concat(lsp_servers, {
+    "eslint", -- eslint-lsp
+    "ts_ls", -- typescript-language-server
+  })
 end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 for _, server in ipairs(lsp_servers) do
-	vim.lsp.config(server, {
-		capabilities = capabilities,
-	})
-	vim.lsp.enable(server)
+  vim.lsp.config(server, {
+    capabilities = capabilities,
+  })
+  vim.lsp.enable(server)
 end
 vim.api.nvim_create_autocmd("LspAttach", {
-	callback = function(args)
-		local bufnr = args.buf
-		local client = vim.lsp.get_client_by_id(args.data.client_id)
-		if client then
-			on_attach(client, bufnr)
-		end
-	end,
+  callback = function(args)
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client then
+      on_attach(client, bufnr)
+    end
+  end,
 })
 
 vim.cmd(
-	"highlight! link LspReferenceText CursorColumn | highlight! link LspReferenceRead CursorColumn | highlight! link LspReferenceWrite CursorColumn"
+  "highlight! link LspReferenceText CursorColumn | highlight! link LspReferenceRead CursorColumn | highlight! link LspReferenceWrite CursorColumn"
 )
 
 local conform_formatters = {
-	bash = { "shfmt" },
-	json = { "prettier" },
-	html = { "prettier" },
-	lua = { "stylua" },
-	markdown = { "prettier" },
-	python = { "ruff" },
-	sh = { "shfmt" },
-	yaml = { "prettier" },
+  bash = { "shfmt" },
+  json = { "prettier" },
+  html = { "prettier" },
+  lua = { "stylua" },
+  markdown = { "prettier" },
+  python = { "ruff" },
+  sh = { "shfmt" },
+  yaml = { "prettier" },
 }
 if system == "Darwin" then
-	concat(conform_formatters, {
-		javascript = { "prettier" },
-		typescript = { "prettier" },
-	})
+  concat(conform_formatters, {
+    javascript = { "prettier" },
+    typescript = { "prettier" },
+  })
 end
 require("conform").setup({
-	formatters_by_ft = conform_formatters,
-	format_on_save = {
-		timeout_ms = 500,
-		lsp_fallback = true,
-	},
+  formatters_by_ft = conform_formatters,
+  format_on_save = {
+    timeout_ms = 500,
+    lsp_fallback = true,
+  },
 })
 map("n", "<leader>ef", function()
-	require("conform").format({ async = true, lsp_fallback = true })
+  require("conform").format({ async = true, lsp_fallback = true })
 end, { desc = "Format" })
 
 require("trouble").setup({})
@@ -310,25 +328,25 @@ map("n", "<leader>pL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location lis
 map("n", "<leader>pQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix list" })
 
 require("persistence").setup({
-	dir = vim.fn.expand(vim.fn.stdpath("state") .. "/sessions/"),
-	need = 2,
+  dir = vim.fn.expand(vim.fn.stdpath("state") .. "/sessions/"),
+  need = 2,
 })
 map("n", "<leader>xr", function()
-	require("persistence").load()
+  require("persistence").load()
 end, { desc = "Restore session" })
 map("n", "<leader>xl", function()
-	require("persistence").load({ last = true })
+  require("persistence").load({ last = true })
 end, { desc = "Restore last session" })
 map("n", "<leader>xd", function()
-	require("persistence").stop()
+  require("persistence").stop()
 end, { desc = "Don't save session" })
 
 require("oil").setup({
-	default_file_explorer = true,
-	columns = { "icon" },
-	view_options = {
-		show_hidden = true,
-	},
+  default_file_explorer = true,
+  columns = { "icon" },
+  view_options = {
+    show_hidden = true,
+  },
 })
 map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 map("n", "<leader>-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
