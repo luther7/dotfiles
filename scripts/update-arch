@@ -87,6 +87,7 @@ arch_packages=(
   shfmt
   signal-desktop
   strace
+  stylua
   system-config-printer
   syncthing
   tailscale
@@ -193,7 +194,7 @@ done
 
 log_action "Update user config files"
 for config in $(find_files home); do
-  symlink "${PWD}/home/${config}/common" "${HOME}/${config}"
+  symlink "${PWD}/home/${config}" "${HOME}/${config}"
 done
 for config in $(find_files config/common); do
   symlink "${PWD}/config/common/${config}" "${HOME}/.config/${config}"
