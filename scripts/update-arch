@@ -12,6 +12,7 @@ arch_packages=(
   bluez-utils
   btrfs-progs
   burpsuite
+  breeze-gtk
   chromium
   cmake
   compsize
@@ -20,6 +21,7 @@ arch_packages=(
   darktable
   davfs2
   direnv
+  dolphin
   dosfstools
   dotnet-runtime
   dotnet-sdk
@@ -28,6 +30,7 @@ arch_packages=(
   exfat-tools
   fd
   ffmpeg
+  ffmpegthumbs
   firefox-developer-edition
   fwupd
   fzf
@@ -35,18 +38,14 @@ arch_packages=(
   git
   github-cli
   glxinfo
-  gnome
-  gnome-browser-connector
-  gnome-shell-extension-appindicator
-  gnome-shell-extension-dash-to-panel
-  gnome-shell-extension-freon
-  gnome-tweaks
   gst-plugin-pipewire
   gst-plugin-va
   gst-plugins-good
   helvum
   htop
   httpie
+  hunspell-en_au
+  hunspell-en_us
   img2pdf
   inetutils
   intel-gpu-tools
@@ -56,6 +55,7 @@ arch_packages=(
   jdk-openjdk
   jq
   krita
+  kdegraphics-thumbnailers
   ldns
   libva-utils
   libvdpau-va-gl
@@ -73,16 +73,20 @@ arch_packages=(
   pacman-contrib
   pandoc
   pdftk
+  phonon-qt5-vlc
+  phonon-qt6-mpv
   pipewire
   pipewire-pulse
   pipewire-audio
   pipewire-jack
+  plasma
   plymouth
   podman
   prettier
   qt6ct
   ripgrep
   rsync
+  sddm
   shellcheck
   shfmt
   signal-desktop
@@ -113,7 +117,6 @@ arch_packages=(
   winetricks
   wireplumber
   wl-clipboard
-  xdg-desktop-portal-gnome
   yarn
   yt-dlp
   yt-dlg-git
@@ -125,7 +128,7 @@ arch_packages=(
 arch_systemd_services=(
   bluetooth
   cups
-  gdm
+  sddm
   NetworkManager
   systemd-boot-update
   systemd-timesyncd
