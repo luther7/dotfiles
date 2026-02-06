@@ -1,8 +1,9 @@
-[user]
-	email = franz@linktr.ee
-	name = Luther Neulist Carroll
+[include]
+	path = ~/.config/git/user
+[include]
+	path = ~/.config/git/catppuccin.gitconfig
 [gpg]
-	format = ssh
+  format = ssh
 [column]
   ui = auto
 [branch]
@@ -21,7 +22,7 @@
   autoSetupRemote = true
   # followTags = true
 [pull]
-	rebase = true
+  rebase = false
 [fetch]
   prune = true
   # pruneTags = true
@@ -39,4 +40,9 @@
   autoStash = true
   updateRefs = true
 [merge]
-  conflictStyle = zdiff3
+	conflictStyle = zdiff3
+[user]
+	email = franz@linktr.ee
+	name = Luther Neulist Carroll
+[url "git@github.com:"]
+	insteadOf = https://github.com/
