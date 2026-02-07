@@ -14,6 +14,10 @@ vim.pack.add({
   { src = "https://github.com/folke/trouble.nvim" },
   { src = "https://github.com/folke/which-key.nvim" },
   { src = "https://github.com/mfussenegger/nvim-dap" },
+  { src = "https://github.com/rcarriga/nvim-dap-ui" },
+  { src = "https://github.com/nvim-neotest/neotest" },
+  { src = "https://github.com/nvim-neotest/nvim-nio" },
+  { src = "https://github.com/nvim-neotest/neotest-plenary" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/mzlogin/vim-markdown-toc" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
@@ -128,6 +132,7 @@ wk.add({
   { "<leader>p", group = "Errors" },
   { "<leader>x", group = "Session" },
   { "<leader>t", group = "Debug" },
+  { "<leader>k", group = "Test" },
 })
 
 local actions = require("telescope.actions")
@@ -184,6 +189,42 @@ end, { desc = "Hover" })
 map("n", "<leader>tr", function()
   require("dap").repl.open()
 end, { desc = "REPL" })
+map("n", "<leader>tU", function()
+  require("dapui").toggle()
+end, { desc = "Toggle UI" })
+
+require("dapui").setup()
+local dap, dapui = require("dap"), require("dapui")
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
+
+require("neotest").setup({
+  adapters = {
+    require("neotest-plenary"),
+  },
+})
+map("n", "<leader>kr", function()
+  require("neotest").run.run()
+end, { desc = "Run nearest" })
+map("n", "<leader>kf", function()
+  require("neotest").run.run(vim.fn.expand("%"))
+end, { desc = "Run file" })
+map("n", "<leader>ks", function()
+  require("neotest").summary.toggle()
+end, { desc = "Summary" })
+map("n", "<leader>ko", function()
+  require("neotest").output.open({ enter = true })
+end, { desc = "Output" })
+map("n", "<leader>kt", function()
+  require("neotest").run.stop()
+end, { desc = "Terminate" })
 
 local group = vim.api.nvim_create_augroup("BlinkCmpLazyLoad", { clear = true })
 vim.api.nvim_create_autocmd("InsertEnter", {
