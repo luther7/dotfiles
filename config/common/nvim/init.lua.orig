@@ -14,10 +14,6 @@ vim.pack.add({
   { src = "https://github.com/folke/trouble.nvim" },
   { src = "https://github.com/folke/which-key.nvim" },
   { src = "https://github.com/mfussenegger/nvim-dap" },
-  { src = "https://github.com/rcarriga/nvim-dap-ui" },
-  { src = "https://github.com/nvim-neotest/neotest" },
-  { src = "https://github.com/nvim-neotest/nvim-nio" },
-  { src = "https://github.com/nvim-neotest/neotest-plenary" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/mzlogin/vim-markdown-toc" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
@@ -34,9 +30,6 @@ vim.pack.add({
   },
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/stevearc/oil.nvim" },
-  -- { src = "https://github.com/mfussenegger/nvim-dap" },
-  -- { src = "https://github.com/rcarriga/nvim-dap-ui" },
-  -- { src = "https://github.com/nvim-neotest/nvim-neo" },
   { src = "https://github.com/williamboman/mason.nvim" },
 })
 
@@ -133,11 +126,8 @@ wk.add({
   { "<leader>v", group = "Git" },
   { "<leader>l", group = "LSP" },
   { "<leader>p", group = "Errors" },
-  { "<leader>t", group = "Tests" },
-  { "<leader>d", group = "Debug" },
   { "<leader>x", group = "Session" },
   { "<leader>t", group = "Debug" },
-  { "<leader>k", group = "Test" },
 })
 
 local actions = require("telescope.actions")
@@ -170,66 +160,13 @@ map("n", "<leader>j", "<cmd>Telescope frecency theme=ivy previewer=false<cr>", {
 map("n", "<leader>r", ivy(builtin.oldfiles), { desc = "Recent files" })
 map("n", "<leader>h", ivy(builtin.help_tags), { desc = "Help" })
 map("n", "<leader>es", ivy(builtin.spell_suggest), { desc = "Spell" })
-map("n", "<leader>tc", function()
-  require("dap").continue()
-end, { desc = "Continue" })
-map("n", "<leader>to", function()
-  require("dap").step_over()
-end, { desc = "Step over" })
-map("n", "<leader>ti", function()
-  require("dap").step_into()
-end, { desc = "Step into" })
-map("n", "<leader>tu", function()
-  require("dap").step_out()
-end, { desc = "Step out" })
-map("n", "<leader>tt", function()
-  require("dap").terminate()
-end, { desc = "Terminate" })
-map("n", "<leader>tb", function()
-  require("dap").toggle_breakpoint()
-end, { desc = "Breakpoint" })
-map("n", "<leader>th", function()
-  require("dap.ui.widgets").hover()
-end, { desc = "Hover" })
-map("n", "<leader>tr", function()
-  require("dap").repl.open()
-end, { desc = "REPL" })
-map("n", "<leader>tU", function()
-  require("dapui").toggle()
-end, { desc = "Toggle UI" })
-
-require("dapui").setup()
-local dap, dapui = require("dap"), require("dapui")
-dap.listeners.after.event_initialized["dapui_config"] = function()
-  dapui.open()
-end
-dap.listeners.before.event_terminated["dapui_config"] = function()
-  dapui.close()
-end
-dap.listeners.before.event_exited["dapui_config"] = function()
-  dapui.close()
-end
-
-require("neotest").setup({
-  adapters = {
-    require("neotest-plenary"),
-  },
-})
-map("n", "<leader>kr", function()
-  require("neotest").run.run()
-end, { desc = "Run nearest" })
-map("n", "<leader>kf", function()
-  require("neotest").run.run(vim.fn.expand("%"))
-end, { desc = "Run file" })
-map("n", "<leader>ks", function()
-  require("neotest").summary.toggle()
-end, { desc = "Summary" })
-map("n", "<leader>ko", function()
-  require("neotest").output.open({ enter = true })
-end, { desc = "Output" })
-map("n", "<leader>kt", function()
-  require("neotest").run.stop()
-end, { desc = "Terminate" })
+map("n", "<leader>tc", function() require("dap").continue() end, { desc = "Continue" })
+map("n", "<leader>to", function() require("dap").step_over() end, { desc = "Step over" })
+map("n", "<leader>ti", function() require("dap").step_into() end, { desc = "Step into" })
+map("n", "<leader>tu", function() require("dap").step_out() end, { desc = "Step out" })
+map("n", "<leader>tt", function() require("dap").terminate() end, { desc = "Terminate" })
+map("n", "<leader>tb", function() require("dap").toggle_breakpoint() end, { desc = "Breakpoint" })
+map("n", "<leader>th", function() require("dap.ui.widgets").hover() end, { desc = "Hover" })
 
 local group = vim.api.nvim_create_augroup("BlinkCmpLazyLoad", { clear = true })
 vim.api.nvim_create_autocmd("InsertEnter", {
@@ -280,9 +217,19 @@ local treesitter_configs = {
   "sql",
   "tmux",
   "toml",
+  "typescript",
   "vimdoc",
   "yaml",
 }
+if system == "Darwin" then
+  concat(treesitter_configs, {
+    "javascript",
+    "graphql",
+    "typescript",
+  })
+elseif system == "Linux" then
+  concat(treesitter_configs, { "c_sharp" })
+end
 require("nvim-treesitter.configs").setup({
   ensure_installed = treesitter_configs,
 })
@@ -303,6 +250,12 @@ local ensure_installed = {
   "yaml-language-server",
   "netcoredbg",
 }
+if system == "Darwin" then
+  concat(ensure_installed, {
+    "eslint-lsp",
+    "typescript-language-server",
+  })
+end
 for _, tool in ipairs(ensure_installed) do
   if not mason_registry.is_installed(tool) then
     vim.cmd("MasonInstall " .. tool)
@@ -322,6 +275,12 @@ local lsp_servers = {
   "sqlls", -- sql-language-server
   "yamlls", -- yaml-language-server
 }
+if system == "Darwin" then
+  concat(lsp_servers, {
+    "eslint", -- eslint-lsp
+    "ts_ls", -- typescript-language-server
+  })
+end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 for _, server in ipairs(lsp_servers) do
   vim.lsp.config(server, {
@@ -391,42 +350,6 @@ end, { desc = "Restore last session" })
 map("n", "<leader>xd", function()
   require("persistence").stop()
 end, { desc = "Don't save session" })
-
--- local dap = require("dap")
--- local dapui = require("dapui")
--- dapui.setup()
--- dap.listeners.before.attach.dapui_config = function()
---   dapui.open()
--- end
--- dap.listeners.before.launch.dapui_config = function()
---   dapui.open()
--- end
--- dap.listeners.before.event_terminated.dapui_config = function()
---   dapui.close()
--- end
--- dap.listeners.before.event_exited.dapui_config = function()
---   dapui.close()
--- end
--- map("n", "<leader>dt", dapui.toggle, { desc = "Toggle UI" })
--- map("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
--- map("n", "<leader>dc", dap.continue, { desc = "Continue" })
--- map("n", "<leader>dj", dap.step_over, { desc = "New" })
--- map("n", "<leader>dn", dap.step_over, { desc = "Step over" })
--- map("n", "<leader>di", dap.step_into, { desc = "Step into" })
--- map("n", "<leader>do", dap.step_out, { desc = "Step out" })
--- map("n", "<leader>dr", dap.repl.open, { desc = "REPL" })
--- map("n", "<leader>dl", dap.run_last, { desc = "Run last" })
--- map("n", "<leader>dq", dap.terminate, { desc = "Terminate" })
---
--- local neotest = require("neotest")
--- neotest.setup()
--- map("n", "<leader>tr", neotest.run.run(), { desc = "Run nearest" })
--- map("n", "<leader>tf", neotest.run.run(vim.fn.expand("%")), { desc = "Run file" })
--- map("n", "<leader>ta", neotest.run.run(vim.uv.cwd()), { desc = "Run all" })
--- map("n", "<leader>tl", neotest.run.run_last(), { desc = "Run last" })
--- map("n", "<leader>ts", neotest.summary.toggle(), { desc = "Toggle summary" })
--- map("n", "<leader>to", neotest.output.open({ enter = true, auto_close = true }), { desc = "Show ouput" })
--- map("n", "<leader>tw", neotest.watch.toggle(vim.fn.expand("%")), { desc = "Toggle watch" })
 
 require("oil").setup({
   default_file_explorer = true,
