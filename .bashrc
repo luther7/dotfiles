@@ -1,3 +1,12 @@
+# OPENSPEC:START
+# OpenSpec shell completions configuration
+if [ -d "/Users/luther/.local/share/bash-completion/completions" ]; then
+  for f in "/Users/luther/.local/share/bash-completion/completions"/*; do
+    [ -f "$f" ] && . "$f"
+  done
+fi
+# OPENSPEC:END
+
 # shellcheck shell=bash
 
 [[ $- != *i* ]] && return
@@ -8,6 +17,7 @@ shopt -q -s checkwinsize
 
 set -o notify
 
+export BASH_SILENCE_DEPRECATION_WARNING=1
 export PAGER=less
 export EDITOR=nvim
 export VISUAL=nvim
@@ -17,20 +27,33 @@ export HISTFILESIZE=100000
 export HISTIGNORE='&:[ ]*'
 export PS1=" \\W $ "
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+export COMPOSE_BAKE=true
+export NVM_DIR="$HOME/.nvm"
+
+export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/workspace/scripts:$PATH"
 export PATH="$HOME/scripts:$PATH"
 export PATH="$HOME/.yarn/bin:$PATH"
-export NVM_DIR="$HOME/.nvm"
-# export DOCKER_BUILDKIT=0
-export COMPOSE_BAKE=true
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 [[ -z "$SSH_AUTH_SOCK" ]] && eval "$(ssh-agent -s)"
+
 # shellcheck disable=SC1091
 [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
+[[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
+
 eval "$(direnv hook bash)"
 eval "$(fzf --bash)"
+
+alias awk="gawk"
+alias grep="ggrep"
+alias sed="gsed"
+alias make="gmake"
+alias vim="TMPDIR=\$HOME/.tmp/nvim nvim"
+alias tmux="direnv exec / tmux"
 
 cd() {
   builtin cd "$@"
@@ -47,25 +70,3 @@ cl() {
   fi
   awk "{ print \$${_number}}"
 }
-
-alias vim="nvim"
-alias tmux="direnv exec / tmux"
-
-declare os=
-command -v uname >/dev/null && os="$(uname -s)"
-export OS="${os}"
-
-if [ "${os}" = "Linux" ]; then
-  export PATH="$HOME/.dotnet/tools:$PATH"
-  alias update-packages="\$HOME/workspace/dotfiles/scripts/update-arch"
-elif [ "${os}" = "Darwin" ]; then
-  export BASH_SILENCE_DEPRECATION_WARNING=1
-  export PATH="/opt/homebrew/bin:$PATH"
-  export PATH="$HOME/workspace/tools/scripts:$PATH"
-  [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-  alias awk="gawk"
-  alias grep="ggrep"
-  alias sed="gsed"
-  alias update-packages="\$HOME/workspace/dotfiles/scripts/update-mac"
-fi

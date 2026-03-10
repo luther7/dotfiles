@@ -17,6 +17,7 @@
   colorMoved = plain
   mnemonicPrefix = true
   renames = true
+	tool = bcomp
 [push]
   default = simple
   autoSetupRemote = true
@@ -39,10 +40,5 @@
   autoSquash = true
   autoStash = true
   updateRefs = true
-[merge]
-	conflictStyle = zdiff3
-[user]
-	email = franz@linktr.ee
-	name = Luther Neulist Carroll
 [url "git@github.com:"]
 	insteadOf = https://github.com/
